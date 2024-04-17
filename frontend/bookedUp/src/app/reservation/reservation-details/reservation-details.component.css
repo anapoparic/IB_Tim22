@@ -1,0 +1,144 @@
+.acc-details {
+  position: relative;
+  background-color: var(--color-whitesmoke-100);
+  min-height: 100vh;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  font-size: var(--font-size-2xs);
+  color: var(--gray-2);
+  font-family: var(--font-sansation); 
+  display: flex;
+  flex-direction: column;
+}
+.main-data-box{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  position: relative;
+  font-size: var(--font-size-base);
+  color: var(--gray-1);
+  margin-bottom: 2%;
+  margin-top: 2%;
+  flex-grow: 1;
+}
+.inputs-data {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  width: 75%;
+  height: 470px;
+  margin-left: 10%;
+  border-radius: var(--br-7xs);
+  background-color: var(--color-white);
+  overflow: hidden; /* This property will hide the overflowing content */
+}
+.image-box {
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 35%;
+  max-height: 35%;
+  transition: transform 0.5s ease;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+}
+.room-image {
+  border-radius: var(--br-8xs);
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.inputs-box {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-left: 5%;
+  padding-right: 5%;
+  min-height: 65%;
+  max-height: 65%;
+  min-width: 80%;
+  max-width: 80%;
+}
+.title-text{
+  font-size:var(--font-size-9xl);
+}
+.normal-text,
+.info-text{
+  font-size:var(--font-size-mini);
+  word-wrap: break-word;
+  line-height: 1.3;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+.info-text{
+  margin-left: 5px;
+  font-size:var(--font-size-lg);
+}
+.line{
+  margin-top: 2%;
+  margin-bottom: 2%;
+  width: 100%;
+  height: 1px;
+}
+.in-line-box{
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+}
+.reviews-frame {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.stars-container,
+.reviews-average {
+  font-size: var(--font-size-xl);
+}
+.stars-container {
+  color: var(--blue-1);
+  margin-right: 5px;
+}
+.star {
+  display: inline-block;
+  margin-right: 5px;
+}
+.address{
+  position: relative;
+  display: flex;
+}
+.icon{
+  width: 20px;
+  height: 20px;
+  margin-right: 1%;
+}
+.button-container {
+  position: relative;
+  border-radius: var(--br-7xs);
+  background-color: var(--color-firebrick);
+  margin-left: 35%;
+  width: 30%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  padding: var(--padding-3xs) var(--padding-lg);
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  font-size: var(--font-size-mini);
+  font-family: var(--font-sansation);
+  color: var(--color-white);
+}  
+input {
+  border: none;
+  outline: none;
+  background: none;
+  width: 100%;
+  font-family: var(--font-adamina);
+  font-size: var(--font-size-mini);
+}

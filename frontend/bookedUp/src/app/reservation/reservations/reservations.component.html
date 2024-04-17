@@ -1,0 +1,97 @@
+<html>
+<body>
+<div class="amenities-admin">
+
+    <div class="amenities-admin-child"></div>
+    <app-nav-bar></app-nav-bar>
+
+    <div id="sort-bar" class="sort-bar">
+        <div class="all-reservation" [ngClass]="{ 'clicked': selectedClass === 'all-reservation' }" (click)="getGuestsReservations()">
+            All Reservations
+        </div>
+        <div class="waiting-reservation" [ngClass]="{ 'clicked': selectedClass === 'waiting-reservation' }" (click)="getGuestsReservationsByStatus('waiting-reservation', ReservationStatus.Created)">
+            Waiting For Approval
+        </div>
+        <div id="acceptedReservations"  class="accepted-reservation" [ngClass]="{ 'clicked': selectedClass === 'accepted-reservation' }" (click)="getGuestsReservationsByStatus('accepted-reservation', ReservationStatus.Accept)">
+            Accepted
+        </div>
+        <div class="rejected-reservation" [ngClass]="{ 'clicked': selectedClass === 'rejected-reservation' }" (click)="getGuestsReservationsByStatus('rejected-reservation', ReservationStatus.Reject)">
+            Rejected
+        </div>
+        <div id="cancelledReservations"  class="cancelled-reservation" [ngClass]="{ 'clicked': selectedClass === 'cancelled-reservation' }" (click)="getGuestsReservationsByStatus('cancelled-reservation', ReservationStatus.Cancelled)">
+            Cancelled
+        </div>
+        <div class="finished-reservation" [ngClass]="{ 'clicked': selectedClass === 'finished-reservation' }" (click)="getGuestsReservationsByStatus('finished-reservation', ReservationStatus.Completed)">
+            Completed
+        </div>
+
+        <div class="search-bar">
+            <input
+                    type="text"
+                    [(ngModel)]="searchText"
+                    placeholder="Search reservations..."
+                    (input)="searchReservations()"
+            />
+        </div>
+    </div>
+
+
+
+    <div class="main-content" id="main-content">
+        <b class="no-text" *ngIf="(reservations | async)?.length == 0">NO RESULTS</b>
+        <div *ngFor="let reservation of reservations | async" class="acc-frame" [class.created-status]="reservation.status === 'CREATED'"
+             [class.cancelled-status]="reservation.status === 'CANCELLED'"
+             [class.rejected-status]="reservation.status === 'REJECTED'"
+             [class.accepted-status]="reservation.status === 'ACCEPTED'">
+            <img
+                    class="accommodation-image"
+                    alt=""
+                    [src]="getPhotoUrl(reservation?.accommodation?.id)"
+            />
+
+            <div class="left-data">
+                <div class="top-data-box">
+                    <b class="title">{{ reservation.accommodation.name }}</b>
+                    <div class="reviews-frame">
+                        <div class="stars-container">
+                            <span class="star" *ngFor="let star of generateStars(roundHalf((reservation?.accommodation?.averageRating ?? 0) ))">
+                                {{ star }}
+                            </span>
+                        </div>
+                        <div class="normal-text" style="margin-left: 10px;">{{ (reservation?.accommodation?.averageRating ?? 0)}}</div>
+                    </div>
+
+                    <b [ngStyle]="{ 'color': getStatusColor(reservation.status) }" class="status-text">{{ reservation.status }}</b>
+                </div>
+
+                <div class="bottom-data-box">
+                    <b class="per-night">{{ reservation.totalPrice }}$</b>
+                    <div class="includes-taxes">Check In: {{ reservation.startDate| date: 'EEEE, MMMM d, y' }}</div>
+                    <div class="includes-taxes">Check Out: {{ reservation.endDate | date: 'EEEE, MMMM d, y' }}</div>
+                </div>
+            </div>
+
+            <div class="right-buttons">
+                <!-- <div *ngIf="(reservation.status === 'CREATED' || (reservation.status === 'ACCEPTED' && isWithinCancellationDeadline(reservation)))" class="reject-button" id="reject-button" (click)="cancelReservation(reservation?.id)">
+                    <b class="button-text">Cancel</b>
+                </div> -->
+
+                <div class="view-details-button" id="view-details-button" routerLink="/reservation-details/{{reservation.id}}">
+                    <b class="button-text">View Details</b>
+                </div>
+
+              <div class="view-details-button" routerLink="/add-review/{{reservation.id}}" *ngIf="shouldShowAddReviewButton(reservation)">
+                <b class="button-text">Add Review</b>
+              </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <app-shorter-footer></app-shorter-footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div class="acc-details">
+
+        <app-nav-bar></app-nav-bar>
+
+        <div class="main-data-box">
+            <div class="buttons-line">
+                <div class="button-container" (click)="toggleDropdown()" *ngIf="!isDropdownVisible" style="width: 20%;">
+                    <div class="in-line-box">
+                      <img class="icon" alt="" src="../../../assets/public/listoutline-1.svg">
+                      <b>{{ selectedAccommodation || 'Accommodations' }}</b>
+                    </div>
+                </div>
+                <div *ngIf="isDropdownVisible" class="dropdown-content">
+                    <a *ngFor="let accommodation of accommodations" (click)="selectAccommodation(accommodation)">
+                    <b>{{ accommodation.name }}</b>
+                    </a>
+                    <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+                </div>
+                  
+                
+
+                <button class="button-container" style="margin-left: 25%;">
+                    <div class="in-line-box">
+                        <img class="icon" alt="" src="../../../assets/public/calendaroutline-1.svg">
+                        <input placeholder="Start Date" [(ngModel)]="startDateInput" class="text" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="startDate" (ngModelChange)="startDateChanged()" />
+                    </div>
+                </button>
+
+                <button class="button-container">
+                    <div class="in-line-box">
+                        <img class="icon" alt="" src="../../../assets/public/calendaroutline-1.svg">
+                        <input placeholder="End Date" [(ngModel)]="endDateInput"  class="text" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="endDate" (ngModelChange)="endDateChanged()" />
+                    </div>
+                </button>
+
+                <button class="button-container">
+                    <div class="in-line-box" (click)="printingPDF()">
+                        <img class="icon" alt="" src="../../../assets/public/group-524.svg">
+                        <b>Download PDF</b>
+                    </div>
+                </button>
+            </div>
+            <div class="inputs-data">
+
+                
+                    <div class="chart-line">
+                        <div class="in-line-box" style="width: 70%; justify-content: left; margin-left: 3%;">
+                            <div class="button-container" style="background-color: transparent; width: 20%;" (click)="reloadChart()">
+                                <img class="icon" alt="" src="../../assets/public/relaod.png" style="margin-right: 5%;"><br>
+                                <b>Reload Chart</b>
+                            </div>
+                        </div>
+                            
+                        <div class="button-container" *ngIf="!isDropdownTypeVisible" style="width: 25%; background-color: transparent;" (click)="toggleTypeDropdown()">
+                            <div class="in-line-box">
+                                <b style="margin-right: 5%;"> {{ selectedType }}</b>
+                                <img class="icon" alt="" src="../../../assets/public/vector-674.svg">
+                            </div>
+                        </div>
+                        <div *ngIf="isDropdownTypeVisible" class="dropdown-content" style="background-color: transparent;">
+                            <a *ngFor="let type of types" (click)="selectType(type)">
+                            <b>{{ type }}</b>
+                            </a>
+                            <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+                        </div>
+                    </div>
+                    
+    
+                    <div class="inputs-box">
+                        <ng-container *ngIf="selectedType === 'Single Accommodation'">
+                            <app-single-accommodation-analytics id="signleCharts" [startDate]="startDate" [endDate]="endDate" [accommodationId]="selectedAccommodationId" #singleAnalytics></app-single-accommodation-analytics>
+                        </ng-container>
+                        <ng-container *ngIf="selectedType === 'All Accommodations'">
+                            <app-yearly-analytics id="charts" [startDate]="startDate" [endDate]="endDate" #yearlyAnalytics></app-yearly-analytics>
+                        </ng-container>
+                    </div>
+                    
+            </div>
+        </div>
+
+      <app-shorter-footer></app-shorter-footer>
+
+    </div>
+  </body>
+</html>

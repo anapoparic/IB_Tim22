@@ -1,0 +1,76 @@
+.back-to-sign {
+    position: relative;
+    letter-spacing: 0.02em;
+    line-height: 20px;
+  }
+  .back-to-sign-in-wrapper {
+    position: absolute;
+    top: 555px;
+    left: 521px;
+    border-radius: var(--br-7xs);
+    background-color: var(--blue-1);
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-xs) var(--padding-lg);
+    box-sizing: border-box;
+    cursor: pointer;
+    text-align: left;
+  }
+  .check-your-inbox {
+    position: absolute;
+    top: 405px;
+    left: 520px;
+    font-size: var(--font-size-9xl);
+    font-family: var(--font-adamina);
+    color: var(--color-gray-400);
+    display: inline-block;
+    width: 401px;
+    height: 32px;
+  }
+  .gmailcom {
+    color: var(--gray-1);
+  }
+  .ftn-examplegmailcom {
+    color: var(--color-black);
+  }
+  .we-have-just-container {
+    position: absolute;
+    top: 449px;
+    left: 521px;
+    font-size: var(--font-size-base);
+    letter-spacing: 0.02em;
+    line-height: 140%;
+    display: inline-block;
+    width: 400px;
+    color: var(--gray-2);
+  }
+  .logo-with-slogan-6,
+  .slika6-removebg-preview-1-icon {
+    position: absolute;
+    top: 37px;
+    left: 42px;
+    width: 268px;
+    height: 148px;
+    object-fit: cover;
+  }
+  .slika6-removebg-preview-1-icon {
+    top: 95px;
+    left: 581px;
+    width: 285px;
+    height: 285px;
+  }
+  .check-inbox {
+    position: relative;
+    background-color: var(--color-white);
+    width: 100%;
+    height: 970px;
+    overflow: hidden;
+    text-align: center;
+    font-size: var(--font-size-mini);
+    color: var(--color-white);
+    font-family: var(--font-sansation);
+  }
+  

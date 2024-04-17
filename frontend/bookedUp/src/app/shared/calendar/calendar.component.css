@@ -1,0 +1,67 @@
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+}
+
+.date {
+  border: 1px solid #ddd;
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.date:hover {
+  background-color: #f5f5f5;
+}
+
+.day-header {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar-header button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.calendar-header span {
+  margin: 0 10px;
+}
+
+.date.selected {
+  background-color:  var(--gray-2);
+  color: #fff;
+}
+.price-text{
+  font-size: var(--font-size-3xs);
+}
+
+.date-none {
+  background: var(--color-whitesmoke-100) !important;
+  color: var(--color-whitesmoke-100) !important;
+}
+.already-picked {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: center;
+  background-color: var(--color-firebrick) !important;
+  color: #fff !important;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.already-picked .price-text.hidden {
+  display: none;
+}
+

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div class="acc-details" *ngIf="accommodation | async as accommodation">
+
+      <app-nav-bar></app-nav-bar>
+
+      <div id="apartment-images" class="images-container">
+        <div id="slider" class="slider-box">
+          <div class="image-box">
+            <div *ngFor="let url of pictureUrls; let i = index" [class.active]="i === currentIndex">
+              <img class="room-image" alt="" [src]="url" (click)="nextImage()" />
+            </div>
+          </div>
+        </div>
+        <div id="more-images" class="more-images">
+          <img class="more" alt="" [src]="pictureUrls[1]" style="padding-bottom: 4%;"/>
+          <img class="more" alt="" [src]="pictureUrls[2]" />
+        </div>
+      </div>
+
+      <div id="nav-bar" class="nav-bar">
+        <div class="bar-text" style="color: var(--blue-1); font-weight: bold;">Overview</div>
+        <div class="bar-text-review" (click)="navigateTo('/accommodation-reviews')">Guest Review</div>
+        <div class="bar-text-host" (click)="navigateTo('/accommodation-host-reviews')">Host Review</div>
+      </div>
+
+      <div id="main-data" class="main-data-box">
+        <div id="right-data" class="right-container">
+          <div class="right-data">
+            <div class="right-box">
+              <div id="apartmentName" class="title-text">{{accommodation.name}}</div>
+
+              <div class="reviews-frame">
+                <div class="stars-container">
+                    <span class="star" *ngFor="let star of generateStars(roundHalf((accommodation?.averageRating ?? 0)))">
+                        {{ star }}
+                    </span>
+                </div>
+                <div class="normal-text">{{ (accommodation?.averageRating ?? 0) }}</div>
+            </div>
+
+              <div id="address" class="address">
+                <img class="icon" alt="" src="../../assets/public/location-1.svg" />
+                <div class="" id="normal-text">
+                  {{ accommodation.address.streetAndNumber }}, {{accommodation.address.city}} {{accommodation.address.postalCode}}, {{ accommodation.address.city }}
+                </div>
+              </div>
+
+            </div>
+            <div class="left-box">
+              <b class="totalPrice" *ngIf="totalPrice!=0">{{totalPrice}} $</b><br>
+              <b class="singlePrice">${{accommodation.price}}/{{accommodation.priceType}}</b><br>
+              <div *ngIf="numberGuests !== 0" class="normal-text" style="margin-top: 10px;">
+                {{ numberGuests }} adult, {{days}} nights
+              </div>
+            </div>
+          </div>
+
+
+          <div id="description" class="description">
+            <div class="description-box">
+              <b class="totalPrice">Overview</b>
+              <div id="about" style="margin-top: 10px; margin-bottom: 10px;">
+                <div class="normal-text">
+                  {{accommodation.description}}
+                </div>
+              </div>
+              <img class="line" alt="" src="../../assets/public/vector-1.svg" style="margin-bottom: 10px;"><br>
+              <b class="totalPrice">Top Facilities</b>
+              <div id="" class="address" style="margin-top: 10px;" *ngFor="let facility of accommodation.amenities;">
+                <img class="icon" alt="" src="../../assets/public/output-onlinepngtools.png" />
+                <div class="normal-text">{{facility}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div id="left-data" class="left-container">
+          <app-calendar #calendarRef
+            [defaultPrice]="accommodation.price"
+            [startDate]="startDate"
+            [endDate]="endDate"
+            [customPricesInput]="accommodation.priceChanges"
+            [alreadyPickedInput]="accommodation.availability"
+            (click)="handleCalendarClick($event)">
+          </app-calendar>
+          <div class="save-account-wrapper" *ngIf="role === 'ROLE_GUEST'" id="save-button" style="margin-top: 5%;" (click)="onButtonClick()">
+            <b class="save-account">Reserve Accommodation</b>
+          </div>
+
+          <div class="save-account-wrapper" *ngIf="role === 'ROLE_GUEST'" style="margin-top: 5%;" (click)="toggleFavourite()">
+            <b class="save-account">{{ isFavourite ? 'Remove from Favourites' : 'Add to Favourites' }}</b>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="map-container">
+        <app-map *ngIf="accommodation && accommodation.address"
+        [latitude]="accommodation.address.latitude"
+        [longitude]="accommodation.address.longitude" ></app-map>
+      </div>
+
+      <app-shorter-footer></app-shorter-footer>
+
+
+    </div>
+  </body>
+</html>

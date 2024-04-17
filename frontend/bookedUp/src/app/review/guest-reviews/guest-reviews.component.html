@@ -1,0 +1,94 @@
+<html>
+<body>
+    <div class="amenities-admin">
+
+        <div class="amenities-admin-child"></div>
+        <app-nav-bar></app-nav-bar>
+
+        <div id="sort-bar" class="sort-bar">
+            <div class="all-accommodations" [ngClass]="{ 'clicked': selectedClass === 'all-accommodations' }" (click)="changeStyle('all-accommodations')">
+              All Reviews
+            </div>
+            <div class="new-accommodations" [ngClass]="{ 'clicked': selectedClass === 'new-accommodations' }" (click)="changeStyle('new-accommodations')">
+              Accommodation Reviews
+            </div>
+            <div class="changed-accommodations" [ngClass]="{ 'clicked': selectedClass === 'changed-accommodations' }" (click)="changeStyle('changed-accommodations')">
+              Host Reviews
+            </div>
+        </div>
+
+        <div class="main-content" id="main-content">          
+          <b class="no-text" *ngIf="(reviews | async)?.length == 0">NO RESULTS</b>
+          <div *ngFor="let review of reviews | async" class="acc-frame" [class.created-status]="review">
+               <!-- [class.changed-status]="user === 'CHANGED'" -->
+              <ng-container *ngIf="review.type === 'ACCOMMODATION'">
+                  <img
+                          class="accommodation-image"
+                          alt=""
+                          [src]="getPhotoUrl(review?.id)"
+                  />
+              </ng-container>
+
+              <ng-container *ngIf="review.type === 'HOST'">
+                  <img
+                          class="profile-image"
+                          alt=""
+                          [src]="getPhotoUrlUser(review?.id)"
+                  />
+              </ng-container>
+
+
+
+
+              <div class="left-data">
+                <ng-container *ngIf="review.type === 'ACCOMMODATION'">
+                    <b class="title">{{ review.accommodation?.name }}</b>
+                </ng-container>
+                <ng-container *ngIf="review.type === 'HOST'">
+                    <b class="title">{{ review.host?.firstName }} {{ review.host?.lastName }}</b>
+                </ng-container>
+
+                <div class="location-frame">
+                  <div class="location-text"><b>Date:</b> {{ review.date| date: 'EEEE, MMMM d, y' }}</div>
+                </div>
+
+                <div class="location-frame">
+                  <div class="location-text"><b>Comment:</b> {{ review.comment }}</div>
+                </div>
+
+                <div class="location-frame">
+                  <!-- <div class="location-text">{{ review.guets.firstName }} {{ review.guets.lastName}}</div> -->
+
+
+                  <div class="reviews-frame">
+                      <div class="stars-container">
+                        <span class="star" *ngFor="let star of generateStars(roundHalf(review.review ? review.review : 0))">
+                          {{ star }}
+                        </span>
+                      </div>
+                        <div class="reviews-average" *ngIf="review.review">{{ roundHalf(review.review ? review.review : 0) }}</div>
+                    </div>
+                </div>
+
+
+<!--                  <div class="location-frame">-->
+<!--                    <div class="location-text">{{ calculateDaysAgo(review.date) }} days ago </div>-->
+<!--                  </div>-->
+
+              </div>
+
+              <div class="right-buttons">
+                  <div class="reject-button" id="reject-button" *ngIf="review" (click)="deleteReview(review?.id)">
+                      <b class="button-text">Delete</b>
+                  </div>
+              </div>
+
+            </div>
+        </div>
+
+
+      <app-footer></app-footer>
+
+    </div>
+  </body>
+</html>
