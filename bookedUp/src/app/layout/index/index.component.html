@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div class="logged">
+
+  <app-nav-bar></app-nav-bar>
+  <div id="search-box" class="search-box">
+    <div id="image-title" class="top-container">
+      <img class="search-image" alt="" src="../../assets/public/rectangle-78@2x.png"/>
+
+      <div class="search-title">The Perfect Stay, One Click Away</div>
+      <div class="search-description">
+        Find your perfect stay with expert hotel and apartment recommendations, <br>
+        travel tips, and destination inspiration.
+      </div>
+    </div>
+
+    <div class="search-container">
+      <div class="input-container" style="margin-left: 1%;">
+        <img class="icon" alt="" src="../../assets/public/location-13.svg" />
+        <input id="locationTxt" class="text" type="text" placeholder="Where are you going?"/>
+      </div>
+      <div class="input-container" style="margin-left: 2%;">
+        <img class="icon" alt="" src="../../assets/public/calendar-1.svg" />
+        <input placeholder="Check In Date" [min]="minFromDate" class="text" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="fromDate" />
+      </div>
+      <div class="input-container" style="margin-left: 2%;">
+        <img class="icon" alt="" src="../../assets/public/calendar-1.svg" />
+        <input placeholder="Check Out Date" [min]="minFromDate" class="text" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="toDate" />
+      </div>
+      <div class="input-container-guest" style="margin-left: 2%;">
+        <img class="icon" alt="" src="../../assets/public/usersquare-12.svg" />
+        <input id="guestNumberTxt" type="number" class="text" placeholder="Guests" pattern="\d*" />
+      </div>
+      <div class="search-button" id="searchButton" style="margin-left: 2%; margin-right: 1%;" (click)="searchAccommodations()">
+        <b >Search</b>
+      </div>
+    </div>
+  </div>
+
+  <div id="popular-destinations" class="populars" style="margin-top: 5%;">
+    <div class="populars-title">Popular destinations</div>
+    <div id="destination-list" class="populars-list">
+      <div class="destination-box" style="margin-right: 2%;" (click)="searchAccommodationsByCountry('Australia')">
+        <img class="destination-image" alt="" src="../../assets/public/rectangle-8@2x.png"  />
+        <div class="destination-text">Australia</div>
+      </div>
+      <div class="destination-box" style="margin-right: 2%;" (click)="searchAccommodationsByCountry('Japan')">
+        <img class="destination-image" alt="" src="../../assets/public/rectangle-9@2x.png" />
+        <div class="destination-text">Japan</div>
+      </div>
+      <div class="destination-box" style="margin-right: 2%;" (click)="searchAccommodationsByCountry('New Zealand')">
+        <img class="destination-image" alt="" src="../../assets/public/rectangle-10@2x.png" />
+        <div class="destination-text">New Zealand</div>
+      </div>
+      <div class="destination-box" (click)="searchAccommodationsByCountry('Dubai')">
+        <img class="destination-image" alt="" src="../../assets/public/hotel1-1@2x.png" />
+        <div class="destination-text">Dubai</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="popular-hotels" class="populars">
+    <div class="populars-title" style="margin-top: 3%;">Popular Hotels</div>
+
+    <div id="hotels-list" class="populars-list">
+      <div class="hotel-box"  [ngClass]="{'no-margin-right': last}"
+                              *ngFor="let accommodation of popularAccommodations | async; let last = last"
+                              routerLink="/accommodation-details/{{accommodation.id}}">
+
+        <img class="hotel-image" alt="" [src]="getPhotoUrl(accommodation?.id)" />
+
+        <div id="hotel-data" class="hotel-data">
+          <div id="popular-text-left" class="popular-text-left">
+            <div id="hotel-title">{{ accommodation.name }}</div>
+            <div id="hotel-address" class="hotel-smaller-text">{{ accommodation.address.streetAndNumber }}, {{accommodation.address.city}} {{accommodation.address.postalCode}}, {{ accommodation.address.city }}</div>
+            <div  class="hotel-price">
+              <div id="hotel-price">${{ accommodation.price }}</div>
+              <div class="hotel-smaller-text" *ngIf="accommodation.priceType=='PER_GUEST'">&nbsp;{{priceTypeGuest}}</div>
+              <div class="hotel-smaller-text" *ngIf="accommodation.priceType=='PER_NIGHT'">&nbsp;{{priceTypeNight}}</div>
+            </div>
+          </div>
+          <div id="popular-text-right" class="popular-text-right">
+            <b id="averageRating" style="color: var(--blue-1);" *ngIf="accommodation">{{ roundHalf(accommodation.averageRating ? accommodation.averageRating  : 0) }} ★</b>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div id="download-app-main" class="download-container">
+    <img class="download-image" alt="" src="../../assets/public/rectangle-18@2x.png" />
+
+      <div class="download-text">Download the mobile application for <br> bonus coupons and travel codes</div>
+      <div class="download-button">
+        <b>Download mobile app</b>
+      </div>
+  </div>
+
+
+  <div class="explore-container">
+    <div class="explore-text">Explore the world with BookedUp</div><br>
+    <div class="explore-description">Discover new places and experiences</div>
+  </div>
+
+
+
+  <app-footer></app-footer>
+</div>
+</body>
+</html>

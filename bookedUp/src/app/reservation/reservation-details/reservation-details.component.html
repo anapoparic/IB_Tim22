@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div class="acc-details">
+
+        <app-nav-bar></app-nav-bar>
+
+        <div class="main-data-box" *ngIf="reservation | async as reservation">
+            <div class="inputs-data">
+                <div class="image-box">
+                <!-- <img class="room-image" alt="" [src]="pictureUrl" /> -->
+                <app-map *ngIf="reservation.accommodation && reservation.accommodation.address"
+                    [latitude]="reservation.accommodation.address.latitude"
+                    [longitude]="reservation.accommodation.address.longitude" ></app-map>
+                </div>
+
+                <div class="inputs-box">
+                    <b class="title-text" style="margin-top: 2%;">{{reservation.accommodation.name}}</b>
+                    <div class="address" style="margin-top: 2%; align-content: center; flex-wrap: wrap; align-items: center;" >
+                        <!-- <div>Host: </div> -->
+                        <img alt="" src="../../../assets/public/usersquare-2.svg" class="icon" />
+                        <b> {{ reservation.accommodation.host.firstName }} {{ reservation.accommodation.host.lastName }}</b>
+                        <img class="icon" alt="" src="../../assets/public/location-1.svg" style="margin-left: 5%;"/>
+                        <div class="" id="normal-text">
+                        {{ reservation.accommodation.address.streetAndNumber }}, {{reservation.accommodation.address.city}} {{reservation.accommodation.address.postalCode}}, {{ reservation.accommodation.address.city }}
+                        </div>
+                        <div class="reviews-frame" style="margin-left: 5%; ">
+                            <div class="stars-container">
+                                <span class="star" *ngFor="let star of generateStars(roundHalf((reservation?.accommodation?.averageRating ?? 0)))">
+                                    {{ star }}
+                                </span>
+                            </div>
+                            <div class="normal-text">{{ (reservation?.accommodation?.averageRating ?? 0) }}</div>
+                        </div>
+                    </div> 
+
+                    <div id="price" class="address" style="margin-top: 15px;">
+                        <div class="info-text">Price: </div>
+                        <b class="info-text"> {{ reservation.totalPrice }} $</b>
+                    </div>
+
+                    <div id="guests" class="address">
+                        <div class="info-text">Guests: </div>
+                        <b class="info-text"> {{ reservation.guestsNumber }} Adults</b>
+                    </div>
+
+                    <div id="checkIn" class="address">
+                        <div class="info-text">Check-In: </div>
+                        <b class="info-text">{{ reservation.startDate| date: 'd MMMM yyyy' }}</b>
+                    </div>
+
+                    <div id="checkOut" class="address">
+                        <div class="info-text">Check-Out: </div>
+                        <b class="info-text">{{ reservation.endDate| date: 'd MMMM yyyy' }}</b>
+                    </div>
+
+                    <div class="address">
+                        <div class="info-text">Guest: </div>
+                        <b class="info-text"> {{ reservation.guest.firstName }} {{ reservation.guest.lastName }}</b>
+                    </div>
+                    
+                        
+
+                    <div id="status" class="address">
+                        <div class="info-text">Status: </div>
+                        <b [ngStyle]="{ 'color': getStatusColor(reservation.status) }" class="info-text">{{ reservation.status }}</b>
+                    </div>               
+                </div>
+            </div>
+
+            <button *ngIf="cancellation" class="button-container" (click)="cancelReservation()">
+                <b>Cancel Reservation</b>
+            </button>
+        </div>
+
+      <app-shorter-footer></app-shorter-footer>
+
+    </div>
+  </body>
+</html>

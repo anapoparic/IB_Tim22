@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div class="reservation">
+      <app-nav-bar></app-nav-bar>
+
+      <div id="main-data" class="main-data-box">
+
+        <div id="right-data" class="right-container" [formGroup]="reservationForm">
+          <div class="title-text" style="margin-bottom: 5%;">Secure Your Reservation</div>
+          <div id="inputs" class="description">
+            <div class="container-title">
+              <img class="icon" alt="" src="../../../assets/public/securityuser-1.svg">
+              <b class="smaller-title" style="margin-right: 2%;">{{acc.name}}</b>
+              <b class="normal-text">{{numberGuests}} adults</b>
+            </div>
+            <div class="description-box">
+
+              <div id="accommodation-details" style="margin-top: 10px; margin-bottom: 10px;">
+                <div class="in-line-box">
+                  <div class="column-box">
+                      <b class="normal-text" >First Name</b>
+                      <div class="input-frame-names">
+                          <input type="text" formControlName="firstName" [readonly]="true" placeholder="Enter first name...">
+                      </div>
+                  </div>
+
+                  <div class="column-box">
+                      <b class="normal-text" >Last Name</b>
+                      <div class="input-frame-names">
+                          <input type="text" formControlName="lastName" [readonly]="true" placeholder="Enter last name...">
+                      </div>
+                  </div>
+                </div>
+
+                <div class="in-line-box" style=" margin-top: 5%;">
+                  <div class="column-box">
+                      <b class="normal-text" >Email</b>
+                      <div class="input-frame-names">
+                          <input type="text" formControlName="email"  [readonly]="true" placeholder="Enter email...">
+                      </div>
+                  </div>
+                  <div class="column-box">
+                    <b class="normal-text" >Phone Number</b>
+                    <div class="input-frame-names">
+                        <input type="text" formControlName="phoneNumber" [readonly]="true" placeholder="Enter phone number...">
+                    </div>
+
+                </div>
+                </div>
+
+                <div class="in-line-box" style=" margin-top: 5%;">
+                  <input type="checkbox" class="checkbox-notification" />
+                  <label class="normal-text">Receive text alerts about this trip.</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="description" class="description" style="margin-top: 5%;">
+            <div class="container-title" style="background-color: #1f1f1f;">
+              <img class="icon" alt="" src="../../../assets/public/securityuser-1.svg">
+              <b class="smaller-title" style="margin-right: 2%;">Important information about your booking</b>
+            </div>
+            <div class="description-box">
+              <ul class="info-container">
+                <li>
+                  This rate is non-refundable. If you change or cancel your booking
+                  you will not get a refund or credit to use for a future stay.
+                </li>
+                <li>
+                  Stay extensions will require a new reservation.
+                </li>
+                <li>
+                  Front desk staff will greet guests on arrival
+                </li>
+                <li>
+                  No refunds will be issued for late check-in or early check-out.
+                </li>
+              </ul>
+
+              <div class="info-container" style="margin-top: 5%;">
+                <span>By clicking the button below, I acknowledge that I have reviewed the
+                </span>
+                <span class="special-text">Privacy Statement</span>
+                <span> and have reviewd and accept the </span>
+                <span class="special-text">Rules and Restrictions</span>
+                <span> and</span>
+                <span class="special-text"> Terms of Use</span>
+                <span>.</span>
+              </div>
+
+              <div class="in-line-box" style="margin-top: 5%;">
+                <img class="icon" alt="" src="../../../assets/public/lockcircle-1.svg">
+                <span>
+                  We use secure transmission and encrypted storage to protect your
+                  personal information
+                </span>
+              </div>
+
+              <div class="complete-booking-wrapper" id="completeBooking"  (click)="reserve()">
+                <b class="complete-booking">Complete Booking</b>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+        <div id="left-data" class="left-container">
+          <div id="reservationDetails" class="hotel-box">
+           <img class="hotel-image" alt="" [src]="pictureUrls[0]">
+
+
+            <div class="hotel-data">
+              <div class="text-hotel-box">
+                <b id="normal-text" style="font-size: var(--font-size-lg);">{{acc.name}}</b>
+                <div id="hotel-address" class="normal-text" style="color: var(--color-gray-100); margin-top: 1%;">{{acc.address.streetAndNumber}}, {{acc.address.city}} {{acc.address.postalCode}}, {{acc.address.country}}</div>
+                  
+                <div class="reviews-frame" >
+                  <div class="stars-container">
+                    <span class="star" *ngFor="let star of generateStars(roundHalf((acc?.averageRating ?? 0)))">
+                        {{ star }}
+                    </span>
+                  </div>
+                </div>
+
+                <div  class="normal-text" style="color: var(--color-gray-100); margin-top: 20%;" >Check in: {{formattedStartDate}}</div>
+                <div  class="normal-text" style="color: var(--color-gray-100);">Check out: {{formattedEndDate}}</div>
+              </div>
+            </div>
+          </div>
+
+          <div id="priceDetails" class="description" style="margin-top: 15%; width: 100%; ">
+            <div class="container-title" style="background-color: var(--color-seagreen-100); ">
+              <img class="icon" alt="" src="../../../assets/public/cardtick-1.svg" style="width: 30px; height: 30px; margin-left: 5%;">
+              <b class="smaller-title" style="margin-right: 2%;">Price Details</b>
+            </div>
+            <div class="description-box">
+
+              <div class="in-line-box" style="margin-top: 5%;">
+                <div class="column-box">
+                  <div class="normal-text">{{nightNumber}} nights</div>
+                </div>
+                <div class="column-box">
+                  <div class="normal-text" style="text-align: right;">${{totalPrice}}</div>
+                </div>
+              </div>
+
+              <div class="in-line-box" style="margin-top: 5%;">
+                <div class="column-box">
+                  <div class="normal-text">Tax and service fees</div>
+                </div>
+                <div class="column-box">
+                  <div class="normal-text" style="text-align: right;">$0</div>
+                </div>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+
+              <div class="in-line-box" style="margin-top: 5%; ">
+                <div class="column-box">
+                  <div class="normal-text" style="font-size: var(--font-size-xl);">
+                    <b>Total</b>
+                  </div>
+                </div>
+                <div class="column-box">
+                  <div class="normal-text" style="text-align: right; font-size: var(--font-size-xl);">
+                    <b>${{totalPrice}}</b>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <app-shorter-footer></app-shorter-footer>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,221 @@
+.reservation {
+  position: relative;
+  background-color: var(--color-whitesmoke-100);
+  min-height: 100vh;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  font-size: var(--font-size-2xs);
+  color: var(--gray-2);
+  font-family: var(--font-sansation); 
+  display: flex;
+  flex-direction: column;
+}
+.main-data-box{
+  width: 100%;
+  height: auto;
+  display: flex;
+  position: relative;
+  font-size: var(--font-size-base);
+  color: var(--gray-1);
+  margin-bottom: 5%;
+  margin-top: 5%;
+}
+.right-container{
+  margin-left: 5%;
+  position: relative;
+  width: 75%;
+}
+.title-text{
+  font-size: var(--font-size-13xl);
+  letter-spacing: 0.01em;
+  font-family: var(--font-adamina);
+  color: var(--color-gray-300);
+}
+.info-container{
+  font-size: var(--font-inherit);
+  letter-spacing: 0.02em;
+  font-family: var(--font-inherit);
+  color: var(--gray-1);
+}
+.special-text{
+  color: var(--blue-1);
+  cursor: pointer;
+}
+.reviews-frame {
+  display: flex;
+  height: 30px;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.stars-container,
+.reviews-average {
+  height: 100%;
+  width: 100%;
+  font-size: var(--font-size-xl);
+}
+.stars-container {
+  color: var(--blue-1);
+  margin-right: 5px;
+}
+.star {
+  display: inline-block;
+  margin-right: 5px;
+}
+.container-title{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: var(--br-7xs) var(--br-7xs) 0 0;
+  height: 60px;
+  width: 100%;
+  color: white;
+  background-color: var(--blue-1);
+}
+.icon{
+  margin-left: 2%;
+  margin-right: 2%;
+  width: 30px;
+  height: 30px;
+}
+.smaller-title{
+  font-size:var(--font-size-xl);
+}
+.normal-text{
+  font-size:var(--font-size-mini);
+  word-wrap: break-word;
+  line-height: 1.3;
+}
+.description{
+  display: block;
+  width: 90%;
+  height: auto;
+  border-radius: var(--br-7xs);
+  background-color: var(--color-white);
+}
+.description-box{
+  padding-top: 5%;
+  padding-bottom: 5%;
+  padding-left: 5%;
+  padding-right: 5%;
+  width: 80%;
+}
+.left-container{
+  position: relative;
+  width: 25%;
+  margin-right: 5%; 
+  margin-top: 6%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.complete-booking{
+  position: relative;
+  letter-spacing: 0.02em;
+  line-height: 18px;
+}
+.line{
+  margin-bottom: 10px;
+  width: 100%;
+  height: 1px;
+}
+.complete-booking-wrapper {
+  cursor: pointer;
+  margin-top: 5%;
+  margin-left: 15%;
+  position: relative;
+  border-radius: var(--br-7xs);
+  background-color: var(--blue-1);
+  width: 80%;
+  height: 37px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-9xs) var(--padding-5xs);
+  box-sizing: border-box;
+  font-size: var(--font-size-smi);
+  color: var(--color-white);
+}
+.input-frame-address{
+  width: 22%;
+  margin-right: 3%;
+  align-items: center;
+}
+input {
+  border: none;
+  outline: none;
+  background: none;
+  width: 100%;
+  font-family: var(--font-adamina);
+  font-size: var(--font-size-mini);
+}
+.input-frame-names {
+    height: 44px;
+    margin-bottom: 1%;
+    margin-top: 1.5%;
+    border-radius: var(--br-9xs);
+    background-color: var(--gray-6);
+    width: 95%;
+    display: flex;
+    flex-direction: row;
+    padding: var(--padding-2xs) var(--padding-xs) var(--padding-xs);
+    box-sizing: border-box;
+    color: var(--gray-6);
+}
+.in-line-box{
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.column-box{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+.checkbox-notification{
+  width: 20px;
+}
+.hotel-box{
+  margin-right: 2%;
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+  font-family: var(--font-adamina);
+  width: 100%;
+  height: 400px;
+}
+.hotel-image{
+  border-top-right-radius: var(--br-3xs);
+  border-top-left-radius: var(--br-3xs);
+  width: 100%;
+  max-height: 40%;
+  min-height: 40%;
+  background-color: white;
+}
+.hotel-data{
+  width: 100%;
+  height: 60%;
+  position: relative;
+  border-bottom-right-radius: var(--br-3xs);
+  border-bottom-left-radius: var(--br-3xs);
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.text-hotel-box{
+  width: 90%;
+  margin-left: 5%;
+}
+.hotel-smaller-text{
+  align-self: stretch;
+  color: var(--color-gray-100);
+  font-size: var(--body-small-bold-size);
+}
+.hotel-price{
+  display: flex;
+}

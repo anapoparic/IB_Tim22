@@ -1,0 +1,35 @@
+<div class="main">
+  <div class="main-canvas">
+    <div class="left-chart">
+      <canvas baseChart
+        [datasets]="chartEarningsData"
+        [labels]="chartLabels"
+        [options]="chartOptions"
+        [legend]="chartLegend"
+        [type]="chartType"
+        #leftChart>
+      </canvas>
+    </div>
+  
+    <div class="right-chart">
+      <canvas baseChart
+        [datasets]="chartReservationsData"
+        [labels]="chartLabels"
+        [options]="chartOptions"
+        [legend]="chartLegend"
+        [type]="chartType"
+        #rightChart>
+      </canvas>
+    </div>
+  </div>
+  <div class="title-container">
+    <div class="left-title">
+      <b class="text">Profit Chart</b>
+    </div>
+    <div class="right-title">
+      <b class="text">Reservation Chart</b>
+    </div>
+  </div>
+</div>
+
+

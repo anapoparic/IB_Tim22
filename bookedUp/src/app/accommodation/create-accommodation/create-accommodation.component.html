@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div class="acc-details">
+
+      <app-nav-bar></app-nav-bar>
+
+      <div id="apartment-images" class="images-container">
+          <div class="image-box">
+            <ng-container *ngIf="pictureUrls.length > 0; else defaultImage">
+              <div *ngFor="let url of pictureUrls; let i = index" [class.active]="i === currentIndex">
+                <img class="room-image" alt="" [src]="url" (click)="nextImage()" />
+              </div>
+            </ng-container>
+            <ng-template #defaultImage>
+              <img class="room-image" src="../../assets/public/rectangle-281@2x.png" alt="" />
+            </ng-template>
+          </div>
+
+          <div class="in-line-box" style="margin-top: 3%;">
+              <input type="file" id="fileInput" style="display: none" (change)="handleFileInputChange($event)" />
+              <button class="button-container" (click)="uploadNewImage()"  style="background-color: var(--color-seagreen-100); width: 30%; margin-right: 10%; margin-left: 15%;">
+                  <b>Add New Image</b>
+              </button>
+              <button class="button-container" (click)="deleteImage()"  style="background-color: var(--color-firebrick); width: 30%;">
+                  <b>Delete Image</b>
+              </button>
+          </div>
+    </div>
+
+      <div class="main-data-box">
+        <div id="right-data" class="right-container">
+          <div class="inputs-data">
+            <div class="inputs-box">
+
+              <b class="title-text">Accommodation Name</b>
+              <div id="name-input" class="normal-text">
+                <input [(ngModel)]="name" type="text" placeholder='Enter name of accommodation here..'/>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+              <b class="title-text">Address</b>
+              <div id="address-input">
+                <div class="in-line-box">
+                  <input [(ngModel)]="addressStreet" class="normal-text" type="text" placeholder='Enter street and number here..' style="margin-right: 10%;"/>
+                  <input [(ngModel)]="city" class="normal-text" type="text" placeholder='Enter city here..'/>
+                </div>
+                <div class="in-line-box">
+                  <input [(ngModel)]="postalCode" type="text" placeholder='Enter postal code here..' pattern="\d*" style="margin-right: 10%;"/>
+                  <input [(ngModel)]="country" class="normal-text" type="text" placeholder='Enter country here..'/>
+                </div>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+              <b class="title-text">Price</b>
+              <div id="price-inputs" class="in-line-box">
+                <div class="normal-text" style="width: 30% !important;">
+                  <input [(ngModel)]="defaultPrice" type="number" placeholder='Enter price here..' pattern="\d*" [readonly]="isInputReadOnly"/>
+                </div>
+                <div class="in-line-box" style="width: 70% !important; justify-content: right;">
+                  <input type="checkbox" id="perNight" name="amenities" class="icon" [(ngModel)]="perNightChecked" (change)="handlePerNightChange()" />
+                  <div class="normal-text" style="margin-right: 10%;">Per Night</div>
+                  <input type="checkbox" id="perGuest" name="amenities" class="icon" [(ngModel)]="perGuestChecked" (change)="handlePerGuestChange()" />
+                  <div class="normal-text">Per Guest</div>
+                </div>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+              <b class="title-text">Overview</b>
+              <div id="description-input" class="normal-text">
+                <input [(ngModel)]="description" type="text" placeholder='Enter description for accommodation here..' style="height: 100px;"/>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+              <b class="title-text">Facilities</b>
+              <div id="facilities" class="in-line-box" style="margin-top: 10px;" *ngFor="let amenity of amenitiesList;">
+                <input type="checkbox" name="facilities" class="icon" (change)="toggleAmenity(amenity)"/>
+                <div class="normal-text">{{amenity}}</div>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+              <b class="title-text">Accommodaton Type</b>
+              <div id="accommodationType" class="in-line-box" style="margin-top: 10px;"  *ngFor="let accType of accTypeList;">
+                <input type="checkbox" name="accommodationType" class="icon" [(ngModel)]="accTypeChecked[accType]" (change)="handleAccTypeChange(accType)" />
+                <div class="normal-text">{{accType}}</div>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+              <div class="in-line-box">
+                <b class="title-text" style="margin-right: 10%;">Minimum Guests</b>
+                <div class="normal-text" style="width: 60%;">
+                  <input [(ngModel)]="minimumPrice" type="number" placeholder='Enter minimum number of guests here..' pattern="\d*" />
+                </div>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+              <div class="in-line-box">
+                <b class="title-text" style="margin-right: 10%;">Maximum Guests</b>
+                <div class="normal-text" style="width: 60%;">
+                  <input [(ngModel)]="maximumPrice" type="number" placeholder='Enter maximum number of guests here..' pattern="\d*" />
+                </div>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+              <div class="in-line-box">
+                <b class="title-text" style="margin-right: 10%;">Cancellation: </b>
+                <div class="normal-text" style="width: 60%;">
+                  <input [(ngModel)]="cancellation" type="number" placeholder='Enter cancellation dead line..' pattern="\d*" />
+                </div>
+              </div>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+              <div id="accept-reservarion-input" class="in-line-box">
+                <b class="title-text" style="margin-right: 5%;">Automatically Accept Reservations</b>
+                <label class="toggle">
+                  <input type="checkbox" [(ngModel)]="acceptReservations">
+                  <span class="slider"></span>
+                  <span class="labels" data-on="ON" data-off="OFF"></span>
+                </label>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div id="left-data" class="left-container">
+          <app-calendar #calendarRef
+            [defaultPrice]=defaultPrice
+            [customPricesInput]=accPriceChange
+          ></app-calendar>
+          <button class="button-container" (click)="addDateRange()"  style="background-color: var(--gray-2);">
+            <b>Add</b>
+          </button>
+          <button class="button-container" (click)="deleteDateRange()"  style="background-color: var(--gray-2);">
+            <b>Delete</b>
+          </button>
+
+
+          <div class="normal-text">Select a date range during which you will have reservations for this accommodation.</div>
+
+          <div class="normal-text">Availaiblity: </div>
+          <div class="normal-text" *ngIf="addedDates.length > 0">
+            <ul>
+              <li *ngFor="let date of addedDates">
+                {{ date.start }} to {{ date.end }}
+              </li>
+            </ul>
+          </div>
+
+          <div class="normal-text">If you wish to set a different price for a specific date range, please select the range and enter the desired price below.</div>
+          <div class="normal-text">
+            <input [(ngModel)]="customPrice" type="number" placeholder='Enter price here..' pattern="\d*" class="custom-input"/>
+          </div>
+          <button class="button-container" (click)="applyCustomPrice()" style="background-color: var(--gray-2);">
+            <b>Apply Custom Price</b>
+          </button>
+          <button class="button-container" (click)="saveAccommodation()">
+            <b>Add new accommodation</b>
+          </button>
+        </div>
+      </div>
+
+      <app-shorter-footer></app-shorter-footer>
+
+    </div>
+  </body>
+</html>

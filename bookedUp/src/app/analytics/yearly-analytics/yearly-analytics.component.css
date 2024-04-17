@@ -1,0 +1,48 @@
+.main{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 15%;
+    width: 70%;
+    max-height: 100%;
+}
+.main-canvas{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 86%;
+}
+.left-chart,
+.right-chart{
+    width: 40%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+.left-chart{
+    margin-right: 20%;
+}
+.title-container{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    height: 8%;
+}
+.left-title,
+.right-title{
+    width: 40%;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    margin-bottom: 2%;
+}
+.left-title{
+    margin-right: 20%;
+}
+.text{
+  font-size: var(--font-size-mini);
+  font-family: var(--font-sansation);
+  color: var(--color-gray-300);
+}

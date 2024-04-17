@@ -1,0 +1,276 @@
+.sign-in6 {
+    position: absolute;
+    top: 160px;
+    left: 519px;
+    font-size: var(--font-size-9xl);
+    font-family: var(--font-adamina);
+    text-align: center;
+    display: inline-block;
+    width: 401px;
+    height: 32px;
+}
+.continue-with-email2 {
+    position: relative;
+    letter-spacing: 0.02em;
+    line-height: 20px;
+}
+.continue-with-email-frame {
+    position: absolute;
+    top: 448px;
+    left: 520px;
+    border-radius: var(--br-7xs);
+    background-color: var(--blue-1);
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-xs) var(--padding-lg);
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: var(--font-size-mini);
+    color: var(--color-white);
+}
+.email-address19 {
+    position: absolute;
+    top: 232px;
+    left: 520px;
+    letter-spacing: 0.02em;
+    line-height: 140%;
+}
+.register5 {
+    color: var(--blue-1);
+}
+.dont-have-an-container {
+    top: 523px;
+    left: 520px;
+    font-size: var(--font-size-base);
+    text-align: center;
+    display: inline-block;
+    width: 400px;
+    cursor: pointer;
+    color: var(--gray-2);
+}
+.dont-have-an-container,
+.forgot-password1,
+.password6 {
+    position: absolute;
+    letter-spacing: 0.02em;
+}
+.password6 {
+    top: 320px;
+    left: 520px;
+    line-height: 140%;
+}
+.forgot-password1 {
+    top: 408px;
+    left: 738px;
+    display: flex;
+    color: var(--blue-1);
+    text-align: right;
+    align-items: center;
+    width: 182px;
+    height: 20px;
+    cursor: pointer;
+}
+.group-child117,
+.keep-me-signed {
+    position: absolute;
+    top: 0;
+    height: 20px;
+}
+.keep-me-signed {
+    left: 28px;
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    width: 182px;
+}
+.keep-me-signed-in-parent {
+    position: absolute;
+    top: 408px;
+    left: 520px;
+    width: 210px;
+    height: 20px;
+    color: var(--gray-2);
+}
+
+.group-child117 {
+    position: absolute;
+    left: 0;
+}
+
+.email-address21 {
+    position: relative;
+    letter-spacing: 0.02em;
+    line-height: 140%;
+}
+.email-address20 {
+    position: absolute;
+    top: 256px;
+    left: 520px;
+    border-radius: var(--br-9xs);
+    background-color: var(--gray-6);
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--padding-2xs) var(--padding-xs) var(--padding-xs);
+    box-sizing: border-box;
+    font-size: var(--font-size-mini);
+    color: var(--gray-6);
+}
+.enter-password4 {
+    flex: 1;
+    position: relative;
+    letter-spacing: 0.02em;
+    line-height: 140%;
+}
+.eye-1-icon4 {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+.password7 {
+    position: absolute;
+    top: 344px;
+    left: 520px;
+    border-radius: var(--br-9xs);
+    background-color: var(--gray-6);
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--padding-2xs) var(--padding-xs) var(--padding-xs);
+    box-sizing: border-box;
+    gap: var(--gap-3xs);
+    font-size: var(--font-size-mini);
+    color: var(--gray-6);
+}
+.logo-with-slogan-214 {
+    position: absolute;
+    top: 28px;
+    left: 42px;
+    width: 268px;
+    height: 148px;
+    object-fit: cover;
+}
+.sign-in5 {
+    position: relative;
+    background-color: var(--color-white);
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+    overflow: hidden;
+    text-align: left;
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-400);
+    font-family: var(--font-sansation);
+}
+
+.email-address20,
+.password7 {
+    position: relative;
+    width: 400px;
+    background-color: var(--gray-6);
+    border-radius: var(--br-9xs);
+}
+
+.email-address21,
+.enter-password4,
+.email-address20 input,
+.password7 input {
+    font-family: var(--font-adamina);
+    font-size: var(--font-size-mini);
+    color: var(--gray-2);
+}
+
+.email-address20 input,
+.password7 input {
+    width: 100%;
+    border: none;
+    background-color: var(--gray-6);
+    outline: none; /* Remove default input focus outline */
+}
+
+.dont-have-an-container,
+.forgot-password1,
+.keep-me-signed-in-parent {
+    position: absolute;
+    letter-spacing: 0.02em;
+    z-index: 10; /* Dodajte ovu liniju kako biste bili sigurni da su ovi elementi iznad ostalih */
+}
+
+.password6 {
+    top: 320px;
+    left: 520px;
+    line-height: 140%;
+}
+
+.forgot-password1 {
+    top: 408px;
+    left: 805px;
+    display: flex;
+    color: var(--blue-1);
+    text-align: right;
+    align-items: center;
+    width: 182px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.keep-me-signed-in-parent {
+    top: 408px;
+    left: 520px;
+    width: 210px;
+    height: 20px;
+    color: var(--gray-2);
+}
+
+.password7 {
+    position: absolute;
+    top: 395px; /* Pomerite na odgovarajuću visinu iznad */
+    left: 520px;
+    margin-top: -50px; /* Dodajte negativnu marginu */
+    border-radius: var(--br-9xs);
+    background-color: var(--gray-6);
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    padding: var(--padding-2xs) var(--padding-xs) var(--padding-xs);
+    box-sizing: border-box;
+    gap: var(--gap-3xs);
+    font-size: var(--font-size-mini);
+    color: var(--gray-6);
+}
+
+
+/*!* Dodajte stil za required stanje za email input *!*/
+/*.email-address20 input:required {*/
+/*    border: 2px solid red; !* Prilagodite boju i debljinu granice prema vašim potrebama *!*/
+/*}*/
+
+/*!* Dodajte stil za required stanje za password input *!*/
+/*.password7 input:required {*/
+/*    border: 2px solid red; !* Prilagodite boju i debljinu granice prema vašim potrebama *!*/
+/*}*/
+
+.required-mark {
+    color: red;
+    margin-left: 2px;
+    font-size: 14px;
+    opacity: 0; /* Inicijalno postavite opacity na 0 kako bi bio skriven */
+    transition: opacity 0.3s ease-in-out; /* Dodajte tranziciju za glatko prikazivanje/skrivanje */
+}
+
+.required-active .required-mark {
+    opacity: 1; /* Kada je required-active klasa prisutna, postavite opacity na 1 da biste prikazali znak */
+}
+
+

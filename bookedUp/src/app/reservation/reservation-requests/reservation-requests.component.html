@@ -1,0 +1,101 @@
+<html>
+<body>
+    <div class="amenities-admin">
+
+        <div class="amenities-admin-child"></div>
+        <app-nav-bar></app-nav-bar>
+
+        <div id="sort-bar" class="sort-bar">
+            <div class="all-reservation" [ngClass]="{ 'clicked': selectedClass === 'all-reservation' }" (click)="getHostsReservations()">
+                All Reservations
+            </div>
+            <div id="waitingForApproval" class="waiting-reservation" [ngClass]="{ 'clicked': selectedClass === 'waiting-reservation' }" (click)="getHostsReservationsByStatus('waiting-reservation', ReservationStatus.Created)">
+                Waiting For Approval
+            </div>
+            <div class="accepted-reservation" [ngClass]="{ 'clicked': selectedClass === 'accepted-reservation' }" (click)="getHostsReservationsByStatus('accepted-reservation', ReservationStatus.Accept)">
+                Accepted
+            </div>
+            <div class="rejected-reservation" [ngClass]="{ 'clicked': selectedClass === 'rejected-reservation' }" (click)="getHostsReservationsByStatus('rejected-reservation', ReservationStatus.Reject)">
+                Rejected
+            </div>
+            <div class="cancelled-reservation" [ngClass]="{ 'clicked': selectedClass === 'cancelled-reservation' }" (click)="getHostsReservationsByStatus('cancelled-reservation', ReservationStatus.Cancelled)">
+                Cancelled
+            </div>
+            <div class="finished-reservation" [ngClass]="{ 'clicked': selectedClass === 'finished-reservation' }" (click)="getHostsReservationsByStatus('finished-reservation', ReservationStatus.Completed)">
+                Completed
+            </div>
+
+            <div class="search-bar">
+                <input
+                        type="text"
+                        [(ngModel)]="searchText"
+                        placeholder="Search Reservations..."
+                        (input)="searchReservations()"
+                />
+            </div>
+        </div>
+
+
+
+        <div class="main-content" id="main-content">
+          <b class="no-text" *ngIf="(reservations | async)?.length == 0">NO RESULTS</b>
+          <div *ngFor="let reservation of reservations | async" class="acc-frame" [class.created-status]="reservation.status === 'CREATED'"
+                                                                                  [class.cancelled-status]="reservation.status === 'CANCELLED'"
+                                                                                  [class.rejected-status]="reservation.status === 'REJECTED'"
+                                                                                  [class.accepted-status]="reservation.status === 'ACCEPTED'">
+              <img
+                class="accommodation-image"
+                alt=""
+                [src]="getPhotoUrl(reservation?.accommodation?.id)"
+
+              />
+
+              <div class="left-data">
+                <div class="top-data-box">
+                   <b class="title">{{ reservation.accommodation.name }}</b>
+                  <div class="reviews-frame">
+                    <div class="stars-container">
+                            <span class="star" *ngFor="let star of generateStars(roundHalf((reservation?.accommodation?.averageRating ?? 0) ))">
+                                {{ star }}
+                            </span>
+                    </div>
+                      <div class="reviews55" *ngIf="reservation.accommodation">{{ roundHalf(reservation.accommodation.averageRating ? reservation.accommodation.averageRating  : 0) }}</div>
+                  </div>
+
+                  <b class="status-text" [class.created-status-text]="reservation.status === 'CREATED'"
+                                        [class.accepted-status-text]="reservation.status === 'ACCEPTED'"
+                                        [class.cancelled-status-text]="reservation.status === 'CANCELLED'"
+                                        [class.rejected-status-text]="reservation.status === 'REJECTED'">{{ reservation.status }}</b>
+                </div>
+
+                <div class="bottom-data-box">
+                    <b class="per-night">{{ reservation.totalPrice }}$</b>
+                    <div class="includes-taxes">Check In: {{ reservation.startDate| date: 'EEEE, MMMM d, y' }}</div>
+                    <div class="includes-taxes">Check Out: {{ reservation.endDate | date: 'EEEE, MMMM d, y' }}</div>
+                </div>
+              </div>
+
+              <div class="right-buttons">
+                <!-- Prikaži dugmad Accept i Reject ako je status 'CREATED' -->
+                <div *ngIf="reservation.status === 'CREATED'" class="accept-button" id="accept-button" (click)="acceptReservation(reservation?.id)">
+                  <b class="button-text">Accept</b>
+                </div>
+                <div *ngIf="reservation.status === 'CREATED'" class="reject-button" id="reject-button" (click)="rejectReservation(reservation?.id)">
+                  <b class="button-text">Reject</b>
+                </div>
+
+                <div class="view-details-button" id="view-details-button" routerLink="/reservation-details/{{reservation.id}}">
+                  <b class="button-text">View Details</b>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+
+
+      <app-shorter-footer></app-shorter-footer>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div class="manage-account-admin">
+  <app-nav-bar></app-nav-bar>
+
+  <div class="main-container" [formGroup]="updateForm!">
+    <div class="left-container">
+      <b class="manage-title-text">Manage Account</b>
+      <div id="" class="in-line-box" style="margin-top: 5%;">
+        <div class="left-box">
+          <b class="title-text">First Name:</b>
+        </div>
+        <div class="right-box">
+          <div class="input-frame">
+<!--            <input type="text" [(ngModel)]="loggedUser.firstName" id="firstNameInput">-->
+              <input type="text" formControlName="firstName" >
+          </div>
+        </div>
+      </div>
+
+      <div id="firstName" class="in-line-box">
+        <div class="left-box">
+        <b class="title-text">Last Name:</b>
+        </div>
+        <div class="right-box">
+          <div class="input-frame">
+<!--            <input type="text" [(ngModel)]="loggedUser.lastName" id="lastNameInput">-->
+            <input type="text" formControlName="lastName" >
+
+          </div>
+        </div>
+      </div>
+
+      <div id="email" class="in-line-box">
+        <div class="left-box">
+          <b class="title-text">Email:</b>
+        </div>
+        <div class="right-box">
+          <div class="input-frame">
+            <input type="text" formControlName="email" [readonly]="true">
+          </div>
+        </div>
+      </div>
+
+
+      <div id="emailAddress" class="in-line-box">
+        <div class="left-box">
+          <b class="title-text">Password</b>
+        </div>
+        <div class="right-box">
+          <div class="password-container">
+<!--              <input-->
+<!--                      id="passwordInput"-->
+<!--                      type="{{ isPasswordVisible ? 'text' : 'password' }}"-->
+<!--                      class="passwordInput"-->
+
+<!--                      [(ngModel)]="loggedUser.password"-->
+<!--              />-->
+            <input
+                    id="passwordInput"
+                    type="{{ isPasswordVisible ? 'text' : 'password' }}"
+                    class="passwordInput"
+
+                    formControlName="password"
+            />
+              <img
+                      class="icon-password"
+                      alt="Toggle Password Visibility"
+                      src="../../assets/public/eye-1.svg"
+                      (click)="togglePasswordVisibility()"
+              />
+          </div>
+        </div>
+      </div>
+
+      <div id="phone" class="in-line-box">
+        <div class="left-box">
+          <b class="title-text">Mobile Phone:</b>
+        </div>
+        <div class="right-box">
+          <div class="input-frame">
+            <input type="number" formControlName="phone" >
+<!--              <input type="number" [(ngModel)]="loggedUser.phone" id="phoneInput">-->
+          </div>
+        </div>
+      </div>
+
+      <div id="address" class="in-line-box" style="margin-top: 5%;">
+        <div class="left-box">
+          <b class="title-text">Address</b>
+        </div>
+        <div class="right-box">
+          <div class="input-frame">
+<!--            <input type="text" [(ngModel)]="loggedUser.address.streetAndNumber" id="streetAndNumberInput">-->
+            <input type="text" formControlName="streetAndNumber" >
+
+          </div>
+          <div class="input-frame">
+<!--            <input type="text" [(ngModel)]="loggedUser.address.city" id="cityInput">-->
+            <input type="text" formControlName="city" >
+          </div>
+          <div class="input-frame">
+<!--            <input type="text" [(ngModel)]="loggedUser.address.postalCode" id="postalCodeInput">-->
+            <input type="text" formControlName="postalCode" >
+          </div>
+          <div class="input-frame">
+<!--            <input type="text" [(ngModel)]="loggedUser.address.country" id="countryInput">-->
+            <input type="text" formControlName="country" >
+          </div>
+        </div>
+      </div>
+
+<!--      &lt;!&ndash; manage-profile.component.html &ndash;&gt;-->
+
+<!--      <div id="createdNotification" class="in-line-box" style="margin-top: 5%;" *ngIf="loggedUser && loggedUser.role === 'HOST'">-->
+<!--        <div class="left-box-email">-->
+<!--          <b class="title-text">New Reservation Notifications</b>-->
+<!--        </div>-->
+<!--        <div class="right-box-email">-->
+<!--          <label class="toggle">-->
+<!--            <input type="checkbox" formControlName="reservationCreatedNotificationEnabled">-->
+<!--            <span class="slider"></span>-->
+<!--            <span class="labels" data-on="ON" data-off="OFF"></span>-->
+<!--          </label>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div id="cancelledNotification" class="in-line-box" style="margin-top: 5%;" *ngIf="loggedUser && loggedUser.role === 'HOST'">-->
+<!--        <div class="left-box-email">-->
+<!--          <b class="title-text">Cancelled Reservation Notifications</b>-->
+<!--        </div>-->
+<!--        <div class="right-box-email">-->
+<!--          <label class="toggle">-->
+<!--            <input type="checkbox" formControlName="cancellationNotificationEnabled">-->
+<!--            <span class="slider"></span>-->
+<!--            <span class="labels" data-on="ON" data-off="OFF"></span>-->
+<!--          </label>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div id="hostratingNotification" class="in-line-box" style="margin-top: 5%;" *ngIf="loggedUser && loggedUser.role === 'HOST'">-->
+<!--        <div class="left-box-email">-->
+<!--          <b class="title-text">Host Rating Notifications</b>-->
+<!--        </div>-->
+<!--        <div class="right-box-email">-->
+<!--          <label class="toggle">-->
+<!--            <input type="checkbox" formControlName="hostRatingNotificationEnabled">-->
+<!--            <span class="slider"></span>-->
+<!--            <span class="labels" data-on="ON" data-off="OFF"></span>-->
+<!--          </label>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div id="accRatingNotification" class="in-line-box" style="margin-top: 5%;" *ngIf="loggedUser && loggedUser.role === 'HOST'">-->
+<!--        <div class="left-box-email">-->
+<!--          <b class="title-text">Accommodation Rating Notifications</b>-->
+<!--        </div>-->
+<!--        <div class="right-box-email">-->
+<!--          <label class="toggle">-->
+<!--            <input type="checkbox" formControlName="accommodationRatingNotificationEnabled">-->
+<!--            <span class="slider"></span>-->
+<!--            <span class="labels" data-on="ON" data-off="OFF"></span>-->
+<!--          </label>-->
+<!--        </div>-->
+<!--      </div>-->
+
+<!--      <div id="emailNotification" class="in-line-box" style="margin-top: 5%;" *ngIf="loggedUser && loggedUser.role === 'GUEST'">-->
+<!--        <div class="left-box-email">-->
+<!--          <b class="title-text">Email Notifications</b>-->
+<!--        </div>-->
+<!--        <div class="right-box-email">-->
+<!--          <label class="toggle">-->
+<!--            <input type="checkbox" formControlName="notificationEnable">-->
+<!--            <span class="slider"></span>-->
+<!--            <span class="labels" data-on="ON" data-off="OFF"></span>-->
+<!--          </label>-->
+<!--        </div>-->
+<!--      </div>-->
+
+      <div class="in-line-box">
+        <div class="left-box"></div>
+        <div class="right-box">
+          <div class="save-account-wrapper" id="save-button" style="margin-top: 5%;" (click)="updateUser()">
+            <b class="save-account">Save Edits</b>
+          </div>
+        </div>
+      </div>
+
+        <div class="in-line-box">
+            <div class="left-box"></div>
+            <div class="right-box">
+                <div class="delete-account-wrapper" id="delete-button" (click)="deleteUser()" *ngIf="loggedUser && (loggedUser.role === 'GUEST' || loggedUser.role === 'HOST')">
+                    <b class="delete-account">Delete Account</b>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <div class="right-container">
+        <img
+          class="profile-image"
+          alt=""
+          [src]="displayedImageUrl"
+        />
+
+        <input type="file" #fileInput accept="image/*" class="input-image" style="display: none;">
+        <button class="custom-button" (click)="handleFileButtonClick()">Choose Image</button>
+
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+
+  <!--  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
+  <!-- <div
+          id="deleteAccountNotification"
+          class="popup-overlay"
+          style="display: none"
+  >
+    <div class="delete-account-notification-">
+      <div class="warning">WARNING!</div>
+      <div class="please-be-aware">
+        Please be aware that if you proceed with deleting your account, your
+        entire history will be permanently removed!
+      </div>
+      <div class="delete-wrapper" id="warning-delete-button">
+        <b class="delete">DELETE</b>
+      </div>
+      <div class="x-container" id="popupframeContainer1">
+        <b class="delete">X</b>
+      </div>
+      <img
+              class="d-digital-marketing-class-11"
+              alt=""
+              src="../../assets/public/3d-digital-marketing-class-1-1@2x.png"
+      />
+    </div>
+  </div> -->
+
+</div>
+</body>
+</html>

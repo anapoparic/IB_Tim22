@@ -1,0 +1,232 @@
+
+.accommodations-host {
+  position: relative;
+  background-color: var(--color-whitesmoke-100);
+  min-height: 100vh;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  font-size: var(--font-size-2xs);
+  color: var(--gray-2);
+  font-family: var(--font-sansation);
+  flex-direction: column;
+  display: flex;
+}
+.accommodations-host-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--color-white);
+  width: 100%;
+  height: 100px;
+}
+.sort-bar {
+  position: relative;
+  justify-content: center;
+  left: 0;
+  width: 100%;
+  background-color: var(--color-white);
+  height: 48px;
+  font-size: var(--font-size-base);
+  color: var(--gray-1);
+}
+.no-text{
+  margin-top: 10%;
+  margin-left: 44%;
+  letter-spacing: 0.01em;
+  color: var(--color-gray-100);
+  font-size: var(--font-size-9xl);
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+.active-accommodations {
+  color: var(--blue-1);
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 16px;
+  left: 122px;
+  letter-spacing: 0.02em;
+}
+.main-content{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 5%;
+  padding-bottom: 50px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  font-size: var(--font-size-base);
+}
+.acc-frame {
+  position: relative;
+  left: 15%;
+  border-radius: var(--br-8xs);
+  background-color: var(--color-white);
+  border: 1px solid var(--gray-5);
+  box-sizing: border-box;
+  width: 70%;
+  height: 240px;
+  display: flex;
+  margin-bottom: 20px;
+}
+.rejected-status {
+  background-color: rgba(255, 233, 234, 0.42);
+}
+.created-status,
+.changed-status{
+  background-color: #ffffe0;
+}
+.accommodation-image {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
+  border-radius: var(--br-8xs);
+  width: 25%;
+  height: auto;
+  object-fit: cover;
+}
+.left-data{
+  position: absolute;
+  left: 35%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: var(--br-8xs);
+  width: 50%;
+  height: 80%;
+}
+.top-data-box{
+  position: absolute;
+  height: 70%;
+  width: 100%;
+}
+.bottom-data-box{
+  position: absolute;
+  top: 70%;
+  height: 30%;
+  width: 100%;
+}
+.title,
+.reviews,
+.group-icon,
+.location-1-icon,
+.includes-taxes,
+.per-night {
+  margin: 0;
+  letter-spacing: 0.01em;
+  color: var(--color-gray-300);
+}
+.title{
+  font-size: var(--font-size-xl);
+}
+.reviews-frame {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.stars-container,
+.reviews-average {
+  font-size: var(--font-size-lg);
+}
+.stars-container {
+  color: #9e8d5f;
+}
+.star {
+  display: inline-block;
+  margin-right: 2px;
+}
+.location-text {
+  font-size: var(--font-size-sm);
+}
+.reviews-average,
+.location-text {
+  margin-left: 2px;
+}
+.location-frame{
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.location-icon {
+  width: 20px;
+  height: 20px;
+}
+.location-text {
+  color: var(--gray-1);
+}
+.status-text,
+.created-status-text,
+.changed-status-text
+{
+  color: var(--gray-1);
+}
+.active-status-text{
+  color: #037940;
+}
+
+.rejected-status-text{
+  color: var(--color-firebrick);
+
+}
+
+.created-status-text,
+.changed-status-text{
+  color: #FBBC04;
+}
+.right-buttons{
+  top: 20%;
+  left: 80%;
+  position: absolute;
+  border-radius: var(--br-8xs);
+  flex-direction: column;
+  width: 15%;
+  height: 100%;
+}
+
+.view-details-button {
+  cursor: pointer;
+  border-radius: var(--br-7xs);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-3xs) var(--padding-lg);
+  box-sizing: border-box;
+  font-size: var(--font-size-mini);
+  color: var(--color-white);
+  background-color: var(--color-seagreen-100);
+  margin-bottom: 10px;
+}
+.view-details-button{
+  background-color: var(--blue-1);
+}
+.button-text {
+  position: relative;
+  letter-spacing: 0.02em;
+  line-height: 20px;
+}
+.add-new-container{
+
+  position: relative;
+  border-radius: var(--br-7xs);
+  background-color: var(--blue-1);
+  width: 250px;
+  display: flex;
+  left:41.5%;
+  margin-bottom: 5%;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-3xs) var(--padding-lg);
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  font-size: var(--font-size-mini);
+  font-family: var(--font-sansation);
+  color: var(--color-white);
+}

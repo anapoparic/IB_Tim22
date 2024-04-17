@@ -1,0 +1,316 @@
+
+.amenities-admin {
+  position: relative;
+  background-color: var(--color-whitesmoke-100);
+  min-height: 100vh;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  font-size: var(--font-size-2xs);
+  color: var(--gray-2);
+  font-family: var(--font-sansation);
+  flex-direction: column;
+  display: flex;
+}
+.amenities-admin-child {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--color-white);
+  width: 100%;
+  height: 100px;
+}
+.sort-bar {
+    position: relative;
+    justify-content: center;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-white);
+    height: 48px;
+    font-size: var(--font-size-base);
+    color: var(--gray-1);
+}
+
+.search-bar,
+.all-reservation,
+.waiting-reservation,
+.accepted-reservation,
+.rejected-reservation,
+.cancelled-reservation,
+.finished-reservation {
+    margin-top: 1%;
+    cursor: pointer;
+    position: absolute;
+    left: 122px;
+    letter-spacing: 0.02em;
+}
+
+
+.waiting-reservation {
+    left: 270px;
+}
+.accepted-reservation {
+    left: 445px;
+}
+.rejected-reservation {
+    left: 538px;
+}
+.cancelled-reservation {
+    left: 625px;
+}
+.finished-reservation {
+    left: 715px;
+}
+
+
+.search-bar{
+    left:1180px;
+
+}
+.clicked {
+    color: var(--blue-1);
+    font-weight: bold;
+}
+.main-content{
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin-top: 5%;
+  padding-bottom: 50px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  font-size: var(--font-size-base);
+}
+.acc-frame,
+.created-status,
+.rejected-status,
+.accepted-status,
+.cancelled-status,
+.completed-status {
+  position: relative;
+  left: 15%;
+  border-radius: var(--br-8xs);
+  background-color: #FFFFFF;
+  border: 1px solid #E0E0E0;
+  box-sizing: border-box;
+  width: 70%;
+  height: 240px;
+  display: flex;
+  margin-bottom: 20px;
+}
+/*.accepted-status {*/
+/*  background-color: rgba(90, 227, 161, 0.35);*/
+/*}*/
+.created-status {
+  background-color: #FFF9C1;
+}
+/*.cancelled-status{*/
+/*  background-color: rgba(47, 128, 237, 0.1);*/
+/*}*/
+/*.rejected-status{*/
+/*  background-color: rgba(255, 129, 129, 0.35);*/
+/*}*/
+.accommodation-image {
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  transform: translateY(-50%);
+  border-radius: var(--br-8xs);
+  width: 25%;
+  height: auto;
+  object-fit: cover;
+}
+.left-data{
+  position: absolute;
+  left: 35%;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: var(--br-8xs);
+  width: 50%;
+  height: 80%;
+}
+.top-data-box{
+  position: absolute;
+  height: 70%;
+  width: 100%;
+}
+.bottom-data-box{
+  position: absolute;
+  top: 70%;
+  height: 30%;
+  width: 100%;
+}
+.title,
+.reviews,
+.group-icon,
+.location-1-icon,
+.includes-taxes,
+.per-night {
+  margin: 0;
+  letter-spacing: 0.01em;
+  color: var(--color-gray-300);
+}
+.title{
+  font-size: var(--font-size-xl);
+}
+.reviews-frame {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.stars-container,
+.reviews-average {
+  font-size: var(--font-size-xl);
+}
+.stars-container {
+  color: #FBBC04;
+}
+.star {
+  display: inline-block;
+  margin-right: 2px;
+}
+.location-text {
+  font-size: var(--font-size-sm);
+}
+.reviews-average,
+.location-text {
+  margin-left: 2px;
+}
+.location-frame{
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.location-icon {
+  width: 20px;
+  height: 20px;
+}
+.location-text {
+  color: var(--gray-1);
+}
+.status-text,
+.created-status-text,
+.accepted-status-text,
+.rejected-status-text{
+  color: var(--gray-1);
+}
+.created-status-text{
+  color: #FBBC04;
+}
+.accepted-status-text{
+  color: #037940;
+}
+.cancelled-status-text{
+  color: #1823BC;
+}
+.rejected-status-text{
+  color: var(--color-firebrick);
+}
+.right-buttons{
+  top: 20%;
+  left: 80%;
+  position: absolute;
+  border-radius: var(--br-8xs);
+  flex-direction: column;
+  width: 15%;
+  height: 100%;
+}
+.accept-button,
+.accepted-button,
+.cancelled-button,
+.completed-button,
+.rejected-button,
+.reject-button,
+.view-details-button {
+  border-radius: var(--br-7xs);
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-3xs) var(--padding-lg);
+  box-sizing: border-box;
+  font-size: var(--font-size-mini);
+  color: var(--color-white);
+  background-color: var(--color-seagreen-100);
+  margin-bottom: 10px;
+}
+
+.rejected-button,
+.reject-button{
+  background-color: var(--color-firebrick);
+}
+
+.completed-button{
+  background-color: #FBBC04;
+}
+.cancelled-button{
+  background-color: #1823BC;
+}
+.view-details-button{
+  background-color: var(--blue-1);
+}
+.button-text {
+  position: relative;
+  letter-spacing: 0.02em;
+  line-height: 20px;
+}
+.footer-acc {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  background-color: var(--color-whitesmoke-400);
+  gap: var(--gap-7xs);
+  height: 41px;
+  z-index: 1;
+}
+.copyright-1-icon {
+  position: relative;
+  width: 16px;
+  height: 18px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.bookedup-2023 {
+  font-size: var(--font-size-sm);
+  margin-left: 5px;
+  position: relative;
+  height: 18px;
+  line-height: 140%;
+}
+
+input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+  border: none;
+  background: none;
+  font-family: var(--font-adamina);
+  font-size: var(--font-size-mini);
+}
+.no-text{
+  margin-top: 10%;
+  margin-left: 44%;
+  letter-spacing: 0.01em;
+  color: var(--color-gray-100);
+  font-size: var(--font-size-9xl);
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+/*.search-bar {*/
+/*  position: absolute;*/
+/*  top: 60px; !* Prilagodite ovu vrednost da biste postavili visinu pretrage *!*/
+/*  left: 25%; !* Postavljanje horizontalne pozicije *!*/
+/*  width: 50%; !* Postavljanje širine pretrage *!*/
+/*  z-index: 2; !* Postavljanje z-index kako bi pretraga bila iznad ostalih elemenata *!*/
+/*}*/

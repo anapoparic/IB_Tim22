@@ -1,0 +1,87 @@
+<html>
+<body>
+<div class="accommodations-host">
+
+  <div class="accommodations-host-child"></div>
+  <app-nav-bar></app-nav-bar>
+
+  <div id="sort-bar" class="sort-bar">
+    <div class="active-accommodations" [ngClass]="{ 'clicked': selectedClass === 'active-accommodations' }" (click)="changeStyle('active-accommodations')">
+      My Accommodations
+    </div>
+    <div class="requests-accommodations" [ngClass]="{ 'clicked': selectedClass === 'requests-accommodations' }" (click)="changeStyle('requests-accommodations')">
+      Waiting For Approval
+    </div>
+    <div class="rejected-accommodations" [ngClass]="{ 'clicked': selectedClass === 'rejected-accommodations' }" (click)="changeStyle('rejected-accommodations')">
+      Rejected
+    </div>
+  </div>
+
+  <div class="main-content" id="main-content">
+    <b class="no-text" *ngIf="(accommodations | async)?.length == 0">NO RESULTS</b>
+    <div *ngFor="let accommodation of accommodations | async" class="acc-frame" [class.created-status]="accommodation.status === 'CREATED'"
+         [class.changed-status]="accommodation.status === 'CHANGED'"
+         [class.rejected-status]="accommodation.status === 'REJECTED'"
+         [class.active-status]="accommodation.status === 'ACTIVE'"
+    >
+      <img
+              class="accommodation-image"
+              alt=""
+              [src]="getPhotoUrl(accommodation?.id)"
+      />
+
+      <div class="left-data">
+        <div class="top-data-box">
+          <b class="title">{{ accommodation.name }}</b>
+
+          <div class="reviews-frame">
+            <div class="stars-container">
+                            <span class="star" *ngFor="let star of generateStars(roundHalf((accommodation.averageRating ?? 0) ))">
+                                {{ star }}
+                            </span>
+            </div>
+<!--            <div class="reviews-average">  {{ roundHalf(accommodation.averageRating/2) }}</div>-->
+              <div class="reviews-average" *ngIf="accommodation">{{ roundHalf(accommodation.averageRating ? accommodation.averageRating  : 0) }}</div>
+
+          </div>
+
+          <div class="location-frame">
+            <img class="location-icon" alt="" src="../../assets/public/location-1.svg" />
+            <div class="location-text">{{ accommodation.address.streetAndNumber }}, {{accommodation.address.city}} {{accommodation.address.postalCode}}, {{ accommodation.address.city }}</div>
+          </div>
+
+          <b class="status-text" [class.created-status-text]="accommodation.status === 'CREATED'"
+             [class.changed-status-text]="accommodation.status === 'CHANGED'"
+             [class.active-status-text]="accommodation.status === 'ACTIVE'"
+             [class.rejected-status-text]="accommodation.status === 'REJECTED'">{{ accommodation.status }}</b>
+        </div>
+
+        <div class="bottom-data-box">
+          <div class="includes-taxes">Includes taxes and fees</div>
+          <b class="per-night" *ngIf="accommodation.priceType=='PER_GUEST'">{{ accommodation.price }}$/{{priceTypeGuest}}</b>
+          <b class="per-night" *ngIf="accommodation.priceType=='PER_NIGHT'">{{ accommodation.price }}$/{{priceTypeNight}}</b>
+
+        </div>
+      </div>
+
+      <div class="right-buttons">
+
+        <div class="view-details-button" id="view-details-button" routerLink="/accommodation-details/{{accommodation.id}}">
+          <b class="button-text">View Details</b>
+        </div>
+          <div class="view-details-button" routerLink="/update-accommodation/{{accommodation.id}}"  *ngIf="accommodation.status===AccommodationStatus.Active">
+              <b class="button-text">Edit Details</b>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="add-new-container" routerLink="/create-accommodation">
+    <b>Add new accommodation</b>
+  </button>
+
+  <app-shorter-footer></app-shorter-footer>
+
+</div>
+</body>
+</html>

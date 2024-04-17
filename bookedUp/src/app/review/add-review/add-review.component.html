@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div class="acc-details">
+
+      <app-nav-bar></app-nav-bar>
+
+      <div class="main-data-box" *ngIf="accommodation | async as accommodation">
+        <div class="inputs-data">
+            <div class="image-box">
+              <img class="room-image" alt="" [src]="pictureUrl" />
+            </div>
+            <div class="inputs-box">
+              <b class="title-text">{{accommodation.name}}</b>
+              <div class="normal-text"><b>Average Rating: {{accommodation.averageRating}}</b></div>
+              <app-star-rating (ratingClicked)="onRatingClickedAccommodation($event)"></app-star-rating>
+              <input class="normal-text" id="accommodationComment" type="text"  [(ngModel)]="accommodationComment" placeholder='Enter comment for accommodation here..'/>
+
+              <img class="line" alt="" src="../../assets/public/vector-1.svg"><br>
+
+              <b class="title-text">{{accommodation.host.firstName}} {{accommodation.host.lastName}}</b>
+              <app-star-rating (ratingClicked)="onRatingClickedHost($event)"></app-star-rating>
+              <div class="in-line-box">
+                <input class="normal-text" type="text"  [(ngModel)]="hostComment" placeholder='Enter comment for host here..' style="top:0%;"/>
+
+                <button class="button-container" (click)="saveReview()">
+                  <b>Submit Review</b>
+                </button>
+              </div>
+
+            </div>
+          </div>
+
+      </div>
+
+      <app-shorter-footer></app-shorter-footer>
+
+    </div>
+  </body>
+</html>
