@@ -1,7 +1,7 @@
 # Project Overview
-This project involves developing a secure certificate issuance system for the Booking application and a corresponding PKI service. 
-The Booking application will allow admins and owners to request certificates for specific purposes. 
-The PKI service will centrally manage certificate issuance, including self-signed and intermediate certificates, while enforcing security best practices. 
+This project involves developing a secure certificate issuance system for the Booking application and a corresponding PKI service. <br>
+The Booking application will allow admins and owners to request certificates for specific purposes. <br>
+The PKI service will centrally manage certificate issuance, including self-signed and intermediate certificates, while enforcing security best practices. <br>
 The goal is to enable secure communication within the Booking application using HTTPS.
 
 # Team 22 / Members
