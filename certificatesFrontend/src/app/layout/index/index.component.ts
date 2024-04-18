@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Request } from '../request/request.model';
 import { RequestsService } from '../request/requests.service';
 import { Observable } from 'rxjs';
+import { Certificate } from '../certificate/certificate.model';
+import { CertificatesService } from '../certificate/certificates.service';
 
 @Component({
   selector: 'app-index',
@@ -16,24 +18,26 @@ export class IndexComponent implements OnInit {
   filter: string = 'requests';
 
   requests: Observable<Request[]> = new Observable<[]>;
+  certifications: Observable<Certificate[]> = new Observable<[]>;
 
 
-  constructor(private router: Router, private route: ActivatedRoute, private requestService: RequestsService) {
+  constructor(private router: Router, private route: ActivatedRoute, private requestService: RequestsService, private certificationService: CertificatesService) {
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.filter = params['filter'] || 'requests';
       this.requests = this.requestService.getRequests();
+      this.certifications = this.certificationService.getCertifications();
     });
   }
 
   changeStyle(className: string): void {
     this.selectedClass = className;
-    if (className === 'new-accommodations') {
-      this.router.navigate(['/accommodation-requests'], {queryParams: {filter: 'certificates'}});
+    if (className === 'certifications') {
+      this.router.navigate([''], {queryParams: {filter: 'certifications'}});
     } else {
-      this.router.navigate(['/accommodation-requests'], {queryParams: {filter: 'requests'}});
+      this.router.navigate([''], {queryParams: {filter: 'requests'}});
     }
   }
 
@@ -42,6 +46,10 @@ export class IndexComponent implements OnInit {
   }
 
   rejectRequest(arg0: number) {
+    throw new Error('Method not implemented.');
+    }
+
+  revoke(arg0: number) {
     throw new Error('Method not implemented.');
     }
 

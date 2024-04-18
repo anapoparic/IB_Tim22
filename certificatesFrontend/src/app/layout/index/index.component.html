@@ -14,13 +14,13 @@
             </div>
         </div>
 
-        <div class="main-content" id="main-content">
+        <div class="main-content" id="main-content" *ngIf="selectedClass === 'requests'">
           <b class="no-text" *ngIf="(requests | async)?.length == 0">NO RESULTS</b>
           <div *ngFor="let request of requests | async" class="request-frame">
               <img
               class="icon-image"
               alt=""
-              src="../../../assets/public/certification.svg"
+              src="../../../assets/public/certificate (5).png"
               />
               <div class="left-data">
                 <div class="top-data-box">
@@ -51,8 +51,42 @@
                 </div>
               </div>
             </div>
-          </div>
+        </div>
 
+        <div class="main-content" id="main-content" *ngIf="selectedClass === 'certifications'">
+          <b class="no-text" *ngIf="(certifications | async)?.length == 0">NO RESULTS</b>
+          <div *ngFor="let certificate of certifications | async" class="request-frame">
+              <img
+              class="icon-image"
+              alt=""
+              src="../../../assets/public/certificate (5).png"
+              />
+              <div class="left-data">
+                <div class="top-data-box">
+                  <div class="horizontal-frame">
+                    <div class="title"><b>No. {{ certificate.number }} {{ certificate.commonName }}</b> </div>
+                    
+                  </div>
+
+                  
+                </div>
+
+                <div class="bottom-data-box">
+                  <div class="horizontal-frame"><b class="light-text" style="margin-right: 5px;">Validation Period: </b> {{ certificate.validFrom | date: 'd.MM.yyyy.' }} - {{ certificate.validUntil | date: 'd.MM.yyyy.'}} </div>
+                  
+                  <div><b class="light-text">Alias: </b>{{ certificate.alias }}</div>
+                  <div><b class="light-text">Issuer Alias: </b>{{ certificate.issuerAlias }}</div>
+                  <div><b class="light-text">Template: </b>{{ certificate.template }}</div>
+                </div>
+              </div>
+
+              <div class="right-buttons">
+                <div class="revoke-button" id="revoke-button" (click)="revoke(certificate?.number ?? 0)">
+                  <b class="button-text">Revoke</b>
+                </div>
+              </div>
+            </div>
+        </div>
 
       <app-shorter-footer></app-shorter-footer>
 

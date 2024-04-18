@@ -78,7 +78,7 @@
 .icon-image {
   position: absolute;
   top: 50%;
-  left: 10%;
+  left: 7%;
   transform: translateY(-50%);
   border-radius: var(--br-8xs);
   width: 10%;
@@ -87,7 +87,7 @@
 }
 .left-data{
   position: absolute;
-  left: 30%;
+  left: 25%;
   top: 35%;
   transform: translateY(-50%);
   border-radius: var(--br-8xs);
@@ -129,6 +129,7 @@
 }
 .accept-button,
 .reject-button,
+.revoke-button,
 .view-details-button {
   border-radius: var(--br-7xs);
   width: 100%;
@@ -144,8 +145,12 @@
   background-color: var(--color-seagreen-100);
   margin-bottom: 10px;
 }
-.reject-button{
+.reject-button,
+.revoke-button{
   background-color: var(--color-firebrick);
+}
+.revoke-button{
+  margin-top: 15%;
 }
 .view-details-button{
   background-color: var(--blue-1);
