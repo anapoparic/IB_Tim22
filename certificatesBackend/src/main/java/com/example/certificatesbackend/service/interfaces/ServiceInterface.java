@@ -10,7 +10,5 @@ public interface ServiceInterface<T> {
 
     T create(T entity) throws Exception;
 
-    T save(T entity) throws Exception;
-
     void delete(Long id) throws Exception;
 }

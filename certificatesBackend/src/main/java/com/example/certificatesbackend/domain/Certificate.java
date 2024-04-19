@@ -41,15 +41,6 @@ public class Certificate {
     @Column(nullable = true)
     private ReasonForRevoke reason;
 
-
-//    @Column(nullable = true)
-//    private Date revocationDate;
-//    @Column(nullable = false)
-//    private String type;
-//
-//    @Column(nullable = false)
-//    private boolean isCA;
-
     @Column(nullable = false)
     private Template template;
 
