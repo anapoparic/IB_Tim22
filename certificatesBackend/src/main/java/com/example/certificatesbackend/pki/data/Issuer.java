@@ -16,4 +16,6 @@ import java.security.PublicKey;
 public class Issuer {
     private PrivateKey privateKey;
     private X500Name x500Name;
+
+
 }
