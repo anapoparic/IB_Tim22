@@ -38,7 +38,8 @@ public class LogInController {
 
     @PostMapping( value ="/login", consumes = "application/json", produces = "application/json")
     public ResponseEntity<TokenDTO> login(@RequestBody LogInDTO loginDto) {
-
+        System.out.println(loginDto.getEmail());
+        System.out.println(loginDto.getPassword());
         UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
                 loginDto.getPassword());
         Authentication auth = authenticationManager.authenticate(authReq);
@@ -46,7 +47,7 @@ public class LogInController {
         SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
 
-        UserDetails userDetail = userDetailsService.loadUserByUsername(loginDto.getEmail());
+git ad        UserDetails userDetail = userDetailsService.loadUserByUsername(loginDto.getEmail());
 
         if (!userDetail.isEnabled()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
