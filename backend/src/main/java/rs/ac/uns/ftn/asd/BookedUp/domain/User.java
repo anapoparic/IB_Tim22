@@ -122,22 +122,6 @@ public class User implements UserDetails {
     }
 
 
-//    public void copyValues(User user) {
-//        this.firstName = user.getFirstName();
-//        this.lastName = user.getLastName();
-//        this.address = user.getAddress();
-//        this.phone = user.getPhone();
-//        this.email = user.getEmail();
-//        //this.role = user.getRole();
-//        this.active = user.isActive();
-//        this.password = user.getPassword();
-//        this.isBlocked = user.isBlocked();
-////        this.notifications = user.getNotifications();
-//        this.authority = user.getAuthority();
-//        this.verified = user.isVerified();
-//        this.profilePicture = user.getProfilePicture();
-//        this.lastPasswordResetDate = user.getLastPasswordResetDate();
-//    }
 
 
 }
