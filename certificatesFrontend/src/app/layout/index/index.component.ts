@@ -35,9 +35,9 @@ export class IndexComponent implements OnInit {
   changeStyle(className: string): void {
     this.selectedClass = className;
     if (className === 'certifications') {
-      this.router.navigate([''], {queryParams: {filter: 'certifications'}});
+      this.router.navigate(['/index'], {queryParams: {filter: 'certifications'}});
     } else {
-      this.router.navigate([''], {queryParams: {filter: 'requests'}});
+      this.router.navigate(['/index'], {queryParams: {filter: 'requests'}});
     }
   }
 

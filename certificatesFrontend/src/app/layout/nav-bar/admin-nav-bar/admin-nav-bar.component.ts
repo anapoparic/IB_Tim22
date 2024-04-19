@@ -43,7 +43,7 @@ export class AdminNavBarComponent implements OnInit{
       next: (_) => {
         localStorage.removeItem('user');
         this.authService.setUser();
-        this.router.navigate(['/']);
+        this.router.navigate(['']);
       }
     })
   }
