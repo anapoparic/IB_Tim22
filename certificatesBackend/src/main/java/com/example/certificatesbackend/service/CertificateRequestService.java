@@ -34,11 +34,6 @@ public class CertificateRequestService implements ServiceInterface<CertificateRe
     }
 
     @Override
-    public CertificateRequest save(CertificateRequest entity) throws Exception {
-        return repository.save(entity);
-    }
-
-    @Override
     public void delete(Long id) throws Exception {
         CertificateRequest req = repository.findById(id)
                 .orElseThrow(() -> new Exception("Certification request with given id doesn't exist"));
