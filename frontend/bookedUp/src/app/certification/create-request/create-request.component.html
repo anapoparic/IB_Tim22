@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <app-nav-bar></app-nav-bar>
+    
+    <div class="register-guest">
+        <div class="data-container">
+            <p class="title-text">Create request for certificate</p>
+
+            <div id="inputs-login" [formGroup]="certificationForm!" class="form-container">
+                
+
+                
+                <div class="in-line-box">
+                    <div class="column-box">
+                        <b class="normal-text">Common Name</b>
+                        <div class="input-frame-names" style="margin-bottom: 0%;">
+                            <input id="commonNameInput" type="text" class="input-field" placeholder="Enter common name..." formControlName="commonName" required/>
+                        </div>
+                    </div>
+
+                    <div class="column-box">        
+                        <b class="normal-text">UID</b>
+                        <div class="input-frame-names">
+                            <input id="uidInput" type="text" class="input-field" placeholder="Enter UID..." formControlName="uid" required/>
+                        </div> 
+                    </div>
+                </div>
+
+                <div class="in-line-box">
+                    <div class="column-box">
+                        <b class="normal-text">Organization</b>
+                        <div class="input-frame-names">
+                            <input id="organizationInput" type="text" class="input-field" placeholder="Enter organization..." formControlName="organization" required/>
+                        </div>
+                    </div>
+
+                    <div class="column-box">        
+                        <b class="normal-text">Unit</b>
+                        <div class="input-frame-names">
+                            <input id="unitInput" type="text" class="input-field" placeholder="Enter unit..." formControlName="unit" required/>
+                        </div>  
+                    </div>
+                </div>
+            
+                <div class="in-line-box">
+                    <div class="column-box">
+                        <b class="normal-text">First Name</b>
+                        <div class="input-frame-names">
+                            <input id="firstNameInput" type="text" class="input-field" placeholder="Enter first name..." formControlName="firstName" required/>
+                        </div>
+                    </div>
+
+                    <div class="column-box">        
+                        <b class="normal-text">Last Name</b>
+                        <div class="input-frame-names">
+                            <input id="lastNameInput" type="text" class="input-field" placeholder="Enter last name..." formControlName="lastName" required/>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="in-line-box">
+                    <div class="column-box">
+                        <b class="normal-text">Country</b>
+                        <div class="input-frame-names">
+                            <input id="countryInput" type="text" class="input-field" placeholder="Enter country..." formControlName="country" required/>
+                        </div>
+                    </div>
+
+                    <div class="column-box">        
+                        <b class="normal-text">Email</b>
+                        <div class="input-frame-names">
+                            <input id="emailInput" type="email" class="input-field" placeholder="Enter email address..." formControlName="email" required/>
+                        </div> 
+                    </div>
+                </div>
+
+                
+            </div>
+            
+
+            <div class="button-container" (click)="sendRequest()">
+                <b>Send request</b>
+            </div>
+
+        </div>
+    </div>
+
+    <app-shorter-footer></app-shorter-footer>
+</body>
+</html>
