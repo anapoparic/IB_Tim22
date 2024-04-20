@@ -1,7 +1,13 @@
 package com.example.certificatesbackend.pki.certificates;
 
+import com.example.certificatesbackend.domain.enums.Template;
 import com.example.certificatesbackend.pki.data.Issuer;
 import com.example.certificatesbackend.pki.data.Subject;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.DERIA5String;
+import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.x509.*;
+import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -10,6 +16,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.ContentSigner;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.springframework.expression.common.TemplateAwareExpressionParser;
 import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
@@ -25,7 +32,7 @@ public class CertificateGenerator {
         Security.addProvider(new BouncyCastleProvider());
     }
 
-    public static X509Certificate generateCertificate(Subject subject, Issuer issuer, Date startDate, Date endDate, String serialNumber) {
+    public static X509Certificate generateCertificate(Subject subject, Issuer issuer, Date startDate, Date endDate, String serialNumber, Template template) {
         try {
             //Posto klasa za generisanje sertifiakta ne moze da primi direktno privatni kljuc pravi se builder za objekat
             //Ovaj objekat sadrzi privatni kljuc izdavaoca sertifikata i koristiti se za potpisivanje sertifikata
@@ -44,6 +51,29 @@ public class CertificateGenerator {
                     endDate,
                     subject.getX500Name(),
                     subject.getPublicKey());
+
+            if (template == Template.CA) {
+                certGen.addExtension(X509Extension.keyUsage, true, new KeyUsage(KeyUsage.keyCertSign | KeyUsage.cRLSign));
+                certGen.addExtension(X509Extension.basicConstraints, true, new BasicConstraints(true));
+                certGen.addExtension(X509Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));
+//                certGen.addExtension(X509Extension.authorityKeyIdentifier, false, new AuthorityKeyIdentifier(issuer..getPublic()));  //ciji key treba da bude
+                certGen.addExtension(X509Extension.certificatePolicies, false, new CertificatePolicies(new PolicyInformation(new ASN1ObjectIdentifier("1.3.6.1.4.1.99999.1"), new DERSequence())));
+                certGen.addExtension(X509Extension.extendedKeyUsage, false, new ExtendedKeyUsage(KeyPurposeId.anyExtendedKeyUsage));
+            } else if (template == Template.INTERMEDIATE) {
+                certGen.addExtension(X509Extension.keyUsage, true, new KeyUsage(KeyUsage.keyCertSign | KeyUsage.cRLSign));
+                certGen.addExtension(X509Extension.basicConstraints, true, new BasicConstraints(true));
+                certGen.addExtension(X509Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));
+//                certGen.addExtension(X509Extension.authorityKeyIdentifier, false, new AuthorityKeyIdentifier());
+                certGen.addExtension(X509Extension.certificatePolicies, false, new CertificatePolicies(new PolicyInformation(new ASN1ObjectIdentifier("1.3.6.1.4.1.99999.2"), new DERSequence())));
+                certGen.addExtension(X509Extension.extendedKeyUsage, false, new ExtendedKeyUsage(KeyPurposeId.anyExtendedKeyUsage));
+            } else if (template == Template.END_ENTITY) {
+                certGen.addExtension(X509Extension.keyUsage, true, new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyEncipherment));
+                certGen.addExtension(X509Extension.basicConstraints, true, new BasicConstraints(false));
+                certGen.addExtension(X509Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));
+//                certGen.addExtension(X509Extension.authorityKeyIdentifier, false, new AuthorityKeyIdentifier(keyPair.getPublic()));
+                certGen.addExtension(X509Extension.certificatePolicies, false, new CertificatePolicies(new PolicyInformation(new ASN1ObjectIdentifier("1.3.6.1.4.1.99999.3"), new DERSequence())));
+                certGen.addExtension(X509Extension.extendedKeyUsage, false, new ExtendedKeyUsage(KeyPurposeId.anyExtendedKeyUsage));
+            }
 
             //Generise se sertifikat
             X509CertificateHolder certHolder = certGen.build(contentSigner);
@@ -66,6 +96,8 @@ public class CertificateGenerator {
             e.printStackTrace();
         } catch (CertificateException e) {
             e.printStackTrace();
+        } catch (CertIOException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }

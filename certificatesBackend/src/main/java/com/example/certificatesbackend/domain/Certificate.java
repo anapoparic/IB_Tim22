@@ -51,9 +51,22 @@ public class Certificate {
     private String organization;
 
     @Column(nullable = false)
-    private String issuerEmail;
+    private String ownerEmail;
 
     @Column(nullable = false)
     private boolean active;
 
+    public Certificate(Date validFrom, Date validTo, String alias, String issuerAlias, boolean isRevoked, ReasonForRevoke reason, Template template, String commonName, String organization, String ownerEmail, boolean active) {
+        this.validFrom = validFrom;
+        this.validTo = validTo;
+        this.alias = alias;
+        this.issuerAlias = issuerAlias;
+        this.isRevoked = isRevoked;
+        this.reason = reason;
+        this.template = template;
+        this.commonName = commonName;
+        this.organization = organization;
+        this.ownerEmail = ownerEmail;
+        this.active = active;
+    }
 }

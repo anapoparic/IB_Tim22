@@ -2,7 +2,9 @@ package com.example.certificatesbackend.controller;
 
 import com.example.certificatesbackend.domain.Certificate;
 import com.example.certificatesbackend.dto.CertificateDTO;
+import com.example.certificatesbackend.dto.CertificateRequestDTO;
 import com.example.certificatesbackend.mapper.CertificateMapper;
+import com.example.certificatesbackend.mapper.CertificateRequestMapper;
 import com.example.certificatesbackend.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,11 +45,11 @@ public class CertificateController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CertificateDTO> createCertificate(@RequestBody CertificateDTO certificateDTO) throws Exception {
+    public ResponseEntity<CertificateDTO> createCertificate(@RequestBody CertificateRequestDTO requestDTO, String alias, String issuerAlias, String template) throws Exception {
         Certificate createdCertificate = null;
 
         try {
-            createdCertificate = service.create(CertificateMapper.toEntity(certificateDTO));
+            createdCertificate = service.create(CertificateRequestMapper.toEntity(requestDTO), alias, issuerAlias, template);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -13,6 +13,8 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class KeyStoreReader {
@@ -136,4 +138,53 @@ public class KeyStoreReader {
         }
         return null;
     }
+
+    public Certificate[] getCertificateChain(String keystorePath, String keystorePass, String issuerAlias) throws CertificateException, IOException, NoSuchAlgorithmException {
+        try {
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(keystorePath));
+            keyStore.load(in, keystorePass.toCharArray());
+
+            if (keyStore.isKeyEntry(issuerAlias)) {
+                return keyStore.getCertificateChain(issuerAlias);
+            }
+        } catch (KeyStoreException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public Issuer getIssuer(String keystorePath, String keystorePass, String issuerAlias) throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException {
+        try {
+            // Učitaj keystore
+            FileInputStream fis = new FileInputStream(keystorePath);
+            KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keystore.load(fis, keystorePass.toCharArray());
+            fis.close();
+
+            // Dohvati certifikat izdavatelja iz keystore-a koristeći alias
+            Certificate issuerCert = keystore.getCertificate(issuerAlias);
+
+            // Provjeri je li certifikat X.509 tipa
+            if (issuerCert instanceof X509Certificate) {
+                X509Certificate issuerX509Cert = (X509Certificate) issuerCert;
+
+                // Dohvati privatni ključ iz keystore-a koristeći alias
+                PrivateKey privateKey = (PrivateKey) keystore.getKey(issuerAlias, keystorePass.toCharArray());
+
+                // Kreiraj X500Name objekt koji predstavlja podatke o izdavatelju
+                X500Name x500Name = new X500Name(issuerX509Cert.getIssuerX500Principal().getName());
+
+                // Kreiraj novi Issuer objekt i vrati ga
+                return new Issuer(privateKey, x500Name);
+            } else {
+                System.out.println("Certificate is not X.509 type.");
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
