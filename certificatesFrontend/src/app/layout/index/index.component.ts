@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Request } from '../request/request.model';
+import { CertificateRequest } from '../request/certificateRequest.model';
 import { RequestsService } from '../request/requests.service';
 import { Observable } from 'rxjs';
 import { Certificate } from '../certificate/certificate.model';
@@ -17,7 +17,7 @@ export class IndexComponent implements OnInit {
   selectedClass: string = 'requests';
   filter: string = 'requests';
 
-  requests: Observable<Request[]> = new Observable<[]>;
+  requests: Observable<CertificateRequest[]> = new Observable<[]>;
   certifications: Observable<Certificate[]> = new Observable<[]>;
 
 
@@ -27,7 +27,7 @@ export class IndexComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.filter = params['filter'] || 'requests';
-      this.requests = this.requestService.getRequests();
+      this.requests = this.requestService.getAllRequests();
       this.certifications = this.certificationService.getCertifications();
     });
   }

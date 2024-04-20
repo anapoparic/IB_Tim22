@@ -32,10 +32,10 @@ public class CertificateRequest {
     @Column(nullable = false)
     private String unit;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String country;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false, unique = true)

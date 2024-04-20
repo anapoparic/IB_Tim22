@@ -25,28 +25,28 @@
               <div class="left-data">
                 <div class="top-data-box">
                   <div class="horizontal-frame">
-                    <div class="title"><b>No. {{ request.number }} {{ request.commonName }}</b> </div>
-                    
-                  </div>
-
-                  
+                    <div class="title"><b>No. {{ request.id }} {{ request.commonName }}</b> </div>                    
+                  </div>                  
                 </div>
 
                 <div class="bottom-data-box">
                   <div class="horizontal-frame">
-                    <div ><b class="light-text">Full Name:</b> {{ request.givenName }} {{request.surname}} </div>
+                    <div ><b class="light-text">Full Name:</b> {{ request.firstName }} {{request.lastName}} </div>
                   </div>
-                  <div><b class="light-text">Organization: </b>{{ request.organization }}</div>
+                  <div class="horizontal-frame">
+                    <div ><b class="light-text">Organization and Unit:</b> {{ request.organization }} - {{request.unit}} </div>
+                  </div>
+                  <div><b class="light-text">Country: </b>{{ request.country }}</div>
                   <div><b class="light-text">Email: </b>{{ request.email }}</div>
                   <div><b class="light-text">UID: </b>{{ request.uid }}</div>
                 </div>
               </div>
 
               <div class="right-buttons">
-                  <div class="accept-button" id="accept-button" (click)="approveRequest(request?.number ?? 0)">
+                  <div class="accept-button" id="accept-button" (click)="approveRequest(request?.id ?? 0)">
                   <b class="button-text">Accept</b>
                 </div>
-                <div class="reject-button" id="reject-button" (click)="rejectRequest(request?.number ?? 0)">
+                <div class="reject-button" id="reject-button" (click)="rejectRequest(request?.id ?? 0)">
                   <b class="button-text">Reject</b>
                 </div>
               </div>

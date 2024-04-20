@@ -96,13 +96,13 @@
 }
 .top-data-box{
   position: absolute;
-  height: 40%;
+  height: 10%;
   width: 100%;
 }
 .bottom-data-box{
   position: absolute;
-  top: 70%;
-  height: 60%;
+  top: 55%;
+  height: 80%;
   width: 100%;
 }
 .title,

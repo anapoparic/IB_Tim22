@@ -47,4 +47,38 @@ export class CertificatesService {
   getCertifications(): Observable<Certificate[]> {
     return of(this.certificates);
   }
+
+
+  // private apiUrl = 'http://localhost:8081/api/certificates'; // Prilagodite URL prema portu 8081 i putanji na serveru
+
+  // constructor(private http: HttpClient) { }
+
+  // getAllCertificates(): Observable<CertificateDTO[]> {
+  //   return this.http.get<CertificateDTO[]>(this.apiUrl);
+  // }
+
+  // getCertificateById(id: number): Observable<CertificateDTO> {
+  //   return this.http.get<CertificateDTO>(`${this.apiUrl}/${id}`);
+  // }
+
+  // createCertificate(requestDTO: CertificateRequestDTO, alias: string, issuerAlias: string, template: string): Observable<CertificateDTO> {
+  //   return this.http.post<CertificateDTO>(this.apiUrl, requestDTO, {
+  //     params: {
+  //       alias: alias,
+  //       issuerAlias: issuerAlias,
+  //       template: template
+  //     }
+  //   }).pipe(
+  //     catchError(this.handleError)
+  //   );
+  // }
+
+  // deleteCertificate(id: number): Observable<void> {
+  //   return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  // }
+
+  // private handleError(error: any) {
+  //   console.error('An error occurred:', error);
+  //   return throwError('Something went wrong; please try again later.');
+  // }
 }

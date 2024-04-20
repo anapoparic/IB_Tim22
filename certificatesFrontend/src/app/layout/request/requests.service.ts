@@ -1,48 +1,37 @@
 import { Injectable } from '@angular/core';
-import { Request } from './request.model';
-import { Observable, of } from 'rxjs';
+import { CertificateRequest } from './certificateRequest.model';
+import { Observable, catchError, of, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RequestsService {
-  requests: Request[] = [];
+  private apiUrl = 'http://localhost:8081/api/requests';
 
-  constructor() {
-    // Inicijalizujemo requests niz sa testnim podacima
-    this.requests = [
-      {
-        number: 12345,
-        commonName: "John",
-        surname: "Doe",
-        givenName: "John",
-        organization: "Example Inc.",
-        email: "johndoe@example.com",
-        uid: "johndoe123"
-      },
-      {
-        number: 67890,
-        commonName: "Jane",
-        surname: "Smith",
-        givenName: "Jane",
-        organization: "ABC Company",
-        email: "janesmith@example.com",
-        uid: "janesmith456"
-      },
-      {
-        number: 54321,
-        commonName: "Michael",
-        surname: "Johnson",
-        givenName: "Michael",
-        organization: "XYZ Corporation",
-        email: "michaeljohnson@example.com",
-        uid: "michaeljohnson789"
-      }
-    ];
-    
+  constructor(private http: HttpClient) { }
+
+  getAllRequests(): Observable<CertificateRequest[]> {
+    return this.http.get<CertificateRequest[]>(`${this.apiUrl}`);
   }
 
-  getRequests(): Observable<Request[]> {
-    return of(this.requests);
+  getRequestById(id: number): Observable<CertificateRequest> {
+    return this.http.get<CertificateRequest>(`${this.apiUrl}/${id}`);
+  }
+
+  createRequest(request: CertificateRequest): Observable<CertificateRequest> {
+    return this.http.post<CertificateRequest>(`${this.apiUrl}`, request)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  deleteRequest(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  private handleError(error: any) {
+    console.error('An error occurred:', error);
+    return throwError('Something went wrong; please try again later.');
   }
 }
