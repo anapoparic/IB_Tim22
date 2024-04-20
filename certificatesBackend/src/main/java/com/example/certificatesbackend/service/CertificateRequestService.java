@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class CertificateRequestService implements ServiceInterface<CertificateRequest> {
@@ -39,5 +40,9 @@ public class CertificateRequestService implements ServiceInterface<CertificateRe
                 .orElseThrow(() -> new Exception("Certification request with given id doesn't exist"));
         req.setActive(false);
         repository.save(req);
+    }
+
+    public List<CertificateRequest> getAllActiveRequests() {
+        return repository.findByActive(true);
     }
 }

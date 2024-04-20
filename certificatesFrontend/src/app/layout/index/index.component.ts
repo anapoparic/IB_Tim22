@@ -5,6 +5,7 @@ import { RequestsService } from '../request/requests.service';
 import { Observable } from 'rxjs';
 import { Certificate } from '../certificate/certificate.model';
 import { CertificatesService } from '../certificate/certificates.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-index',
@@ -27,7 +28,7 @@ export class IndexComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.filter = params['filter'] || 'requests';
-      this.requests = this.requestService.getAllRequests();
+      this.requests = this.requestService.getAllActiveRequests();
       this.certifications = this.certificationService.getCertifications();
     });
   }
@@ -45,9 +46,25 @@ export class IndexComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
 
-  rejectRequest(arg0: number) {
-    throw new Error('Method not implemented.');
-    }
+  rejectRequest(id: number) {
+    this.requestService.deleteRequest(id).subscribe({
+      next: () => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successfully Rejected',
+          text: 'You sucessfully reject this certificate request.',
+        }); 
+        this.requests = this.requestService.getAllActiveRequests();
+      },
+      error: (error) => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'An error is occured. Please try again.',
+        });
+      }
+    });
+  }
 
   revoke(arg0: number) {
     throw new Error('Method not implemented.');

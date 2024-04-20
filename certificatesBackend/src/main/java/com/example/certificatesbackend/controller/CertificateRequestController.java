@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -60,14 +61,24 @@ public class CertificateRequestController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CertificateRequest> deleteRequest(@PathVariable("id") Long id) {
+    public ResponseEntity<CertificateRequestDTO> deleteRequest(@PathVariable("id") Long id) {
         try {
             service.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<CertificateRequest>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<CertificateRequestDTO>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(path="/active", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CertificateRequestDTO>> getAllActiveRequests() {
+        Collection<CertificateRequest> requests = service.getAllActiveRequests();
+        Collection<CertificateRequestDTO> requestDTOS = requests.stream()
+                .map(CertificateRequestMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(requestDTOS, HttpStatus.OK);
     }
 
 }
