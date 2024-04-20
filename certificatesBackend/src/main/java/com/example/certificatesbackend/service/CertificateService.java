@@ -125,8 +125,8 @@ public class CertificateService  {
 
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
         builder.addRDN(BCStyle.CN, request.getCommonName());
-        builder.addRDN(BCStyle.SURNAME, request.getSurname());
-        builder.addRDN(BCStyle.GIVENNAME, request.getGivenName());
+        builder.addRDN(BCStyle.SURNAME, request.getLastName());
+        builder.addRDN(BCStyle.GIVENNAME, request.getFirstName());
         builder.addRDN(BCStyle.O, request.getOrganization());
         builder.addRDN(BCStyle.E, request.getEmail());
         builder.addRDN(BCStyle.UID, request.getUid());
