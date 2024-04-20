@@ -1,16 +1,15 @@
 package com.example.certificatesbackend.controller;
 
-import com.example.certificatesbackend.domain.User;
 import com.example.certificatesbackend.dto.LogInDTO;
 import com.example.certificatesbackend.dto.TokenDTO;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,7 +41,7 @@ public class LogInController {
     private JwtTokenUtil jwtTokenUtil;
 
     @PostMapping(value = "/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<TokenDTO> login(@RequestBody LogInDTO loginDto) {
+    public ResponseEntity<TokenDTO> login(@RequestBody LogInDTO loginDto) throws BadRequestException {
 
         System.out.println("Usao sam u funkciju");
 
@@ -50,45 +49,21 @@ public class LogInController {
 
 
         try {
-            System.out.println("ovo su prosledjeni parametri " + loginDto.getEmail() + " " + loginDto.getPassword() );
-            System.out.println("ovo je prebacen auth " + authReq.getCredentials() );
-            Authentication auth = authenticationManager.authenticate(authReq);
-            System.out.println("Zavrsio sam autentikaciju");
+            TokenDTO token = new TokenDTO();
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(loginDto.getEmail());
+            System.out.println(userDetails.getUsername());
+            String tokenValue = this.jwtTokenUtil.generateToken(userDetails);
+            token.setToken(tokenValue);
 
-            SecurityContext sc = SecurityContextHolder.getContext();
-            sc.setAuthentication(auth);
+            Authentication authentication = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
 
-            UserDetails userDetail = userDetailsService.loadUserByUsername(loginDto.getEmail());
-            System.out.println("Ucitao sam korisnika po username-u");
-
-            if (!userDetail.isEnabled()) {
-                System.out.println("Korisnik nije omogucen");
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
-
-            User user = userService.getByEmail(loginDto.getEmail());
-            if (user != null && user.isBlocked()) {
-                System.out.println("Korisnik je blokiran");
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            }
-
-            String token = jwtTokenUtil.generateToken(userDetail);
-            System.out.println("Generisem token: " + token);
-
-            TokenDTO tokenDto = new TokenDTO();
-            tokenDto.setToken(token);
-            System.out.println("Setujem token");
-
-            return new ResponseEntity<>(tokenDto, HttpStatus.OK);
-
-        } catch (AuthenticationException e) {
-            System.out.println("Autentikacija nije uspela: " + e.getMessage());
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception e) {
-            System.out.println("Greška prilikom logiranja: " + e.getMessage());
-            e.printStackTrace(); // Dodajte ovu liniju za detaljan ispis stack trace-a u konzolu
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println(token);
+            return new ResponseEntity<>(token, HttpStatus.OK);
+        } catch (BadCredentialsException e) {
+            throw new BadRequestException("Wrong password!");
         }
+
     }
 
 
