@@ -1,0 +1,15 @@
+package com.example.certificatesbackend.service.interfaces;
+
+import com.example.certificatesbackend.domain.ConfirmationToken;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+public interface IConfirmationTokenService {
+
+     void saveConfirmationToken(ConfirmationToken token) ;
+
+     Optional<ConfirmationToken> getToken(String token);
+
+     int setConfirmedAt(String token);
+}

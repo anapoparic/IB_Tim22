@@ -26,6 +26,7 @@ export class AuthService {
   }
 
   login(auth: any): Observable<AuthResponse> {
+    console.log("tu sam i saljem", this.headers)
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, auth, {
       headers: this.headers,
     });
