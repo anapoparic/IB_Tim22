@@ -14,16 +14,26 @@ import com.example.certificatesbackend.repository.ICertificateRepository;
 import com.example.certificatesbackend.service.interfaces.ServiceInterface;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.*;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.text.ParseException;
 import java.util.*;
 
-import static com.example.certificatesbackend.constants.Constants.KEYSTORE_PASSWORD;
-import static com.example.certificatesbackend.constants.Constants.KEYSTORE_PATH;
+import static com.example.certificatesbackend.constants.Constants.*;
+import static com.example.certificatesbackend.pki.certificates.CertificateGenerator.generateRootCertificate;
 
 @Service
 public class CertificateService  {
@@ -135,4 +145,64 @@ public class CertificateService  {
         return subject;
     }
 
+    public X509Certificate createRootCertificate()throws ParseException {
+        storeWriter.loadKeyStore(null, KEYSTORE_PASSWORD.toCharArray());
+        KeyPair keyPair = generateKeyPair();
+        Subject subject = createRootSubject(keyPair);
+        assert keyPair != null;
+
+        Date validFrom = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(validFrom);
+        calendar.add(Calendar.MONTH, 13);
+        Date validTo = calendar.getTime();
+        String serialNumber = String.valueOf(System.currentTimeMillis());
+
+
+        X509Certificate createdCertificate = generateRootCertificate(subject, keyPair, validFrom, validTo, serialNumber);
+
+        storeWriter.write(ROOT_ALIAS, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), createdCertificate);
+        storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
+
+        Certificate newCertificate = new Certificate(validFrom, validTo, ROOT_ALIAS, ROOT_ALIAS,
+                false, null, Template.CA, "admin", "FTN", "admin@example.com",
+                true);
+        repository.save(newCertificate);
+
+        return createdCertificate;
+    }
+    private Subject createRootSubject(KeyPair keyPairValues) throws java.text.ParseException {
+
+        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
+        builder.addRDN(BCStyle.CN, "drugi");
+        builder.addRDN(BCStyle.SURNAME, "adminic2");
+        builder.addRDN(BCStyle.GIVENNAME, "admin2");
+        builder.addRDN(BCStyle.O, "FTN");
+        builder.addRDN(BCStyle.OU, "SIIT");
+        builder.addRDN(BCStyle.COUNTRY_OF_RESIDENCE, "Serbia");
+        builder.addRDN(BCStyle.E, "admin2@example.com");
+        builder.addRDN(BCStyle.UID, "1");
+        Subject subject = new Subject(keyPairValues.getPublic(), builder.build());
+        return subject;
+    }
+
+    public List<java.security.cert.Certificate> getAllCertificates(String keyStoreFile, String keyStorePass) {
+        List<java.security.cert.Certificate> certificates = new ArrayList<>();
+        try {
+            KeyStore ks = KeyStore.getInstance("JKS", "SUN");
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
+            ks.load(in, keyStorePass.toCharArray());
+
+            Enumeration<String> aliases = ks.aliases();
+            while (aliases.hasMoreElements()) {
+                String alias = aliases.nextElement();
+                java.security.cert.Certificate cert = ks.getCertificate(alias);
+                certificates.add(cert);
+            }
+        } catch (KeyStoreException | NoSuchProviderException | NoSuchAlgorithmException | CertificateException |
+                 IOException e) {
+            e.printStackTrace();
+        }
+        return certificates;
+    }
 }

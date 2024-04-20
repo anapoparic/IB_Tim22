@@ -12,8 +12,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.example.certificatesbackend.constants.Constants.KEYSTORE_PASSWORD;
+import static com.example.certificatesbackend.constants.Constants.KEYSTORE_PATH;
 
 @RestController
 @RequestMapping("/api/certificates")
@@ -44,6 +49,28 @@ public class CertificateController {
         return new ResponseEntity<CertificateDTO>(CertificateMapper.toDto(certificate), HttpStatus.OK);
     }
 
+    @GetMapping(value = "/keyStore", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<CertificateDTO>> getCertificatesFromKeyStore() {
+        List<CertificateDTO> certifications = new ArrayList<>();
+        List<java.security.cert.Certificate> certificates = service.getAllCertificates(KEYSTORE_PATH, KEYSTORE_PASSWORD);
+        for (java.security.cert.Certificate certificate: certificates){
+            certifications.add(new CertificateDTO(certificate));
+
+        }
+        return new ResponseEntity<List<CertificateDTO>>(certifications, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/generateRoot")
+    public ResponseEntity<CertificateDTO> createRootCertificate() throws Exception {
+        try {
+            service.createRootCertificate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CertificateDTO> createCertificate(@RequestBody CertificateRequestDTO requestDTO, String alias, String issuerAlias, String template) throws Exception {
         Certificate createdCertificate = null;

@@ -31,6 +31,7 @@ public class CertificateRequestService implements ServiceInterface<CertificateRe
         if (entity.getId() != null){
             throw new Exception("Id must be null when persisting a new entity.");
         }
+        entity.setActive(true);
         return repository.save(entity);
     }
 
