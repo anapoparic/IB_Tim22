@@ -44,6 +44,7 @@ public class CertificateGenerator {
             //Takodje se navodi koji provider se koristi, u ovom slucaju Bouncy Castle
             builder = builder.setProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 
+
             //Formira se objekat koji ce sadrzati privatni kljuc i koji ce se koristiti za potpisivanje sertifikata
             ContentSigner contentSigner = builder.build(keyPair.getPrivate());
 
