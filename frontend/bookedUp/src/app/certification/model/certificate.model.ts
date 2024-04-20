@@ -1,4 +1,4 @@
-import { ReasonForRevoke } from "./reasonForRevoke.enum";
+import { ReasonForRevoke } from "./enum/reasonForRevoke.enum";
 import { Template } from "./template.enum";
 
 export interface Certificate {

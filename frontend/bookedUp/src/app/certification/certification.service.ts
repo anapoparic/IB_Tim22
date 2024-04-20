@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CertificateRequest } from './model/certificateRequest.model';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Certificate } from './model/certificate.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,32 @@ export class CertificationService {
 
   deleteRequest(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  private apiUrlCer = 'http://localhost:8081/api/certificates';
+
+  getAllCertificates(): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(this.apiUrlCer);
+  }
+
+  getCertificateById(id: number): Observable<Certificate> {
+    return this.http.get<Certificate>(`${this.apiUrlCer}/${id}`);
+  }
+
+  createCertificate(requestDTO: CertificateRequest, alias: string, issuerAlias: string, template: string): Observable<Certificate> {
+    return this.http.post<Certificate>(this.apiUrlCer, requestDTO, {
+      params: {
+        alias: alias,
+        issuerAlias: issuerAlias,
+        template: template
+      }
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteCertificate(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrlCer}/${id}`);
   }
 
   private handleError(error: any) {

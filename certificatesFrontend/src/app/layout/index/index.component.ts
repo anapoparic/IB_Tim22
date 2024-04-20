@@ -29,7 +29,7 @@ export class IndexComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.filter = params['filter'] || 'requests';
       this.requests = this.requestService.getAllActiveRequests();
-      this.certifications = this.certificationService.getCertifications();
+      this.certifications = this.certificationService.getAllCertificates();
     });
   }
 
@@ -42,7 +42,7 @@ export class IndexComponent implements OnInit {
     }
   }
 
-  approveRequest(arg0: number) {
+  approveRequest(id: number) {
     throw new Error('Method not implemented.');
   }
 

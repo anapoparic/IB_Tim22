@@ -1,5 +1,6 @@
 package com.example.certificatesbackend.service;
 
+import com.example.certificatesbackend.constants.Constants;
 import com.example.certificatesbackend.domain.Certificate;
 import com.example.certificatesbackend.domain.CertificateRequest;
 import com.example.certificatesbackend.domain.enums.Template;
@@ -95,8 +96,6 @@ public class CertificateService  {
         //u keystore ti samo belezis info o kreiranom sertifikatu kao sto su javni kljuc, privatni, serijski broj itd...
 
         return newCertificate;
-
-
     }
 
     public void delete(Long id) throws Exception {
@@ -128,6 +127,8 @@ public class CertificateService  {
         builder.addRDN(BCStyle.SURNAME, request.getLastName());
         builder.addRDN(BCStyle.GIVENNAME, request.getFirstName());
         builder.addRDN(BCStyle.O, request.getOrganization());
+        builder.addRDN(BCStyle.OU, request.getUnit());
+        builder.addRDN(BCStyle.COUNTRY_OF_RESIDENCE, request.getCountry());
         builder.addRDN(BCStyle.E, request.getEmail());
         builder.addRDN(BCStyle.UID, request.getUid());
         Subject subject = new Subject(keyPairValues.getPublic(), builder.build());
