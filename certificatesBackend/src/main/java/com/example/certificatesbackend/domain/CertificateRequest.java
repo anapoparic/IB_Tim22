@@ -38,7 +38,7 @@ public class CertificateRequest {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false) //moguce da treba biti unique
     private String uid;
 
     @Column(nullable = false)

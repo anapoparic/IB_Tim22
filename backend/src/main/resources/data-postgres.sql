@@ -24,6 +24,7 @@ VALUES
     ('images/us4.png', 'guest', 535, 466, true),
     ('images/us5.png', 'guest', 500, 500, true),
     ('images/us6.png', 'guest', 220, 230, true),
+    ('images/us7.png', 'guest', 524, 476,true),
     ('images/us7.png', 'guest', 524, 476,true);
 
 INSERT INTO users (first_name, last_name, address_id, phone, email, password, is_blocked, verified, photo_id, last_password_reset_date, notification_enable, accommodation_rating_notification_enabled, average_rating, cancellation_notification_enabled, host_rating_notification_enabled, reservation_created_notification_enabled, active, role)
@@ -34,7 +35,8 @@ VALUES
     ('Marko', 'Marković', 4, 0631234567, 'marko.markovic@example.com', 'markopass', false, true, 4, '2023-04-01 18:20:00', true, null, null, null, null, null,true, 'GUEST'),
     ('Jovana', 'Jovanović', 5, 0649876543, 'jovana.jovanovic@example.com', 'jovanapass', false, true, 5, '2023-04-01 18:20:00', true, null, null, null, null, null,true, 'GUEST'),
     ('Nenad', 'Nenadić', 6, 0658765432, 'nenad.nenadic@example.com', 'nenadpass', false, true, 6, '2023-05-01 21:10:00', true, null, null, null, null, null,true, 'GUEST'),
-    ('Mila', 'Milićević', 7, 0661122334, 'mila.milicevic@example.com', 'milinpass', false, true, 7, '2022-06-01 09:30:00', false, null, null, null, null, null,true, 'GUEST');
+    ('Mila', 'Milićević', 7, 0661122334, 'mila.milicevic@example.com', 'milinpass', false, true, 7, '2022-06-01 09:30:00', false, null, null, null, null, null,true, 'GUEST'),
+    ('Admin', 'Adminovic', 9, 77364272, 'admin@example.com', 'adminpass', false, true, 8, '2023-01-01 10:00:00', null, null, null, null, null, null, true, 'SUPER_ADMIN');
 
 ALTER TABLE accommodation
     ALTER COLUMN description TYPE VARCHAR(1000);
