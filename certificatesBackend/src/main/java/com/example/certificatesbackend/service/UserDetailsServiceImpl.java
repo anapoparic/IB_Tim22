@@ -3,6 +3,8 @@ package com.example.certificatesbackend.service;
 import com.example.certificatesbackend.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.example.certificatesbackend.repository.IUserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -25,17 +28,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return userOptional.map(user -> {
             if (user.isActive()) {
+                // Assuming user.getPassword() never returns null, otherwise handle appropriately
+                String role = user.getRole().toString(); // Assuming getRole() returns an enum or string representing the role
+                List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList(role);
+
                 return org.springframework.security.core.userdetails.User
                         .withUsername(email)
                         .password(user.getPassword())
-                        .roles(user.getRole().toString()) // Assuming getRole() returns a string representation of the role
+                        .accountExpired(false)
+                        .accountLocked(false)
+                        .credentialsExpired(false)
+                        .disabled(false)
                         .build();
             } else {
-                throw new DisabledException("User account is not active");
-                // Alternatively, you can throw UsernameNotFoundException to treat inactive users as not found
+                // Alternatively, you can treat inactive users as not found
+                throw new UsernameNotFoundException("User account is not active");
             }
         }).orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     }
+
 //    public String signUpUser(User user) {
 //        boolean userExists = userRepository
 //                .findByEmail(user.getEmail())
