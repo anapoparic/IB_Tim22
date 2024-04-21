@@ -1,9 +1,18 @@
 <html>
 <body>
+  <app-nav-bar></app-nav-bar>
     <div class="main-div">
 
         <div class="main-admin-child"></div>
-        <app-nav-bar></app-nav-bar>
+
+        <div id="sort-bar" class="sort-bar">
+          <div class="root" [ngClass]="{ 'clicked': selectedClass === 'root' }" (click)="refreshView()">
+            Roots
+          </div>
+          <div class="tree" [ngClass]="{ 'clicked': selectedClass === 'tree' }">
+            Tree View
+          </div>
+        </div>
 
         <div class="main-content" id="main-content">
           <b class="no-text" *ngIf="(certifications | async)?.length == 0">NO RESULTS</b>
@@ -12,6 +21,7 @@
               class="icon-image"
               alt=""
               src="../../../assets/public/certificate (4).png"
+              (click)="openDescendantsOfRoot(certificate?.id ?? 0)"
               />
               <div class="left-data">
                 <div class="top-data-box">

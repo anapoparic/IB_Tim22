@@ -96,4 +96,26 @@ public class CertificateController {
         }
         return new ResponseEntity<Certificate>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping(value = "/root", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CertificateDTO>> getAllRootCertificates() {
+        Collection<Certificate> certificates = service.getAllRoot();
+        Collection<CertificateDTO> certificateDTOS = certificates.stream()
+                .map(CertificateMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(certificateDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/descendants/{rootId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CertificateDTO>> getAllDescendantsOfRoot(@PathVariable Integer rootId) {
+        // Poziv servisa za pronalaženje svih potomaka (dece) root sertifikata
+        Collection<Certificate> descendants = service.findAllChildren(rootId);
+
+        Collection<CertificateDTO> descendantsDTOS = descendants.stream()
+                .map(CertificateMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(descendantsDTOS, HttpStatus.OK);
+    }
 }

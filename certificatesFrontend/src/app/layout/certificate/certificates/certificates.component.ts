@@ -17,6 +17,7 @@ import { CertificatesTreeComponent } from '../certificates-tree/certificates-tre
 export class CertificatesComponent implements OnInit {
 
 
+  selectedClass: string = 'root';
   certifications: Observable<Certificate[]> = new Observable<[]>;
 
 
@@ -25,8 +26,23 @@ export class CertificatesComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.certifications = this.certificationService.getAllCertificates();
+      this.certifications = this.certificationService.getAllRootCertificates();
+      this.certificationService.getAllDescendantsOfRoot(1)
+      .subscribe(
+        data => {
+          console.log('Podaci su uspešno primljeni:', data);
+          // Ovde možete dalje manipulisati podacima ili izvršiti odgovarajuću logiku
+        },
+        error => {
+          console.error('Došlo je do greške prilikom dobijanja podataka:', error);
+        }
+      );
     });
+  }
+
+  refreshView(): void {
+    this.selectedClass = "root";
+    this.certifications = this.certificationService.getAllRootCertificates();
   }
 
   revoke(id: number) {
@@ -68,7 +84,7 @@ export class CertificatesComponent implements OnInit {
     this.certificationService.getCertificateById(certificateId).subscribe(certificate => {
       const dialogRef = this.dialog.open(CertificatesTreeComponent, {
         width: 'auto',
-        data: certificate
+        data: this.certificationService.getAllDescendantsOfRoot(certificateId)
       });
     });
   }
@@ -78,6 +94,11 @@ export class CertificatesComponent implements OnInit {
     const dialogRef = this.dialog.open(CreateRequestComponent, {
       width: 'auto'
     });
+  }
+
+  openDescendantsOfRoot(certificateId: number): void {
+    this.selectedClass = "tree";
+    this.certifications = this.certificationService.getAllDescendantsOfRoot(certificateId);
   }
 
 }
