@@ -107,7 +107,7 @@ public class CertificateGenerator {
                     subject.getX500Name(),
                     subject.getPublicKey());
 
-            if (template == Template.CA) {
+            if (template == Template.ROOT) {
                 certGen.addExtension(X509Extension.keyUsage, true, new KeyUsage(KeyUsage.keyCertSign | KeyUsage.cRLSign));
                 certGen.addExtension(X509Extension.basicConstraints, true, new BasicConstraints(true));
                 certGen.addExtension(X509Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));

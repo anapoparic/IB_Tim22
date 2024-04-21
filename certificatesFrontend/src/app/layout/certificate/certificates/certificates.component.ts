@@ -8,6 +8,7 @@ import { ReasonForRevoke } from '../model/enum/reasonForRevoke.enum';
 import Swal from 'sweetalert2';
 import { CreateRequestComponent } from '../create-request/create-request.component';
 import { CertificatesTreeComponent } from '../certificates-tree/certificates-tree.component';
+import { CreateRootComponent } from '../create-root/create-root.component';
 
 @Component({
   selector: 'app-certificates',
@@ -76,6 +77,12 @@ export class CertificatesComponent implements OnInit {
   //ovde se dodaje implementacija za dodavanje novog sertikata
   signCertificate(arg0: number) {
     const dialogRef = this.dialog.open(CreateRequestComponent, {
+      width: 'auto'
+    });
+  }
+
+  signRootCertificate() {
+    const dialogRef = this.dialog.open(CreateRootComponent, {
       width: 'auto'
     });
   }

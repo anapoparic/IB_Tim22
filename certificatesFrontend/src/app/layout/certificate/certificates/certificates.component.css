@@ -171,3 +171,22 @@
     align-items: center;
     align-content: center;
   }
+  .add-new-container{
+    position: relative;
+    border-radius: var(--br-7xs);
+    background-color: var(--blue-1);
+    width: 250px;
+    display: flex;
+    left:41.5%;
+    margin-bottom: 5%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-3xs) var(--padding-lg);
+    box-sizing: border-box;
+    cursor: pointer;
+    border: none;
+    font-size: var(--font-size-mini);
+    font-family: var(--font-sansation);
+    color: var(--color-white);
+  }

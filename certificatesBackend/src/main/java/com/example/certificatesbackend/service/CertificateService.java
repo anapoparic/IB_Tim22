@@ -8,6 +8,7 @@ import com.example.certificatesbackend.dto.CertificateRequestDTO;
 import com.example.certificatesbackend.pki.certificates.CertificateGenerator;
 import com.example.certificatesbackend.pki.data.Issuer;
 import com.example.certificatesbackend.pki.data.Subject;
+import com.example.certificatesbackend.pki.keystores.KeyStoreManager;
 import com.example.certificatesbackend.pki.keystores.KeyStoreReader;
 import com.example.certificatesbackend.pki.keystores.KeyStoreWriter;
 import com.example.certificatesbackend.repository.ICertificateRepository;
@@ -42,6 +43,9 @@ public class CertificateService  {
     private ICertificateRepository repository;
 
     @Autowired
+    private KeyStoreManager keyStoreManager;
+
+    @Autowired
     public KeyStoreWriter storeWriter;
 
     @Autowired
@@ -49,6 +53,8 @@ public class CertificateService  {
 
     @Autowired
     public CertificateRequestService requestService;
+
+    public int keystoreCounter = 0;
 
     public Collection<Certificate> getAll() {
         return repository.findAll();
@@ -77,14 +83,12 @@ public class CertificateService  {
 
         X509Certificate certificate = null;
 
-        if (Template.valueOf(template) == Template.CA) {
-            certificate = CertificateGenerator.generateCertificate(subject, issuer, validFrom, validTo, serialNumber, Template.CA);
+        if (Template.valueOf(template) == Template.ROOT) {
+            certificate = CertificateGenerator.generateCertificate(subject, issuer, validFrom, validTo, serialNumber, Template.ROOT);
         } else if (Template.valueOf(template) == Template.END_ENTITY) {
             certificate = CertificateGenerator.generateCertificate(subject, issuer, validFrom, validTo, serialNumber, Template.END_ENTITY);
         } else if (Template.valueOf(template) == Template.INTERMEDIATE) {
             certificate = CertificateGenerator.generateCertificate(subject, issuer, validFrom, validTo, serialNumber, Template.INTERMEDIATE);
-        } else {
-            certificate = CertificateGenerator.generateCertificate(subject, issuer, validFrom, validTo, serialNumber, Template.CA);
         }
 
         java.security.cert.Certificate[] newChain = Arrays.copyOf(certificatesChain, certificatesChain.length + 1);
@@ -95,15 +99,10 @@ public class CertificateService  {
         storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
 
         Certificate newCertificate = new Certificate(validFrom, validTo, alias, issuerAlias,
-                false, null, Template.valueOf(template), request.getCommonName(), request.getOrganization(), request.getEmail(),
+                false, null, Template.valueOf(template), request.getCommonName(), request.getOrganization(), request.getUnit(), request.getCountry(), request.getEmail(),
                 true);
         repository.save(newCertificate);
         requestService.delete(request.getId());
-        //treba dodati funkciju export (videti kod milice) -> zasto?
-        //jer kada kreiramo sertifikat novi mi ga zapisujemo u keystore sa ostalima, ali nam treba taj sertifikat
-        //odredjenom formatu (kao opipljiv), znaci u formatu certificate.CRT
-        //CRT - dobijas sertifikat kao sto imas u sistemu one sertifikate takav format imas i to je taj sertifikat
-        //u keystore ti samo belezis info o kreiranom sertifikatu kao sto su javni kljuc, privatni, serijski broj itd...
 
         return newCertificate;
     }
@@ -145,10 +144,51 @@ public class CertificateService  {
         return subject;
     }
 
-    public X509Certificate createRootCertificate()throws ParseException {
-        storeWriter.loadKeyStore(null, KEYSTORE_PASSWORD.toCharArray());
+//    public X509Certificate createRootCertificate()throws ParseException {
+//        storeWriter.loadKeyStore(null, KEYSTORE_PASSWORD.toCharArray());
+//        KeyPair keyPair = generateKeyPair();
+//        Subject subject = createRootSubject(keyPair);
+//        assert keyPair != null;
+//
+//        Date validFrom = new Date();
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(validFrom);
+//        calendar.add(Calendar.MONTH, 13);
+//        Date validTo = calendar.getTime();
+//        String serialNumber = String.valueOf(System.currentTimeMillis());
+//
+//
+//        X509Certificate createdCertificate = generateRootCertificate(subject, keyPair, validFrom, validTo, serialNumber);
+//
+//        storeWriter.write(ROOT_ALIAS, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), createdCertificate);
+//        storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
+//
+//        Certificate newCertificate = new Certificate(validFrom, validTo, ROOT_ALIAS, ROOT_ALIAS,
+//                false, null, Template.ROOT, "admin", "FTN", "admin@example.com",
+//                true);
+//        repository.save(newCertificate);
+//
+//        return createdCertificate;
+//    }
+//    private Subject createRootSubject(KeyPair keyPairValues) throws java.text.ParseException {
+//
+//        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
+//        builder.addRDN(BCStyle.CN, "drugi");
+//        builder.addRDN(BCStyle.SURNAME, "adminic2");
+//        builder.addRDN(BCStyle.GIVENNAME, "admin2");
+//        builder.addRDN(BCStyle.O, "FTN");
+//        builder.addRDN(BCStyle.OU, "SIIT");
+//        builder.addRDN(BCStyle.COUNTRY_OF_RESIDENCE, "Serbia");
+//        builder.addRDN(BCStyle.E, "admin2@example.com");
+//        builder.addRDN(BCStyle.UID, "1");
+//        Subject subject = new Subject(keyPairValues.getPublic(), builder.build());
+//        return subject;
+//    }
+
+    public X509Certificate createRootCertificate(Certificate certificate, String uid) throws ParseException, IOException {
         KeyPair keyPair = generateKeyPair();
-        Subject subject = createRootSubject(keyPair);
+        Subject subject = createRootSubject(keyPair, certificate.getCommonName(), "Admin", "Adminic", certificate.getOrganization(), certificate.getOrganizationUnit(),
+                certificate.getCountry(), certificate.getOwnerEmail(), uid);
         assert keyPair != null;
 
         Date validFrom = new Date();
@@ -158,30 +198,37 @@ public class CertificateService  {
         Date validTo = calendar.getTime();
         String serialNumber = String.valueOf(System.currentTimeMillis());
 
-
         X509Certificate createdCertificate = generateRootCertificate(subject, keyPair, validFrom, validTo, serialNumber);
 
-        storeWriter.write(ROOT_ALIAS, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), createdCertificate);
-        storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
+        String keystoreFileName = "keystore_" + keystoreCounter + ".jks";
+        keystoreCounter++;
 
-        Certificate newCertificate = new Certificate(validFrom, validTo, ROOT_ALIAS, ROOT_ALIAS,
-                false, null, Template.CA, "admin", "FTN", "admin@example.com",
+
+        storeWriter.loadKeyStore(null, KEYSTORE_PASSWORD.toCharArray());
+        storeWriter.write(certificate.getAlias(), keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), createdCertificate);
+        storeWriter.saveKeyStore(keystoreFileName, KEYSTORE_PASSWORD.toCharArray());
+
+        Certificate newCertificate = new Certificate(validFrom, validTo, certificate.getAlias(), certificate.getIssuerAlias(),
+                false, null, Template.ROOT, certificate.getCommonName(), certificate.getOrganization(), certificate.getOrganizationUnit(), certificate.getCountry(), certificate.getOwnerEmail(),
                 true);
         repository.save(newCertificate);
 
+
         return createdCertificate;
     }
-    private Subject createRootSubject(KeyPair keyPairValues) throws java.text.ParseException {
+
+    private Subject createRootSubject(KeyPair keyPairValues, String commonName, String surname, String givenName, String organization,
+                                      String organizationalUnit, String countryOfResidence, String email, String uid) throws java.text.ParseException {
 
         X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
-        builder.addRDN(BCStyle.CN, "drugi");
-        builder.addRDN(BCStyle.SURNAME, "adminic2");
-        builder.addRDN(BCStyle.GIVENNAME, "admin2");
-        builder.addRDN(BCStyle.O, "FTN");
-        builder.addRDN(BCStyle.OU, "SIIT");
-        builder.addRDN(BCStyle.COUNTRY_OF_RESIDENCE, "Serbia");
-        builder.addRDN(BCStyle.E, "admin2@example.com");
-        builder.addRDN(BCStyle.UID, "1");
+        builder.addRDN(BCStyle.CN, commonName);
+        builder.addRDN(BCStyle.SURNAME, surname);
+        builder.addRDN(BCStyle.GIVENNAME, givenName);
+        builder.addRDN(BCStyle.O, organization);
+        builder.addRDN(BCStyle.OU, organizationalUnit);
+        builder.addRDN(BCStyle.COUNTRY_OF_RESIDENCE, countryOfResidence);
+        builder.addRDN(BCStyle.E, email);
+        builder.addRDN(BCStyle.UID, uid);
         Subject subject = new Subject(keyPairValues.getPublic(), builder.build());
         return subject;
     }

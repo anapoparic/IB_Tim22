@@ -32,6 +32,17 @@ export class CertificatesService {
     );
   }
 
+  createRootCertificate(requestDTO: Certificate, uid: string): Observable<Certificate> {
+    return this.http.post<Certificate>(`${this.apiUrlCer}/generateRoot`, requestDTO, {
+      params: {
+        uid: uid
+      }
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+
   deleteCertificate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrlCer}/${id}`);
   }

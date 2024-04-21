@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    <img class="x-icon" alt="" src="../../../assets/public/out.png" (click)="closeDialog()" style="cursor: pointer;"/>
+    <div class="register-guest">
+        <div class="data-container">
+            <p mat-dialog-title class="title-text">New root certificate</p>
+
+            <div id="inputs-login" [formGroup]="certificationForm!" class="form-container"  mat-dialog-content>
+
+                <b class="normal-text">Alias</b>
+                <div class="input-frame">
+                    <input id="aliasInput" type="text" class="input-field" formControlName="alias" required />
+                </div>
+
+                <b class="normal-text">Issuer alias</b>
+                <div class="input-frame">
+                    <input id="issuerAliasInput" type="text" class="input-field" formControlName="issuer_alias" required />
+                </div>
+
+                <b class="normal-text">Template</b>
+                <div class="input-frame">
+                    <input id="templateInput" type="text" class="input-field" formControlName="template" required value="Root" />
+                </div>
+
+                <b class="normal-text">Common Name</b>
+                <div class="input-frame" style="margin-bottom: 0%;">
+                    <input id="commonNameInput" type="text" class="input-field" placeholder="Enter common name..." formControlName="commonName" required/>
+                </div>
+
+                <b class="normal-text">Organization</b>
+                <div class="input-frame">
+                    <input id="organizationInput" type="text" class="input-field" placeholder="Enter organization..." formControlName="organization" required/>
+                </div>
+
+                <b class="normal-text">Unit</b>
+                <div class="input-frame">
+                    <input id="unitInput" type="text" class="input-field" placeholder="Enter unit..." formControlName="unit" required/>
+                </div> 
+                
+                <b class="normal-text">Email</b>
+                <div class="input-frame">
+                    <input id="emailInput" type="email" class="input-field" placeholder="Enter email address..." formControlName="email" required />
+                </div> 
+    
+
+                <b class="normal-text">Country</b>
+                <div class="input-frame">
+                    <input id="countryInput" type="text" class="input-field" placeholder="Enter country.." formControlName="country" required />
+                </div> 
+
+                <b class="normal-text">UID</b>
+                <div class="input-frame">
+                    <input id="uidInput" type="text" class="input-field" placeholder="Enter uid.." formControlName="uid" required readonly/>
+                </div>
+             
+            </div>
+            
+
+            <div class="button-container" (click)="createRoot()">
+                <b>Create</b>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

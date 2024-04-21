@@ -61,9 +61,10 @@ public class CertificateController {
     }
 
     @PostMapping(value = "/generateRoot")
-    public ResponseEntity<CertificateDTO> createRootCertificate() throws Exception {
+    public ResponseEntity<CertificateDTO> createRootCertificate(CertificateDTO certificateDTO, String uid) throws Exception {
+        System.out.println("UIDDD" + uid);
         try {
-            service.createRootCertificate();
+            service.createRootCertificate(CertificateMapper.toEntity(certificateDTO), uid);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
