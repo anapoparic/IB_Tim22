@@ -8,6 +8,7 @@ import { ReasonForRevoke } from '../model/enum/reasonForRevoke.enum';
 import Swal from 'sweetalert2';
 import { CreateRequestComponent } from '../create-request/create-request.component';
 import { CertificatesTreeComponent } from '../certificates-tree/certificates-tree.component';
+import { CreateRootComponent } from '../create-root/create-root.component';
 
 @Component({
   selector: 'app-certificates',
@@ -83,7 +84,12 @@ export class CertificatesComponent implements OnInit {
       data: certificateAlias
     });
   }
-
+  
+  signRootCertificate() {
+    const dialogRef = this.dialog.open(CreateRootComponent, {
+      width: 'auto'
+    });
+  }
   openDescendantsOfRoot(certificateId: number): void {
     this.selectedClass = "tree";
     this.certifications = this.certificationService.getAllDescendantsOfRoot(certificateId);

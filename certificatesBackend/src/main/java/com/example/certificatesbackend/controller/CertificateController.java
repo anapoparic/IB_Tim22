@@ -1,6 +1,7 @@
 package com.example.certificatesbackend.controller;
 
 import com.example.certificatesbackend.domain.Certificate;
+import com.example.certificatesbackend.domain.CertificateRequest;
 import com.example.certificatesbackend.dto.CertificateDTO;
 import com.example.certificatesbackend.dto.CertificateRequestDTO;
 import com.example.certificatesbackend.mapper.CertificateMapper;
@@ -60,10 +61,10 @@ public class CertificateController {
         return new ResponseEntity<List<CertificateDTO>>(certifications, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/generateRoot")
-    public ResponseEntity<CertificateDTO> createRootCertificate() throws Exception {
+    @PostMapping(value = "/generateRoot", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createRootCertificate(@RequestBody CertificateDTO certificateDTO, String uid) throws Exception {
         try {
-            service.createRootCertificate();
+            service.createRootCertificate(CertificateMapper.toEntity(certificateDTO), uid);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -71,6 +72,7 @@ public class CertificateController {
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CertificateDTO> createCertificate(
             @RequestBody CertificateRequestDTO requestDTO,
