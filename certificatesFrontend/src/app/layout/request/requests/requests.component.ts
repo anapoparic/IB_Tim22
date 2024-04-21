@@ -1,47 +1,28 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { CertificateRequest } from '../request/certificateRequest.model';
-import { RequestsService } from '../request/requests.service';
-import { Observable } from 'rxjs';
-import { Certificate } from '../certificate/certificate.model';
-import { CertificatesService } from '../certificate/certificates.service';
+import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
-import {Template} from "../certificate/template.enum";
-import {ReasonForRevoke} from "../certificate/reasonForRevoke.enum";
+import { Template } from '../../certificate/model/enum/template.enum';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { CertificateRequest } from '../model/certificateRequest.model';
+import { RequestsService } from '../requests.service';
 
 @Component({
-  selector: 'app-index',
-  templateUrl: './index.component.html',
-  styleUrls: ['./index.component.css', '../../../styles.css']
+  selector: 'app-requests',
+  templateUrl: './requests.component.html',
+  styleUrls: ['./requests.component.css']
 })
-
-export class IndexComponent implements OnInit {
-
-  selectedClass: string = 'requests';
-  filter: string = 'requests';
+export class RequestsComponent implements OnInit {
 
   requests: Observable<CertificateRequest[]> = new Observable<[]>;
-  certifications: Observable<Certificate[]> = new Observable<[]>;
 
 
-  constructor(private router: Router, private route: ActivatedRoute, private requestService: RequestsService, private certificationService: CertificatesService) {
+  constructor(private router: Router, private route: ActivatedRoute, private requestService: RequestsService) {
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.filter = params['filter'] || 'requests';
       this.requests = this.requestService.getAllActiveRequests();
-      this.certifications = this.certificationService.getAllCertificates();
     });
-  }
-
-  changeStyle(className: string): void {
-    this.selectedClass = className;
-    if (className === 'certifications') {
-      this.router.navigate(['/index'], {queryParams: {filter: 'certifications'}});
-    } else {
-      this.router.navigate(['/index'], {queryParams: {filter: 'requests'}});
-    }
   }
 
   approveRequest(id: number) {
@@ -110,13 +91,13 @@ export class IndexComponent implements OnInit {
   getExtensionsForTemplate(template: Template): { extension: string, value: string }[] {
     let extensions: { extension: string, value: string }[] = [];
 
-    if (template === Template.CA) {
+    if (template === Template.ROOT) {
       extensions.push({ extension: 'X509Extension.keyUsage', value: 'true, keyCertSign, cRLSign' });
       extensions.push({ extension: 'X509Extension.basicConstraints', value: 'true' });
       extensions.push({ extension: 'X509Extension.subjectKeyIdentifier', value: 'false' });
       extensions.push({ extension: 'X509Extension.certificatePolicies', value: 'false, 1.3.6.1.4.1.99999.1' });
       extensions.push({ extension: 'X509Extension.extendedKeyUsage', value: 'false, anyExtendedKeyUsage' });
-    } else if (template === Template.INTERMEDIATE) {
+    } else if (template === Template.CA) {
       extensions.push({ extension: 'X509Extension.keyUsage', value: 'true, keyCertSign, cRLSign' });
       extensions.push({ extension: 'X509Extension.basicConstraints', value: 'true' });
       extensions.push({ extension: 'X509Extension.subjectKeyIdentifier', value: 'false' });
@@ -174,47 +155,12 @@ export class IndexComponent implements OnInit {
         });
         this.requests = this.requestService.getAllActiveRequests();
       },
-      error: (error) => {
+      error: () => {
         Swal.fire({
           icon: 'error',
           title: 'Error',
           text: 'An error is occured. Please try again.',
         });
-      }
-    });
-  }
-
-  revoke(id: number) {
-    const reasons = Object.values(ReasonForRevoke).map(value => ({ value, label: value }));
-
-    const checkboxes = reasons.map(reason => `
-    <div style="text-align: left;">
-      <label class="swal2-checkbox" style="text-align: right;">
-        <input type="radio" name="revokeReason" value="${reason.value}">
-        <span class="swal2-label" style="text-align: right;">${reason.label}</span>
-      </label>
-    </div>
-  `).join('<br>');
-
-    Swal.fire({
-      title: 'Revoke Certificate',
-      html: checkboxes,
-      showCancelButton: true,
-      confirmButtonText: 'Revoke',
-      cancelButtonText: 'Cancel',
-      preConfirm: () => {
-        const selectedReason = (document.querySelector('input[name="revokeReason"]:checked') as HTMLInputElement)?.value;
-        if (!selectedReason) {
-          Swal.showValidationMessage('Please select a reason.');
-        }
-        return selectedReason;
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const reason = result.value;
-        // Ovde možeš izvršiti akciju za poništenje certifikata sa odabranim razlogom
-        // Na primer: this.certificationService.revokeCertificate(id, reason).subscribe(...);
-        Swal.fire('Certificate Revoked!', `Certificate with ID ${id} has been successfully revoked.`, 'success');
       }
     });
   }

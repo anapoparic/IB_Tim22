@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CertificateRequest } from './certificateRequest.model';
+import { CertificateRequest } from './model/certificateRequest.model';
 import { Observable, catchError, of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 

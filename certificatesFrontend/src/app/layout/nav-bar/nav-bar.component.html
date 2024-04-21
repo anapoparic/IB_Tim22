@@ -1,6 +1,6 @@
 <header>
     <div class="header-container">
-       <img class="logo" alt="" src="../../../assets/public/cream-black-minimalist-illustrated-luxury-real-estate-circle-logo-7-3@2x.png" routerLink="/index" style="cursor: pointer;"/>
+       <img class="logo" alt="" src="../../../assets/public/logoSecurity.png" routerLink="/index" style="cursor: pointer;"/>
     
        <div class="home-nav">
        </div>
@@ -19,13 +19,13 @@
  
      <div id="adminDropdownContainer" class="popup-overlay" *ngIf="isPopupVisible" (click)="onPopupClick($event)">
        <div class="admin-dropdown">
-         <div class="nav-box" (click)="navigateTo('/manage-profile')">
+         <div class="nav-box" (click)="navigateTo('/requests')">
             <img class="nav-icon" alt="" src="../../../assets/public/certificate (5).png" />
             <div class="nav-text">Requests</div>
          </div>
  
-         <div class="nav-box" (click)="navigateTo('/accommodation-requests')">
-            <img class="nav-icon" alt="" src="../../../assets/public/certificate (1).png" />
+         <div class="nav-box" (click)="navigateTo('/certificates')">
+            <img class="nav-icon" alt="" src="../../../assets/public/certificate (4).png" />
             <div class="nav-text">Certificates</div>
          </div>
  

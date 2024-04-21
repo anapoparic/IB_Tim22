@@ -1,5 +1,5 @@
-import { ReasonForRevoke } from "./reasonForRevoke.enum";
-import { Template } from "./template.enum";
+import { ReasonForRevoke } from "./enum/reasonForRevoke.enum";
+import { Template } from "./enum/template.enum";
 
 export interface Certificate {
     id?: number;
