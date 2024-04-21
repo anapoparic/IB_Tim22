@@ -72,12 +72,16 @@ public class CertificateController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CertificateDTO> createCertificate(@RequestBody CertificateRequestDTO requestDTO, String alias, String issuerAlias, String template) throws Exception {
+    public ResponseEntity<CertificateDTO> createCertificate(
+            @RequestBody CertificateRequestDTO requestDTO,
+            @RequestParam String alias,
+            @RequestParam String issuerAlias,
+            @RequestParam String template
+    ) throws Exception {
         Certificate createdCertificate = null;
 
         try {
             createdCertificate = service.create(CertificateRequestMapper.toEntity(requestDTO), alias, issuerAlias, template);
-
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new CertificateDTO(), HttpStatus.BAD_REQUEST);

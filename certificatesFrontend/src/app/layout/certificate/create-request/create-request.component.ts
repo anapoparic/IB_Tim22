@@ -12,6 +12,7 @@ import { CertificatesService } from '../certificates.service';
 import { CertificateRequest } from '../../request/model/certificateRequest.model';
 import { RequestsService } from '../../request/requests.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Template } from '../model/enum/template.enum';
 
 @Component({
   selector: 'app-create-request',
@@ -28,10 +29,13 @@ export class CreateRequestComponent implements OnInit{
       uid:  [{value: '', disabled: true}],
       organization:  ['', Validators.required],
       unit:  ['', Validators.required],
-      firstName:  [{value: '', disabled: true}],
-      lastName:  [{value: '', disabled: true}],
-      country:  [{value: '', disabled: true}],
-      email:  [{value: '', disabled: true}]
+      firstName:  ['', Validators.required],
+      lastName:  ['', Validators.required],
+      country:  ['', Validators.required],
+      email:  ['', Validators.required],
+      alias:  ['', Validators.required],
+      issuerAlias:  [{value: '', disabled: true}],
+      template:  [Template.CA],
     });
   }
 
@@ -44,13 +48,16 @@ export class CreateRequestComponent implements OnInit{
 
           this.certificationForm!.setValue({
             commonName: '',
-            uid: user.id,
+            uid: this.requestService.generateUniqueUID(),
             organization: '',
             unit: '',
-            firstName: user.firstName,
-            lastName: user.lastName,
-            country: user.address?.country,
-            email: user.email,
+            firstName: '',
+            lastName: '',
+            country: '',
+            email: '',
+            alias:  '',
+            issuerAlias:  this.data,
+            template:  Template.CA,
           });
         },
         (error) => {
@@ -75,28 +82,33 @@ export class CreateRequestComponent implements OnInit{
         unit: formValues.unit || '',
         country: formValues.country || '',
         email: formValues.email || '',
-        uid: formValues.uid || ''
+        uid: this.certificationForm?.controls['uid'].value || ''
       };
 
       this.requestService.createRequest(request).subscribe({
         next: (createdRequest: CertificateRequest) => {
-          Swal.fire('Success', 'Successfully created!', 'success');
-          this.router.navigate(['/']);
-        },
-        error: (error) => {
-          if (error.status === 400 && error.error === 'You have already sent a request with this email.') {
-            Swal.fire('Error', 'You have already sent a request with this email.', 'error');
-          } else {
-            Swal.fire('Error', 'You have already sent a request with this email.', 'error');
-          }
+          this.certificationService.createCertificate(request, formValues.alias, this.certificationForm?.controls['issuerAlias'].value, formValues.template.toString()).subscribe({
+            next: () => {
+              Swal.fire('Success', 'Successfully created!', 'success');
+              this.router.navigate(['/']);
+            },
+            error: (error) => {
+              Swal.fire('Error', 'Please try again!', 'error');
+            }
+          });
         }
       });
+
+      
     } else {
       Swal.fire('Error', 'Some fields are empty or have invalid values.', 'error');
     }
   }
 
-
+  toggleRole() {
+    const currentTemplate = this.certificationForm?.get('template')?.value;
+    this.certificationForm?.get('template')?.setValue(currentTemplate === Template.CA ? Template.END_ENTITY : Template.CA );
+  }
 
   checkForEmptyValues(formValues: any): boolean {
     return Object.values(formValues).every(value => {

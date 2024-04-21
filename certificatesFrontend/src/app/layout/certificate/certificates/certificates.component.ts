@@ -63,8 +63,6 @@ export class CertificatesComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         const reason = result.value;
-        // Ovde možeš izvršiti akciju za poništenje certifikata sa odabranim razlogom
-        // Na primer: this.certificationService.revokeCertificate(id, reason).subscribe(...);
         Swal.fire('Certificate Revoked!', `Certificate with ID ${id} has been successfully revoked.`, 'success');
       }
     });
@@ -79,10 +77,10 @@ export class CertificatesComponent implements OnInit {
     });
   }
 
-  //ovde se dodaje implementacija za dodavanje novog sertikata
-  signCertificate(arg0: number) {
+  signCertificate(certificateAlias: string) {
     const dialogRef = this.dialog.open(CreateRequestComponent, {
-      width: 'auto'
+      width: 'auto',
+      data: certificateAlias
     });
   }
 
