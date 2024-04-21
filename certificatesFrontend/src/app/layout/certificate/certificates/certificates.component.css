@@ -171,25 +171,3 @@
     align-items: center;
     align-content: center;
   }
-  ::ng-deep .x-icon {
-    width: 2% !important;
-    height:auto !important;
-    cursor: pointer;
-    margin-left: 90%;
-    margin-top: 4%;
-    margin-bottom: 2%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: right;
-  }
-  ::ng-deep .title-dialog{
-    margin: 0;
-    letter-spacing: 0.01em;
-    color: var(--color-gray-300);
-    font-size: var(--font-size-xl);
-    align-items: center;
-    flex-wrap: wrap;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-}

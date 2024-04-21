@@ -11,6 +11,7 @@ import { RequestsComponent } from './request/requests/requests.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { CreateRequestComponent } from './certificate/create-request/create-request.component';
+import { CertificatesTreeComponent } from './certificate/certificates-tree/certificates-tree.component';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { CreateRequestComponent } from './certificate/create-request/create-requ
     ShorterFooterComponent,
     CertificatesComponent,
     RequestsComponent,
+    CertificatesTreeComponent,
   ],
   exports: [
     NavBarComponent,

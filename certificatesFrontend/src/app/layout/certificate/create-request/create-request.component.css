@@ -205,3 +205,14 @@ input {
     cursor: pointer;
     color: var(--gray-2);
 }
+.x-icon {
+    width: 2% !important;
+    height:auto !important;
+    cursor: pointer;
+    margin-left: 90%;
+    margin-top: 4%;
+    margin-bottom: 2%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: right;
+  }
