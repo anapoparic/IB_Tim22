@@ -55,7 +55,7 @@ export class CreateRootComponent implements OnInit{
             unit: '',
             email: user.email,
             country: user.address?.country,
-            uid: user.id
+            uid: this.requestService.generateUniqueUID()
           });
         },
         (error) => {
@@ -92,6 +92,7 @@ export class CreateRootComponent implements OnInit{
         next: (createdCertificate: Certificate) => {
           Swal.fire('Success', 'Successfully created!', 'success');
           this.router.navigate(['/certificates']);
+          this.closeDialog();
         },
         error: (error) => {
           Swal.fire('Error', 'Error', 'error'); 

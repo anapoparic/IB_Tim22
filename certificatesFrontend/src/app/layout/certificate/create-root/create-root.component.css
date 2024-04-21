@@ -188,6 +188,7 @@ input {
     font-size: var(--font-size-mini);
     font-family: var(--font-sansation);
     color: var(--color-white);
+    margin-bottom: 5%;
 }
 
 .special-text {

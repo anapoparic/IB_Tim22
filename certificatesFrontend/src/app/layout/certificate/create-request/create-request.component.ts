@@ -35,7 +35,7 @@ export class CreateRequestComponent implements OnInit{
       email:  ['', Validators.required],
       alias:  ['', Validators.required],
       issuerAlias:  [{value: '', disabled: true}],
-      template:  [Template.CA],
+      template:  [Template.INTERMEDIATE],
     });
   }
 
@@ -57,7 +57,7 @@ export class CreateRequestComponent implements OnInit{
             email: '',
             alias:  '',
             issuerAlias:  this.data,
-            template:  Template.CA,
+            template:  Template.INTERMEDIATE,
           });
         },
         (error) => {
@@ -84,21 +84,17 @@ export class CreateRequestComponent implements OnInit{
         email: formValues.email || '',
         uid: this.certificationForm?.controls['uid'].value || ''
       };
-
-      this.requestService.createRequest(request).subscribe({
-        next: (createdRequest: CertificateRequest) => {
-          this.certificationService.createCertificate(request, formValues.alias, this.certificationForm?.controls['issuerAlias'].value, formValues.template.toString()).subscribe({
-            next: () => {
-              Swal.fire('Success', 'Successfully created!', 'success');
-              this.router.navigate(['/']);
-            },
-            error: (error) => {
-              Swal.fire('Error', 'Please try again!', 'error');
-            }
-          });
+      
+      this.certificationService.createCertificate(request, formValues.alias, this.certificationForm?.controls['issuerAlias'].value, formValues.template.toString()).subscribe({
+        next: () => {
+          Swal.fire('Success', 'Successfully created!', 'success');
+          this.router.navigate(['/certifications']);
+          this.closeDialog();
+        },
+        error: (error) => {
+          Swal.fire('Error', 'Please try again!', 'error');
         }
       });
-
       
     } else {
       Swal.fire('Error', 'Some fields are empty or have invalid values.', 'error');
@@ -107,7 +103,7 @@ export class CreateRequestComponent implements OnInit{
 
   toggleRole() {
     const currentTemplate = this.certificationForm?.get('template')?.value;
-    this.certificationForm?.get('template')?.setValue(currentTemplate === Template.CA ? Template.END_ENTITY : Template.CA );
+    this.certificationForm?.get('template')?.setValue(currentTemplate === Template.INTERMEDIATE ? Template.END_ENTITY : Template.INTERMEDIATE );
   }
 
   checkForEmptyValues(formValues: any): boolean {

@@ -97,7 +97,7 @@ export class RequestsComponent implements OnInit {
       extensions.push({ extension: 'X509Extension.subjectKeyIdentifier', value: 'false' });
       extensions.push({ extension: 'X509Extension.certificatePolicies', value: 'false, 1.3.6.1.4.1.99999.1' });
       extensions.push({ extension: 'X509Extension.extendedKeyUsage', value: 'false, anyExtendedKeyUsage' });
-    } else if (template === Template.CA) {
+    } else if (template === Template.INTERMEDIATE) {
       extensions.push({ extension: 'X509Extension.keyUsage', value: 'true, keyCertSign, cRLSign' });
       extensions.push({ extension: 'X509Extension.basicConstraints', value: 'true' });
       extensions.push({ extension: 'X509Extension.subjectKeyIdentifier', value: 'false' });

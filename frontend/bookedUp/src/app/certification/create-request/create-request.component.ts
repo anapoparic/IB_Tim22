@@ -42,7 +42,7 @@ export class CreateRequestComponent implements OnInit{
 
           this.certificationForm!.setValue({
             commonName: '',
-            uid: user.id,
+            uid: this.certificationService.generateUniqueUID(),
             organization: '',
             unit: '',
             firstName: user.firstName,

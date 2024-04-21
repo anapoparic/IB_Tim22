@@ -153,38 +153,24 @@ public class KeyStoreReader {
         return null;
     }
 
-    public Issuer getIssuer(String keystorePath, String keystorePass, String issuerAlias) throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException {
+    public Issuer getIssuer(String keyStoreFile, String alias, char[] password, char[] keyPass) {
         try {
-            // Učitaj keystore
-            FileInputStream fis = new FileInputStream(keystorePath);
-            KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keystore.load(fis, keystorePass.toCharArray());
-            fis.close();
 
-            // Dohvati certifikat izdavatelja iz keystore-a koristeći alias
-            Certificate issuerCert = keystore.getCertificate(issuerAlias);
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
 
-            // Provjeri je li certifikat X.509 tipa
-            if (issuerCert instanceof X509Certificate) {
-                X509Certificate issuerX509Cert = (X509Certificate) issuerCert;
+            keyStore.load(in, password);
 
-                // Dohvati privatni ključ iz keystore-a koristeći alias
-                PrivateKey privateKey = (PrivateKey) keystore.getKey(issuerAlias, keystorePass.toCharArray());
+            Certificate cert = keyStore.getCertificate(alias);
 
-                // Kreiraj X500Name objekt koji predstavlja podatke o izdavatelju
-                X500Name x500Name = new X500Name(issuerX509Cert.getIssuerX500Principal().getName());
+            PrivateKey privKey = (PrivateKey) keyStore.getKey(alias, keyPass);
 
-                // Kreiraj novi Issuer objekt i vrati ga
-                return new Issuer(privateKey, x500Name);
-            } else {
-                System.out.println("Certificate is not X.509 type.");
-                return null;
-            }
+            X500Name issuerName = new JcaX509CertificateHolder((X509Certificate) cert).getSubject();
 
+            return new Issuer(privKey, issuerName);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+        return null;
     }
 
 }

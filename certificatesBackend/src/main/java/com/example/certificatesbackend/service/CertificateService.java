@@ -112,8 +112,8 @@ public class CertificateService  {
         assert keyPair != null;
         subject.setPublicKey(keyPair.getPublic());
 
-        java.security.cert.Certificate[] certificatesChain = storeReader.getCertificateChain(KEYSTORE_PATH, KEYSTORE_PASSWORD, issuerAlias);
-        Issuer issuer = storeReader.getIssuer(KEYSTORE_PATH, KEYSTORE_PASSWORD, issuerAlias);
+        //java.security.cert.Certificate[] certificatesChain = storeReader.getCertificateChain(KEYSTORE_PATH, KEYSTORE_PASSWORD, issuerAlias);
+        Issuer issuer = storeReader.getIssuer(KEYSTORE_PATH,issuerAlias, KEYSTORE_PASSWORD.toCharArray(), KEYSTORE_PASSWORD.toCharArray());
         String serialNumber = String.valueOf(System.currentTimeMillis());
 
         Date validFrom = new Date();
@@ -132,11 +132,12 @@ public class CertificateService  {
             certificate = CertificateGenerator.generateCertificate(subject, issuer, validFrom, validTo, serialNumber, Template.INTERMEDIATE);
         }
 
-        java.security.cert.Certificate[] newChain = Arrays.copyOf(certificatesChain, certificatesChain.length + 1);
-        newChain[0] = certificate;
+//        java.security.cert.Certificate[] newChain = Arrays.copyOf(certificatesChain, certificatesChain.length + 1);
+//        newChain[0] = certificate;
 
         storeWriter.loadKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
-        storeWriter.writeChain(alias, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), newChain);
+        storeWriter.write(alias, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), certificate);
+        //storeWriter.writeChain(alias, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), newChain);
         storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
 
         Certificate newCertificate = new Certificate(validFrom, validTo, alias, issuerAlias,
