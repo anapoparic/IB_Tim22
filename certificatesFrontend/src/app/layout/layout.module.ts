@@ -8,9 +8,14 @@ import { ShorterFooterComponent } from './shorter-footer/shorter-footer.componen
 import { CertificatesComponent } from './certificate/certificates/certificates.component';
 import { RequestsComponent } from './request/requests/requests.component';
 
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { CreateRequestComponent } from './certificate/create-request/create-request.component';
+
 
 @NgModule({
   declarations: [
+    CreateRequestComponent,
     NavBarComponent,
     ShorterFooterComponent,
     CertificatesComponent,
@@ -25,6 +30,8 @@ import { RequestsComponent } from './request/requests/requests.component';
     RouterModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule    
   ]
 })
 export class LayoutModule { }
