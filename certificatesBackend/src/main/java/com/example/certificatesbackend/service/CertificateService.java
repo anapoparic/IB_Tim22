@@ -86,6 +86,24 @@ public class CertificateService  {
         }
     }
 
+    public Collection<Certificate> findPathToRoot(Integer certificateId) {
+        LinkedList<Certificate> pathToRoot = new LinkedList<>();
+        Certificate currentCertificate = repository.findById(certificateId);
+
+        while (currentCertificate != null) {
+            pathToRoot.addFirst(currentCertificate); // Dodajemo na početak liste
+            if (currentCertificate.getTemplate().equals(Template.ROOT)) {
+                break; // Ako je root, prekidamo petlju
+            }
+            // Pronalazimo roditelja trenutnog sertifikata
+            Optional<Certificate> parentOptional = repository.findByAlias(currentCertificate.getIssuerAlias());
+            // Ako roditelj ne postoji, prekidamo petlju
+            currentCertificate = parentOptional.orElse(null);
+        }
+
+        return pathToRoot;
+    }
+
     public Certificate getById(Long id) {
         return repository.findById(id).orElse(null);
     }

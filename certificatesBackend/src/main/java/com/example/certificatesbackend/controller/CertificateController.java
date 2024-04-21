@@ -109,7 +109,6 @@ public class CertificateController {
 
     @GetMapping(value = "/descendants/{rootId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CertificateDTO>> getAllDescendantsOfRoot(@PathVariable Integer rootId) {
-        // Poziv servisa za pronalaženje svih potomaka (dece) root sertifikata
         Collection<Certificate> descendants = service.findAllChildren(rootId);
 
         Collection<CertificateDTO> descendantsDTOS = descendants.stream()
@@ -117,5 +116,16 @@ public class CertificateController {
                 .collect(Collectors.toList());
 
         return new ResponseEntity<>(descendantsDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/pathToRoot/{rootId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CertificateDTO>> getPathToRoot(@PathVariable Integer rootId) {
+        Collection<Certificate> path = service.findPathToRoot(rootId);
+
+        Collection<CertificateDTO> pathDTOS = path.stream()
+                .map(CertificateMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(pathDTOS, HttpStatus.OK);
     }
 }

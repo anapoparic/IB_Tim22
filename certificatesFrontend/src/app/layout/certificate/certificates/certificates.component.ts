@@ -27,16 +27,6 @@ export class CertificatesComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.certifications = this.certificationService.getAllRootCertificates();
-      this.certificationService.getAllDescendantsOfRoot(1)
-      .subscribe(
-        data => {
-          console.log('Podaci su uspešno primljeni:', data);
-          // Ovde možete dalje manipulisati podacima ili izvršiti odgovarajuću logiku
-        },
-        error => {
-          console.error('Došlo je do greške prilikom dobijanja podataka:', error);
-        }
-      );
     });
   }
 
@@ -84,7 +74,7 @@ export class CertificatesComponent implements OnInit {
     this.certificationService.getCertificateById(certificateId).subscribe(certificate => {
       const dialogRef = this.dialog.open(CertificatesTreeComponent, {
         width: 'auto',
-        data: this.certificationService.getAllDescendantsOfRoot(certificateId)
+        data: this.certificationService.getPathToRoot(certificateId)
       });
     });
   }

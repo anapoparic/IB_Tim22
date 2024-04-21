@@ -5,17 +5,10 @@
     <h2 mat-dialog-title class="title-dialog">Certificate Path</h2>
     
     <div mat-dialog-content>
-      <!-- Implementirajte logiku za prikaz hijerarhijske strukture sertifikata ovde -->
-      <!-- Primer: -->
-      <ul>
-        <li>{{ data.name }}</li>
-        <li *ngFor="let child of data.children">
-          {{ child.name }}
-          <ul>
-            <li *ngFor="let grandchild of child.children">{{ grandchild.name }}</li>
-          </ul>
-        </li>
-      </ul>
+      <div *ngFor="let alias of aliasList; let i = index" [style.marginLeft.px]="i * 20">
+        <span *ngIf="i > 0" class="indent">|_</span>{{ alias }}
+      </div>
+
     </div>
 </body>
 </html>

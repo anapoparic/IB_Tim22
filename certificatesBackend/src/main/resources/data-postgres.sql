@@ -2,7 +2,10 @@ INSERT INTO certificate (valid_from, valid_to, alias, issuer_alias, is_revoked, 
 VALUES
     ('2023-01-01 10:00:00', '2024-01-01 10:00:00', 'Alias1', 'Alias1', false, NULL, 0, 'CommonName1', 'Organization1', 'email1@example.com', true),
     ('2023-01-01 10:00:00', '2024-01-01 10:00:00', 'Alias2', 'Alias1', false, NULL, 1, 'CommonName2', 'Organization2', 'email2@example.com', true),
-    ('2023-01-01 10:00:00', '2024-01-01 10:00:00', 'Alias3', 'Alias2', false, NULL, 3, 'CommonName3', 'Organization3', 'email3@example.com', true);
+    ('2023-01-01 10:00:00', '2024-01-01 10:00:00', 'Alias3', 'Alias2', false, NULL, 3, 'CommonName3', 'Organization3', 'email3@example.com', true),
+    ('2023-01-01 10:00:00', '2024-01-01 10:00:00', 'Alias4', 'Alias1', false, NULL, 1, 'CommonName4', 'Organization2', 'email4@example.com', true),
+    ('2023-01-01 10:00:00', '2024-01-01 10:00:00', 'Alias5', 'Alias1', false, NULL, 1, 'CommonName5', 'Organization2', 'email5@example.com', true),
+    ('2023-01-01 10:00:00', '2024-01-01 10:00:00', 'Alias6', 'Alias5', false, NULL, 3, 'CommonName6', 'Organization3', 'email6@example.com', true);
 
 INSERT INTO requests (common_name, first_name, last_name, organization, unit, country, email, uid, active)
 VALUES
