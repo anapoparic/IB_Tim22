@@ -18,6 +18,7 @@ import { CreateRootComponent } from '../create-root/create-root.component';
 export class CertificatesComponent implements OnInit {
 
 
+  selectedClass: string = 'root';
   certifications: Observable<Certificate[]> = new Observable<[]>;
 
 
@@ -26,8 +27,13 @@ export class CertificatesComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.certifications = this.certificationService.getAllCertificates();
+      this.certifications = this.certificationService.getAllRootCertificates();
     });
+  }
+
+  refreshView(): void {
+    this.selectedClass = "root";
+    this.certifications = this.certificationService.getAllRootCertificates();
   }
 
   revoke(id: number) {
@@ -58,8 +64,6 @@ export class CertificatesComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         const reason = result.value;
-        // Ovde možeš izvršiti akciju za poništenje certifikata sa odabranim razlogom
-        // Na primer: this.certificationService.revokeCertificate(id, reason).subscribe(...);
         Swal.fire('Certificate Revoked!', `Certificate with ID ${id} has been successfully revoked.`, 'success');
       }
     });
@@ -69,22 +73,26 @@ export class CertificatesComponent implements OnInit {
     this.certificationService.getCertificateById(certificateId).subscribe(certificate => {
       const dialogRef = this.dialog.open(CertificatesTreeComponent, {
         width: 'auto',
-        data: certificate
+        data: this.certificationService.getPathToRoot(certificateId)
       });
     });
   }
 
-  //ovde se dodaje implementacija za dodavanje novog sertikata
-  signCertificate(arg0: number) {
+  signCertificate(certificateAlias: string) {
     const dialogRef = this.dialog.open(CreateRequestComponent, {
-      width: 'auto'
+      width: 'auto',
+      data: certificateAlias
     });
   }
-
+  
   signRootCertificate() {
     const dialogRef = this.dialog.open(CreateRootComponent, {
       width: 'auto'
     });
+  }
+  openDescendantsOfRoot(certificateId: number): void {
+    this.selectedClass = "tree";
+    this.certifications = this.certificationService.getAllDescendantsOfRoot(certificateId);
   }
 
 }

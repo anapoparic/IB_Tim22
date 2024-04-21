@@ -56,6 +56,17 @@
     margin-right: 3%;
     align-items: center;
 }
+.input-frame-toggle{
+    height: 37px;
+    margin-bottom: 1%;
+    margin-top: 1.5%;
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    padding: var(--padding-2xs) var(--padding-xs) var(--padding-xs);
+    box-sizing: border-box;
+}
 input {
     border: none;
     outline: none;
@@ -84,8 +95,9 @@ input {
     align-items: center;
     width: 50%;
 }
+
 .toggle {
-    --width: 80px;
+    --width: 100px;
     --height: calc(var(--width) / 3);
   
     position: relative;
@@ -110,7 +122,7 @@ input {
     width: 100%;
     height: 100%;
     border-radius: var(--height);
-    background-color: #ccc;
+    background-color: var(--gray-6);
     transition: all 0.4s ease-in-out;
 }
 
@@ -122,7 +134,7 @@ input {
     width: calc(var(--height));
     height: calc(var(--height));
     border-radius: calc(var(--height) / 2);
-    background-color: #fff;
+    background-color: var(--gray-6);
     box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
     transition: all 0.4s ease-in-out;
 }
@@ -137,11 +149,16 @@ input {
 
 .toggle .labels {
     position: absolute;
-    top: 8px;
     left: 0;
-    width: 100%;
+    margin-left: 10%;
+    width: 80%;
     height: 100%;
-    font-size: 12px;
+    font-size: var(--font-size-2xs);
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+    display: flex;
     font-family: sans-serif;
     transition: all 0.4s ease-in-out;
 }
@@ -149,7 +166,7 @@ input {
 .toggle .labels::after {
     content: attr(data-off);
     position: absolute;
-    right: 5px;
+    right: 7px;
     color: #4d4d4d;
     opacity: 1;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
@@ -160,7 +177,7 @@ input {
     content: attr(data-on);
     position: absolute;
     left: 5px;
-    color: #ffffff;
+    color: #4d4d4d;
     opacity: 0;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.4);
     transition: all 0.4s ease-in-out;
@@ -188,6 +205,7 @@ input {
     font-size: var(--font-size-mini);
     font-family: var(--font-sansation);
     color: var(--color-white);
+    margin-bottom: 5%;
 }
 
 .special-text {

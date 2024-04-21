@@ -60,6 +60,56 @@ public class CertificateService  {
         return repository.findAll();
     }
 
+    public Collection<Certificate> getAllRoot() {
+        return repository.findAllByTemplate(Template.ROOT);
+    }
+
+    public Collection<Certificate> findAllChildren(Integer rootId) {
+        Certificate root = repository.findById(rootId);
+
+        if (root == null) {
+            return new ArrayList<>(); // Return an empty list if the root certificate is not found
+        }
+
+        Collection<Certificate> children = new ArrayList<>();
+        findAllChildrenRecursive(root, children);
+
+        return children;
+    }
+
+    private void findAllChildrenRecursive(Certificate parent, Collection<Certificate> children) {
+        // Find all direct children of the current parent certificate
+        Collection<Certificate> directChildren = repository.findAllByIssuerAlias(parent.getAlias());
+
+        for (Certificate child : directChildren) {
+            children.add(child);
+            if(!child.getIssuerAlias().equals(child.getAlias())){ // if certificate sign itself
+                // Add the child certificate to the collection of children
+
+                // Recursively find all children of the current child
+                findAllChildrenRecursive(child, children);
+            }
+        }
+    }
+
+    public Collection<Certificate> findPathToRoot(Integer certificateId) {
+        LinkedList<Certificate> pathToRoot = new LinkedList<>();
+        Certificate currentCertificate = repository.findById(certificateId);
+
+        while (currentCertificate != null) {
+            pathToRoot.addFirst(currentCertificate); // Dodajemo na početak liste
+            if (currentCertificate.getTemplate().equals(Template.ROOT)) {
+                break; // Ako je root, prekidamo petlju
+            }
+            // Pronalazimo roditelja trenutnog sertifikata
+            Optional<Certificate> parentOptional = repository.findByAlias(currentCertificate.getIssuerAlias());
+            // Ako roditelj ne postoji, prekidamo petlju
+            currentCertificate = parentOptional.orElse(null);
+        }
+
+        return pathToRoot;
+    }
+
     public Certificate getById(Long id) {
         return repository.findById(id).orElse(null);
     }

@@ -23,6 +23,7 @@
       position: relative;
       justify-content: center;
       left: 0;
+      margin-top: -0.5%;
       width: 100%;
       background-color: var(--color-white);
       height: 48px;
@@ -46,19 +47,15 @@
     font-size: var(--font-size-base);
   }
   .root,
-  .ca,
-  .end-entity {
+  .tree {
     cursor: pointer;
     position: absolute;
     top: 16px;
     left: 122px;
     letter-spacing: 0.02em;
   }
-  .ca {
-    left: 240px;
-  }
-  .end-entity{
-    left: 310px;
+  .tree{
+    left: 200px;
   }
   .clicked {
     color: var(--blue-1);
@@ -77,6 +74,7 @@
     margin-bottom: 20px;
   }
   .icon-image {
+    cursor: pointer;
     position: absolute;
     top: 50%;
     left: 7%;

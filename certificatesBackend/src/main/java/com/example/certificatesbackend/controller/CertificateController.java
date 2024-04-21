@@ -74,12 +74,16 @@ public class CertificateController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CertificateDTO> createCertificate(@RequestBody CertificateRequestDTO requestDTO, String alias, String issuerAlias, String template) throws Exception {
+    public ResponseEntity<CertificateDTO> createCertificate(
+            @RequestBody CertificateRequestDTO requestDTO,
+            @RequestParam String alias,
+            @RequestParam String issuerAlias,
+            @RequestParam String template
+    ) throws Exception {
         Certificate createdCertificate = null;
 
         try {
             createdCertificate = service.create(CertificateRequestMapper.toEntity(requestDTO), alias, issuerAlias, template);
-
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(new CertificateDTO(), HttpStatus.BAD_REQUEST);
@@ -97,5 +101,37 @@ public class CertificateController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Certificate>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(value = "/root", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CertificateDTO>> getAllRootCertificates() {
+        Collection<Certificate> certificates = service.getAllRoot();
+        Collection<CertificateDTO> certificateDTOS = certificates.stream()
+                .map(CertificateMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(certificateDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/descendants/{rootId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CertificateDTO>> getAllDescendantsOfRoot(@PathVariable Integer rootId) {
+        Collection<Certificate> descendants = service.findAllChildren(rootId);
+
+        Collection<CertificateDTO> descendantsDTOS = descendants.stream()
+                .map(CertificateMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(descendantsDTOS, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/pathToRoot/{rootId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CertificateDTO>> getPathToRoot(@PathVariable Integer rootId) {
+        Collection<Certificate> path = service.findPathToRoot(rootId);
+
+        Collection<CertificateDTO> pathDTOS = path.stream()
+                .map(CertificateMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(pathDTOS, HttpStatus.OK);
     }
 }

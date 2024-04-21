@@ -20,6 +20,22 @@ export class CertificatesService {
     return this.http.get<Certificate>(`${this.apiUrlCer}/${id}`);
   }
 
+  getCertificatesFromKeyStore(): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(`${this.apiUrlCer}/keyStore`);
+  }
+
+  getAllRootCertificates(): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(`${this.apiUrlCer}/root`);
+  }
+
+  getAllDescendantsOfRoot(id: number): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(`${this.apiUrlCer}/descendants/${id}`);
+  }
+
+  getPathToRoot(id: number): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(`${this.apiUrlCer}/pathToRoot/${id}`);
+  }
+
   createCertificate(requestDTO: CertificateRequest, alias: string, issuerAlias: string, template: string): Observable<Certificate> {
     return this.http.post<Certificate>(this.apiUrlCer, requestDTO, {
       params: {
@@ -50,4 +66,5 @@ export class CertificatesService {
     console.error('An error occurred:', error);
     return throwError('Something went wrong; please try again later.');
   }
+  
 }
