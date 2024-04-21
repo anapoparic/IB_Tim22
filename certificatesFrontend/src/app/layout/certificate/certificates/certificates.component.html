@@ -1,9 +1,9 @@
 <html>
 <body>
-  <app-nav-bar></app-nav-bar>
     <div class="main-div">
 
         <div class="main-admin-child"></div>
+        <app-nav-bar></app-nav-bar>
 
         <div id="sort-bar" class="sort-bar">
           <div class="root" [ngClass]="{ 'clicked': selectedClass === 'root' }" (click)="refreshView()">

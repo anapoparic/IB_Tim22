@@ -6,9 +6,22 @@
     
     <div mat-dialog-content>
       <div *ngFor="let alias of aliasList; let i = index" [style.marginLeft.px]="i * 20">
-        <span *ngIf="i > 0" class="indent">|_</span>{{ alias }}
+        <div class="frame">
+          <img
+          *ngIf="i == 0"
+          class="icon"
+          alt=""
+          src="../../../assets/public/certificate (4).png"
+          />
+          <img
+          *ngIf="i > 0"
+          class="icon"
+          alt=""
+          src="../../../assets/public/certificate (1).png"
+          />
+          <div class="normal-text">{{ alias }}</div>
       </div>
-
+    </div>
     </div>
 </body>
 </html>

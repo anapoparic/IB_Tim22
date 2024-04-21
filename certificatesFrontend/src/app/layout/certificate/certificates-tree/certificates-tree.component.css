@@ -20,3 +20,27 @@
     align-content: center;
     justify-content: center;
 }
+.indent {
+  margin-right: 5px; 
+  color: #888;
+}
+.location-text {
+  font-size: var(--font-size-sm);
+}
+.reviews-average,
+.location-text {
+  margin-left: 2px;
+}
+.frame{
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 2%;
+}
+.normal-text {
+  color: var(--gray-1);
+}
