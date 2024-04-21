@@ -1,12 +1,13 @@
 export enum ReasonForRevoke {
-    UNSPECIFIED = 'Neodređeni razlog za poništenje certifikata.',
-    KEY_COMPROMISE = 'Kompromitiranje privatnog ključa.',
-    CA_COMPROMISE = 'Kompromitiranje certifikacijskog autoriteta (CA).',
-    AFFILIATION_CHANGED = 'Promjena povezanosti s organizacijom ili entitetom.',
-    SUPERSEDED = 'Certifikat je zamijenjen novijim certifikatom.',
-    CESSATION_OF_OPERATION = 'Prekid operacija povezanih s certifikatom.',
-    CERTIFICATE_HOLD = 'Držanje certifikata - privremeno suspendiranje.',
-    REMOVE_FROM_CRL = 'Uklanjanje iz popisa opozvanih certifikata (CRL).',
-    PRIVILEGE_WITHDRAWN = 'Povlačenje privilegija povezanih s certifikatom.',
-    AACOMPROMISE = 'Kompromitiranje atributa povjerenja.'
+  UNSPECIFIED = 'Unspecified reason for revocation',
+  KEY_COMPROMISE = 'Private key compromise',
+  CA_COMPROMISE = 'CA compromise',
+  AFFILIATION_CHANGED = 'Change in affiliation',
+  SUPERSEDED = 'Superseded certificate',
+  CESSATION_OF_OPERATION = 'Cessation of operation',
+  CERTIFICATE_HOLD = 'Certificate hold - temporary suspension',
+  REMOVE_FROM_CRL = 'Removal from Certificate Revocation List',
+  PRIVILEGE_WITHDRAWN = 'Withdrawal of associated privileges',
+  AACOMPROMISE = 'Attribute authority compromise'
+
 }

@@ -43,7 +43,7 @@ export class CreateRequestComponent implements OnInit{
           this.certificationForm!.setValue({
             commonName: '',
             uid: user.id,
-            organization: '', 
+            organization: '',
             unit: '',
             firstName: user.firstName,
             lastName: user.lastName,
@@ -62,7 +62,6 @@ export class CreateRequestComponent implements OnInit{
 
     if (this.checkForEmptyValues(formValues)) {
       const request: CertificateRequest = {
-        
         commonName: formValues.commonName || '',
         firstName: formValues.firstName || '',
         lastName: formValues.lastName || '',
@@ -74,15 +73,23 @@ export class CreateRequestComponent implements OnInit{
       };
 
       this.certificationService.createRequest(request).subscribe({
-        next: (registeredUser: User) => {
+        next: (createdRequest: CertificateRequest) => {
           Swal.fire('Success', 'Successfully created!', 'success');
           this.router.navigate(['/']);
+        },
+        error: (error) => {
+          if (error.status === 400 && error.error === 'You have already sent a request with this email.') {
+            Swal.fire('Error', 'You have already sent a request with this email.', 'error');
+          } else {
+            Swal.fire('Error', 'You have already sent a request with this email.', 'error');
+          }
         }
       });
     } else {
       Swal.fire('Error', 'Some fields are empty or have invalid values.', 'error');
     }
   }
+
 
   checkForEmptyValues(formValues: any): boolean {
     return Object.values(formValues).every(value => {

@@ -7,6 +7,7 @@ import { Certificate } from '../certificate/certificate.model';
 import { CertificatesService } from '../certificate/certificates.service';
 import Swal from 'sweetalert2';
 import {Template} from "../certificate/template.enum";
+import {ReasonForRevoke} from "../certificate/reasonForRevoke.enum";
 
 @Component({
   selector: 'app-index',
@@ -183,8 +184,39 @@ export class IndexComponent implements OnInit {
     });
   }
 
-  revoke(arg0: number) {
-    throw new Error('Method not implemented.');
-    }
+  revoke(id: number) {
+    const reasons = Object.values(ReasonForRevoke).map(value => ({ value, label: value }));
+
+    const checkboxes = reasons.map(reason => `
+    <div style="text-align: left;">
+      <label class="swal2-checkbox" style="text-align: right;">
+        <input type="radio" name="revokeReason" value="${reason.value}">
+        <span class="swal2-label" style="text-align: right;">${reason.label}</span>
+      </label>
+    </div>
+  `).join('<br>');
+
+    Swal.fire({
+      title: 'Revoke Certificate',
+      html: checkboxes,
+      showCancelButton: true,
+      confirmButtonText: 'Revoke',
+      cancelButtonText: 'Cancel',
+      preConfirm: () => {
+        const selectedReason = (document.querySelector('input[name="revokeReason"]:checked') as HTMLInputElement)?.value;
+        if (!selectedReason) {
+          Swal.showValidationMessage('Please select a reason.');
+        }
+        return selectedReason;
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const reason = result.value;
+        // Ovde možeš izvršiti akciju za poništenje certifikata sa odabranim razlogom
+        // Na primer: this.certificationService.revokeCertificate(id, reason).subscribe(...);
+        Swal.fire('Certificate Revoked!', `Certificate with ID ${id} has been successfully revoked.`, 'success');
+      }
+    });
+  }
 
 }
