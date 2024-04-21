@@ -46,19 +46,22 @@ public class CertificateRequestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CertificateRequestDTO> createRequest(@RequestBody CertificateRequestDTO requestDTO) throws Exception {
-        CertificateRequest createdRequest = null;
-
+    public ResponseEntity<?> createRequest(@RequestBody CertificateRequestDTO requestDTO) {
         try {
-            createdRequest = service.create(CertificateRequestMapper.toEntity(requestDTO));
+            if (service.existsActiveRequestByEmail(requestDTO.getEmail())) {
+                return ResponseEntity.badRequest().body("You have already sent a request with this email.");
+            }
 
+            CertificateRequest createdRequest = service.create(CertificateRequestMapper.toEntity(requestDTO));
+            CertificateRequestDTO createdRequestDTO = CertificateRequestMapper.toDto(createdRequest);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdRequestDTO);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(new CertificateRequestDTO(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
         }
-
-        return new ResponseEntity<>(CertificateRequestMapper.toDto(createdRequest), HttpStatus.CREATED);
     }
+
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<CertificateRequestDTO> deleteRequest(@PathVariable("id") Long id) {

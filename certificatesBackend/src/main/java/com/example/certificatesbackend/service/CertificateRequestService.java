@@ -43,6 +43,11 @@ public class CertificateRequestService implements ServiceInterface<CertificateRe
         repository.save(req);
     }
 
+    public boolean existsActiveRequestByEmail(String email) {
+        return repository.findByEmailAndActive(email, true).isPresent();
+    }
+
+
     public List<CertificateRequest> getAllActiveRequests() {
         return repository.findByActive(true);
     }

@@ -12,4 +12,6 @@ public interface ICertificateRequestRepository extends JpaRepository<Certificate
     Optional<CertificateRequest> findByIdAndActive(Integer id, boolean b);
 
     List<CertificateRequest> findByActive(boolean b);
+
+    Optional<CertificateRequest> findByEmailAndActive(String email, boolean b);
 }
