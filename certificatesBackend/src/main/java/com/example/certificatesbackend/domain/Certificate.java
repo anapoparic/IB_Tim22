@@ -2,6 +2,7 @@ package com.example.certificatesbackend.domain;
 
 import com.example.certificatesbackend.domain.enums.ReasonForRevoke;
 import com.example.certificatesbackend.domain.enums.Template;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

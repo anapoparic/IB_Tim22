@@ -1,10 +1,8 @@
 package com.example.certificatesbackend.service;
 
-import com.example.certificatesbackend.constants.Constants;
 import com.example.certificatesbackend.domain.Certificate;
 import com.example.certificatesbackend.domain.CertificateRequest;
 import com.example.certificatesbackend.domain.enums.Template;
-import com.example.certificatesbackend.dto.CertificateRequestDTO;
 import com.example.certificatesbackend.pki.certificates.CertificateGenerator;
 import com.example.certificatesbackend.pki.data.Issuer;
 import com.example.certificatesbackend.pki.data.Subject;
@@ -12,17 +10,10 @@ import com.example.certificatesbackend.pki.keystores.KeyStoreManager;
 import com.example.certificatesbackend.pki.keystores.KeyStoreReader;
 import com.example.certificatesbackend.pki.keystores.KeyStoreWriter;
 import com.example.certificatesbackend.repository.ICertificateRepository;
-import com.example.certificatesbackend.service.interfaces.ServiceInterface;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
-import org.bouncycastle.cert.X509v3CertificateBuilder;
-import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
-import org.bouncycastle.operator.ContentSigner;
-import org.bouncycastle.operator.OperatorCreationException;
-import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
@@ -194,55 +185,6 @@ public class CertificateService  {
         return subject;
     }
 
-//    public X509Certificate createRootCertificate(Certificate certificate, String uid) throws ParseException, IOException {
-//        KeyPair keyPair = generateKeyPair();
-//        Subject subject = createRootSubject(keyPair, certificate.getCommonName(), "Admin", "Adminic", certificate.getOrganization(), certificate.getOrganizationUnit(),
-//                certificate.getCountry(), certificate.getOwnerEmail(), uid);
-//        assert keyPair != null;
-//
-//        Date validFrom = new Date();
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(validFrom);
-//        calendar.add(Calendar.MONTH, 13);
-//        Date validTo = calendar.getTime();
-//        String serialNumber = String.valueOf(System.currentTimeMillis());
-//
-//        X509Certificate createdCertificate = generateRootCertificate(subject, keyPair, validFrom, validTo, serialNumber);
-//
-//        String keystoreFileName = "keystore_" + keystoreCounter + ".jks";
-//        keystoreCounter++;
-//
-//
-//        storeWriter.loadKeyStore(null, KEYSTORE_PASSWORD.toCharArray());
-//        storeWriter.write(certificate.getAlias(), keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), createdCertificate);
-//        storeWriter.saveKeyStore(keystoreFileName, KEYSTORE_PASSWORD.toCharArray());
-//
-//        Certificate newCertificate = new Certificate(validFrom, validTo, certificate.getAlias(), certificate.getIssuerAlias(),
-//                false, null, Template.ROOT, certificate.getCommonName(), certificate.getOrganization(), certificate.getOrganizationUnit(), certificate.getCountry(), certificate.getOwnerEmail(),
-//                true);
-//        repository.save(newCertificate);
-//
-//
-//        return createdCertificate;
-//    }
-//
-//    private Subject createRootSubject(KeyPair keyPairValues, String commonName, String surname, String givenName, String organization,
-//                                      String organizationalUnit, String countryOfResidence, String email, String uid) throws java.text.ParseException {
-//
-//        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
-//        builder.addRDN(BCStyle.CN, commonName);
-//        builder.addRDN(BCStyle.SURNAME, surname);
-//        builder.addRDN(BCStyle.GIVENNAME, givenName);
-//        builder.addRDN(BCStyle.O, organization);
-//        builder.addRDN(BCStyle.OU, organizationalUnit);
-//        builder.addRDN(BCStyle.COUNTRY_OF_RESIDENCE, countryOfResidence);
-//        builder.addRDN(BCStyle.E, email);
-//        builder.addRDN(BCStyle.UID, uid);
-//        Subject subject = new Subject(keyPairValues.getPublic(), builder.build());
-//        return subject;
-//    }
-//
-
     public X509Certificate createRootCertificate(Certificate certificate, String uid) throws ParseException, IOException {
         KeyPair keyPair = generateKeyPair();
         Subject subject = createRootSubject(keyPair, certificate.getCommonName(), "Admin", "Adminic", certificate.getOrganization(), certificate.getOrganizationUnit(),
@@ -258,13 +200,10 @@ public class CertificateService  {
 
         X509Certificate createdCertificate = generateRootCertificate(subject, keyPair, validFrom, validTo, serialNumber);
 
-        String keystoreFileName = "keystore_" + keystoreCounter + ".jks";
-        keystoreCounter++;
 
-
-        storeWriter.loadKeyStore(null, KEYSTORE_PASSWORD.toCharArray());
+        storeWriter.loadKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
         storeWriter.write(certificate.getAlias(), keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), createdCertificate);
-        storeWriter.saveKeyStore(keystoreFileName, KEYSTORE_PASSWORD.toCharArray());
+        storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
 
         Certificate newCertificate = new Certificate(validFrom, validTo, certificate.getAlias(), certificate.getIssuerAlias(),
                 false, null, Template.ROOT, certificate.getCommonName(), certificate.getOrganization(), certificate.getOrganizationUnit(), certificate.getCountry(), certificate.getOwnerEmail(),
