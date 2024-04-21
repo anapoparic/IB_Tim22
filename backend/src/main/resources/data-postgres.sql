@@ -14,7 +14,8 @@ VALUES
 INSERT INTO public.authority (role) VALUES
                                         ('ADMIN'),
                                         ('GUEST'),
-                                        ('HOST');
+                                        ('HOST'),
+                                        ('SUPER_ADMIN');
 
 INSERT INTO photo (url, caption, width, height, active)
 VALUES

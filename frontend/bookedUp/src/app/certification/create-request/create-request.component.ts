@@ -23,13 +23,13 @@ export class CreateRequestComponent implements OnInit{
   constructor(private authService: AuthService, private router: Router, private userService: UserService,private formBuilder: FormBuilder, private  certificationService: CertificationService) {
     this.certificationForm =  this.formBuilder.group({
       commonName:  ['', Validators.required],
-      uid:  ['', Validators.required],
+      uid:  [{value: '', disabled: true}],
       organization:  ['', Validators.required],
       unit:  ['', Validators.required],
-      firstName:  ['', Validators.required],
-      lastName:  ['', Validators.required],
-      country:  ['', Validators.required],
-      email:  ['', Validators.required, Validators.email]
+      firstName:  [{value: '', disabled: true}],
+      lastName:  [{value: '', disabled: true}],
+      country:  [{value: '', disabled: true}],
+      email:  [{value: '', disabled: true}]
     });
   }
 
