@@ -144,10 +144,10 @@ public class CertificateService  {
         return subject;
     }
 
-//    public X509Certificate createRootCertificate()throws ParseException {
-//        storeWriter.loadKeyStore(null, KEYSTORE_PASSWORD.toCharArray());
+//    public X509Certificate createRootCertificate(Certificate certificate, String uid) throws ParseException, IOException {
 //        KeyPair keyPair = generateKeyPair();
-//        Subject subject = createRootSubject(keyPair);
+//        Subject subject = createRootSubject(keyPair, certificate.getCommonName(), "Admin", "Adminic", certificate.getOrganization(), certificate.getOrganizationUnit(),
+//                certificate.getCountry(), certificate.getOwnerEmail(), uid);
 //        assert keyPair != null;
 //
 //        Date validFrom = new Date();
@@ -157,33 +157,41 @@ public class CertificateService  {
 //        Date validTo = calendar.getTime();
 //        String serialNumber = String.valueOf(System.currentTimeMillis());
 //
-//
 //        X509Certificate createdCertificate = generateRootCertificate(subject, keyPair, validFrom, validTo, serialNumber);
 //
-//        storeWriter.write(ROOT_ALIAS, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), createdCertificate);
-//        storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
+//        String keystoreFileName = "keystore_" + keystoreCounter + ".jks";
+//        keystoreCounter++;
 //
-//        Certificate newCertificate = new Certificate(validFrom, validTo, ROOT_ALIAS, ROOT_ALIAS,
-//                false, null, Template.ROOT, "admin", "FTN", "admin@example.com",
+//
+//        storeWriter.loadKeyStore(null, KEYSTORE_PASSWORD.toCharArray());
+//        storeWriter.write(certificate.getAlias(), keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), createdCertificate);
+//        storeWriter.saveKeyStore(keystoreFileName, KEYSTORE_PASSWORD.toCharArray());
+//
+//        Certificate newCertificate = new Certificate(validFrom, validTo, certificate.getAlias(), certificate.getIssuerAlias(),
+//                false, null, Template.ROOT, certificate.getCommonName(), certificate.getOrganization(), certificate.getOrganizationUnit(), certificate.getCountry(), certificate.getOwnerEmail(),
 //                true);
 //        repository.save(newCertificate);
 //
+//
 //        return createdCertificate;
 //    }
-//    private Subject createRootSubject(KeyPair keyPairValues) throws java.text.ParseException {
+//
+//    private Subject createRootSubject(KeyPair keyPairValues, String commonName, String surname, String givenName, String organization,
+//                                      String organizationalUnit, String countryOfResidence, String email, String uid) throws java.text.ParseException {
 //
 //        X500NameBuilder builder = new X500NameBuilder(BCStyle.INSTANCE);
-//        builder.addRDN(BCStyle.CN, "drugi");
-//        builder.addRDN(BCStyle.SURNAME, "adminic2");
-//        builder.addRDN(BCStyle.GIVENNAME, "admin2");
-//        builder.addRDN(BCStyle.O, "FTN");
-//        builder.addRDN(BCStyle.OU, "SIIT");
-//        builder.addRDN(BCStyle.COUNTRY_OF_RESIDENCE, "Serbia");
-//        builder.addRDN(BCStyle.E, "admin2@example.com");
-//        builder.addRDN(BCStyle.UID, "1");
+//        builder.addRDN(BCStyle.CN, commonName);
+//        builder.addRDN(BCStyle.SURNAME, surname);
+//        builder.addRDN(BCStyle.GIVENNAME, givenName);
+//        builder.addRDN(BCStyle.O, organization);
+//        builder.addRDN(BCStyle.OU, organizationalUnit);
+//        builder.addRDN(BCStyle.COUNTRY_OF_RESIDENCE, countryOfResidence);
+//        builder.addRDN(BCStyle.E, email);
+//        builder.addRDN(BCStyle.UID, uid);
 //        Subject subject = new Subject(keyPairValues.getPublic(), builder.build());
 //        return subject;
 //    }
+//
 
     public X509Certificate createRootCertificate(Certificate certificate, String uid) throws ParseException, IOException {
         KeyPair keyPair = generateKeyPair();

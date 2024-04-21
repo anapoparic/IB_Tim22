@@ -22,10 +22,10 @@ import { Certificate } from '../model/certificate.model';
 })
 export class CreateRootComponent implements OnInit{
 
-  certificationForm: FormGroup | undefined;
+  certificationRootForm: FormGroup | undefined;
 
-  constructor(public dialogRef: MatDialogRef<CreateRootComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private authService: AuthService, private router: Router, private userService: UserService,private formBuilder: FormBuilder, private requestService: RequestsService, private  certificationService: CertificatesService) {
-    this.certificationForm =  this.formBuilder.group({
+  constructor(public dialogRef: MatDialogRef<CreateRootComponent>, private authService: AuthService, private router: Router, private userService: UserService,private formBuilder: FormBuilder, private requestService: RequestsService, private  certificationService: CertificatesService) {
+    this.certificationRootForm =  this.formBuilder.group({
       alias: [{value: '', disabled: true}],
       issuer_alias: [{value: '', disabled: true}],
       template: [{value: '', disabled: true}],
@@ -46,16 +46,16 @@ export class CreateRootComponent implements OnInit{
           this.loggedUser = user;
           
 
-          this.certificationForm!.setValue({
+          this.certificationRootForm!.setValue({
             alias: this.generateRootAlias(),
             issuer_alias: this.generateRootAlias(),
-            template: 'Root',
+            template: Template.ROOT,
             commonName: '',
             organization: '',
             unit: '',
-            email: 'admin@example.com',
-            country: 'Serbia',
-            uid: '8'
+            email: user.email,
+            country: user.address?.country,
+            uid: user.id
           });
         },
         (error) => {
@@ -70,26 +70,28 @@ export class CreateRootComponent implements OnInit{
   
 
   createRoot(){
-    const formValues = this.certificationForm?.value;
-
+    const formValues = this.certificationRootForm?.value;
     if (this.checkForEmptyValues(formValues)) {
-      console.log("sldnfkjds" + formValues)
-      const request: Certificate = {
+      const certificate: Certificate = {
 
-        alias: formValues.alias || '',
-        issuerAlias: formValues.issuer_alias || '',
+        validFrom: undefined,
+        validTo: undefined,
+        alias: this.certificationRootForm?.controls['alias'].value || '',
+        issuerAlias: this.certificationRootForm?.controls['issuer_alias'].value || '',
+        isRevoked: false,
+        reason: undefined,
         template: Template.ROOT,
-        commonName: formValues.commonName || '',
-        organization:  formValues.organization || '',
-        organizationUnit:  formValues.unit || '',
-        ownerEmail:  formValues.email || '',
-        country: formValues.country || '',
+        commonName: this.certificationRootForm?.controls['commonName'].value || '',
+        organization:  this.certificationRootForm?.controls['organization'].value || '',
+        organizationUnit:  this.certificationRootForm?.controls['unit'].value || '',
+        country: this.certificationRootForm?.controls['country'].value || '',
+        ownerEmail:  this.certificationRootForm?.controls['email'].value || ''
       };
 
-      this.certificationService.createRootCertificate(request, '8').subscribe({
+      this.certificationService.createRootCertificate(certificate, this.authService.getUserID().toString()).subscribe({
         next: (createdCertificate: Certificate) => {
           Swal.fire('Success', 'Successfully created!', 'success');
-          this.router.navigate(['/']);
+          this.router.navigate(['/certificates']);
         },
         error: (error) => {
           Swal.fire('Error', 'Error', 'error'); 

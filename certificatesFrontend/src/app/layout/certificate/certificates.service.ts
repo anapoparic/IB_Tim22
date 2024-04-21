@@ -40,8 +40,7 @@ export class CertificatesService {
     }).pipe(
       catchError(this.handleError)
     );
-  }
-  
+  }  
 
   deleteCertificate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrlCer}/${id}`);
