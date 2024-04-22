@@ -18,6 +18,7 @@ import { CertificationService } from '../certification.service';
 })
 export class CreateRequestComponent implements OnInit{
 
+
   certificationForm: FormGroup | undefined;
 
   constructor(private authService: AuthService, private router: Router, private userService: UserService,private formBuilder: FormBuilder, private  certificationService: CertificationService) {
@@ -63,13 +64,13 @@ export class CreateRequestComponent implements OnInit{
     if (this.checkForEmptyValues(formValues)) {
       const request: CertificateRequest = {
         commonName: formValues.commonName || '',
-        firstName: formValues.firstName || '',
-        lastName: formValues.lastName || '',
+        firstName: this.certificationForm?.controls['firstName'].value || '',
+        lastName: this.certificationForm?.controls['lastName'].value || '',
         organization: formValues.organization || '',
         unit: formValues.unit || '',
-        country: formValues.country || '',
-        email: formValues.email || '',
-        uid: formValues.uid || ''
+        country: this.certificationForm?.controls['country'].value || '',
+        email: this.certificationForm?.controls['email'].value || '',
+        uid: this.certificationForm?.controls['uid'].value || ''
       };
 
       this.certificationService.createRequest(request).subscribe({
@@ -102,6 +103,10 @@ export class CreateRequestComponent implements OnInit{
         return true;
       }
     });
+  }
+
+  downloadCertificate() {
+    throw new Error('Method not implemented.');
   }
 
 }

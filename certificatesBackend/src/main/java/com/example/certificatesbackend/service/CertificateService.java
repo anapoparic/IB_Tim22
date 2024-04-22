@@ -306,6 +306,7 @@ public class CertificateService  {
         }
         return certificates;
     }
-
-
+    public Optional<Certificate> getAliasByCommonName(String commonName){
+        return repository.findByCommonName(commonName);
+    }
 }

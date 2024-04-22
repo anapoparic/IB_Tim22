@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.example.certificatesbackend.constants.Constants.KEYSTORE_PASSWORD;
@@ -48,6 +49,17 @@ public class CertificateController {
         }
 
         return new ResponseEntity<CertificateDTO>(CertificateMapper.toDto(certificate), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/aliasByCommonName/{commonName}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CertificateDTO> getAliasByCommonName(@PathVariable("commonName") String commonName) {
+        Optional<Certificate> certificate = service.getAliasByCommonName(commonName);
+
+        if (certificate.isEmpty()) {
+            return new ResponseEntity<CertificateDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<CertificateDTO>(CertificateMapper.toDto(certificate.get()), HttpStatus.OK);
     }
 
     @GetMapping(value = "/keyStore", produces = MediaType.APPLICATION_JSON_VALUE)

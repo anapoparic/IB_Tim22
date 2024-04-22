@@ -58,6 +58,10 @@ export class CertificatesService {
     );
   }  
 
+  getAliasByCommonName(commonName: string):  Observable<Certificate> {
+    return this.http.get<Certificate>(`${this.apiUrlCer}/aliasByCommonName/${commonName}`);
+  }
+
   deleteCertificate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrlCer}/${id}`);
   }

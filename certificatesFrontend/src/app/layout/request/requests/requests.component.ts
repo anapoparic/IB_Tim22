@@ -28,72 +28,10 @@ export class RequestsComponent implements OnInit {
   }
 
   approveRequest(id: number) {
-    const templateOptions = Object.values(Template).map(value => ({ value, label: value }));
-
-    const templateSelect = document.getElementById('template') as HTMLSelectElement;
-    const seeExtensionsBtn = document.getElementById('seeExtensionsBtn') as HTMLButtonElement;
-    const extensionsDiv = document.getElementById('extensions');
-
-    // Check if extensionsDiv exists
-    if (extensionsDiv) {
-      templateSelect.addEventListener('change', () => {
-        seeExtensionsBtn.style.display = 'block';
-        extensionsDiv.style.display = 'none';
-      });
-
-      seeExtensionsBtn.addEventListener('click', () => {
-        this.showExtensions(templateSelect.value as Template, extensionsDiv);
-      });
-    }
-
     const dialogRef = this.dialog.open(AcceptRequestComponent, {
       width: 'auto',
       data: this.requestService.getRequestById(id)
     });
-  }
-
-  showExtensions(template: Template, extensionsDiv: HTMLElement): void {
-    const extensions = this.getExtensionsForTemplate(template);
-    extensionsDiv.innerHTML = this.generateExtensionsTable(extensions);
-    extensionsDiv.style.display = 'block';
-  }
-
-  getExtensionsForTemplate(template: Template): { extension: string, value: string }[] {
-    let extensions: { extension: string, value: string }[] = [];
-
-    if (template === Template.ROOT) {
-      extensions.push({ extension: 'X509Extension.keyUsage', value: 'true, keyCertSign, cRLSign' });
-      extensions.push({ extension: 'X509Extension.basicConstraints', value: 'true' });
-      extensions.push({ extension: 'X509Extension.subjectKeyIdentifier', value: 'false' });
-      extensions.push({ extension: 'X509Extension.certificatePolicies', value: 'false, 1.3.6.1.4.1.99999.1' });
-      extensions.push({ extension: 'X509Extension.extendedKeyUsage', value: 'false, anyExtendedKeyUsage' });
-    } else if (template === Template.INTERMEDIATE) {
-      extensions.push({ extension: 'X509Extension.keyUsage', value: 'true, keyCertSign, cRLSign' });
-      extensions.push({ extension: 'X509Extension.basicConstraints', value: 'true' });
-      extensions.push({ extension: 'X509Extension.subjectKeyIdentifier', value: 'false' });
-      extensions.push({ extension: 'X509Extension.certificatePolicies', value: 'false, 1.3.6.1.4.1.99999.2' });
-      extensions.push({ extension: 'X509Extension.extendedKeyUsage', value: 'false, anyExtendedKeyUsage' });
-    } else if (template === Template.END_ENTITY) {
-      extensions.push({ extension: 'X509Extension.keyUsage', value: 'true, digitalSignature, keyEncipherment' });
-      extensions.push({ extension: 'X509Extension.basicConstraints', value: 'true' });
-      extensions.push({ extension: 'X509Extension.subjectKeyIdentifier', value: 'false' });
-      extensions.push({ extension: 'X509Extension.certificatePolicies', value: 'false, 1.3.6.1.4.1.99999.3' });
-      extensions.push({ extension: 'X509Extension.extendedKeyUsage', value: 'false, anyExtendedKeyUsage' });
-    }
-
-    return extensions;
-  }
-
-  generateExtensionsTable(extensions: { extension: string, value: string }[]): string {
-    return `
-    <table>
-      <tr>
-        <th>Extension</th>
-        <th>Value</th>
-      </tr>
-      ${extensions.map(ext => `<tr><td>${ext.extension}</td><td>${ext.value}</td></tr>`).join('')}
-    </table>
-  `;
   }
 
   rejectRequest(id: number) {

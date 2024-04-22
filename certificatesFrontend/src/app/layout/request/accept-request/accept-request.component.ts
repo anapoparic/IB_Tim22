@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -11,6 +11,7 @@ import { Template } from '../../certificate/model/enum/template.enum';
 import { Certificate } from '../../certificate/model/certificate.model';
 import Swal from 'sweetalert2';
 import { CertificateRequest } from '../model/certificateRequest.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-accept-request',
@@ -22,6 +23,7 @@ export class AcceptRequestComponent implements OnInit{
   acceptForm: FormGroup | undefined;
   loggedUser!: User;
   request: CertificateRequest | undefined;
+  alias: string | undefined;
 
   constructor(public dialogRef: MatDialogRef<AcceptRequestComponent>, 
     @Inject(MAT_DIALOG_DATA) public data: any, 
@@ -39,6 +41,14 @@ export class AcceptRequestComponent implements OnInit{
   }
 
   ngOnInit() {
+
+    const commonName = 'Booking';
+    this.certificationService.getAliasByCommonName(commonName).subscribe(
+      (certificate: Certificate) => {
+        this.alias = certificate.alias;
+      }
+    );
+
     this.data.subscribe(
       (request: CertificateRequest) => {
         this.request = request;
@@ -53,7 +63,7 @@ export class AcceptRequestComponent implements OnInit{
 
           this.acceptForm!.setValue({
             alias: generatedAlias,
-            issuer_alias: "Booking",
+            issuer_alias: this.alias,
             template: Template.END_ENTITY,
           });
         },
@@ -70,46 +80,32 @@ export class AcceptRequestComponent implements OnInit{
 
   acceptRequest(){
     const formValues = this.acceptForm?.value;
-    if (this.checkForEmptyValues(formValues)) {
-      const certificate: Certificate = {
-        alias: this.acceptForm?.controls['alias'].value || '',
-        issuerAlias: this.acceptForm?.controls['issuer_alias'].value || '',
-        isRevoked: false,
-        template: Template.END_ENTITY,
-        commonName: this.request?.commonName || '',
-        organization: this.request?.organization || '',
-        organizationUnit: this.request?.unit || '',
-        country: this.request?.country || '',
-        ownerEmail:  this.request?.email || ''
-      };
+    const certificate: Certificate = {
+      alias: this.acceptForm?.controls['alias'].value || '',
+      issuerAlias: this.acceptForm?.controls['issuer_alias'].value || '',
+      isRevoked: false,
+      template: Template.END_ENTITY,
+      commonName: this.request?.commonName || '',
+      organization: this.request?.organization || '',
+      organizationUnit: this.request?.unit || '',
+      country: this.request?.country || '',
+      ownerEmail:  this.request?.email || ''
+    };
 
-      this.certificationService.createCertificate(this.request!, certificate.alias, certificate.issuerAlias, certificate.template.toString()).subscribe({
-        next: (createdCertificate: Certificate) => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Certificate Request Accepted',
-            text: `Certificate request with ID ${this.request!.id} has been successfully accepted.`,
-          });
-          this.router.navigate(['/certificates']);
-          this.closeDialog();
-        },
-        error: (error) => {
-          Swal.fire('Error', 'Error', 'error'); 
-        }
-      });
-    }
-  }
-
-  checkForEmptyValues(formValues: any): boolean {
-    return Object.values(formValues).every(value => {
-      if (typeof value === 'string') {
-        return value.trim() !== '';
-      } else if (typeof value === 'number') {
-        return value !== 0;
-      } else {
-        return true;
+    this.certificationService.createCertificate(this.request!, certificate.alias, certificate.issuerAlias, certificate.template.toString()).subscribe({
+      next: (createdCertificate: Certificate) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Certificate Request Accepted',
+          text: `Certificate request with ID ${this.request!.id} has been successfully accepted.`,
+        });
+        this.router.navigate(['/certificates']);
+        this.closeDialog();
+      },
+      error: (error) => {
+        Swal.fire('Error', 'Error', 'error'); 
       }
     });
   }
-
+  
 }
