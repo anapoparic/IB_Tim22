@@ -22,6 +22,7 @@ import { Template } from '../model/enum/template.enum';
 export class CreateRequestComponent implements OnInit{
 
   certificationForm: FormGroup | undefined;
+  extensionVisible: boolean = true;
 
   constructor(public dialogRef: MatDialogRef<CreateRequestComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private authService: AuthService, private router: Router, private userService: UserService,private formBuilder: FormBuilder, private requestService: RequestsService, private  certificationService: CertificatesService) {
     this.certificationForm =  this.formBuilder.group({
@@ -102,6 +103,7 @@ export class CreateRequestComponent implements OnInit{
   }
 
   toggleRole() {
+    this.extensionVisible = !this.extensionVisible;
     const currentTemplate = this.certificationForm?.get('template')?.value;
     this.certificationForm?.get('template')?.setValue(currentTemplate === Template.INTERMEDIATE ? Template.END_ENTITY : Template.INTERMEDIATE );
   }

@@ -66,6 +66,7 @@
     flex-direction: row;
     padding: var(--padding-2xs) var(--padding-xs) var(--padding-xs);
     box-sizing: border-box;
+    margin-bottom: 5%;
 }
 input {
     border: none;
