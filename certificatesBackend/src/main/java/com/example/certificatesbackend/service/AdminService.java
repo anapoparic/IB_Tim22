@@ -32,11 +32,6 @@ public class AdminService implements ServiceInterface<Admin> {
     }
 
     @Override
-    public Admin save(Admin admin) throws Exception {
-        return repository.save(admin);
-    }
-
-    @Override
     public void delete(Long id) {
         repository.deleteById(id);
 

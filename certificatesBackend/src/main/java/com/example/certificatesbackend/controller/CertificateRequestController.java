@@ -4,6 +4,7 @@ import com.example.certificatesbackend.domain.CertificateRequest;
 import com.example.certificatesbackend.dto.CertificateRequestDTO;
 import com.example.certificatesbackend.mapper.CertificateRequestMapper;
 import com.example.certificatesbackend.service.CertificateRequestService;
+import com.example.certificatesbackend.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -22,6 +24,9 @@ public class CertificateRequestController {
 
     @Autowired
     private CertificateRequestService service;
+
+    @Autowired
+    private CertificateService certificateService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CertificateRequestDTO>> getRequests() {
@@ -45,29 +50,42 @@ public class CertificateRequestController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CertificateRequestDTO> createRequest(@RequestBody CertificateRequestDTO requestDTO) throws Exception {
-        CertificateRequest createdRequest = null;
-
+    public ResponseEntity<?> createRequest(@RequestBody CertificateRequestDTO requestDTO) {
         try {
-            createdRequest = service.create(CertificateRequestMapper.toEntity(requestDTO));
+            if (service.existsActiveRequestByEmail(requestDTO.getEmail()) || certificateService.existsActiveRequestByEmail(requestDTO.getEmail())) {
+                return ResponseEntity.badRequest().body("You have already sent a request with this email.");
+            }
 
+            CertificateRequest createdRequest = service.create(CertificateRequestMapper.toEntity(requestDTO));
+            CertificateRequestDTO createdRequestDTO = CertificateRequestMapper.toDto(createdRequest);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdRequestDTO);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>(new CertificateRequestDTO(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().build();
         }
-
-        return new ResponseEntity<>(CertificateRequestMapper.toDto(createdRequest), HttpStatus.CREATED);
     }
 
+
     @DeleteMapping(value = "/{id}")
-    public ResponseEntity<CertificateRequest> deleteRequest(@PathVariable("id") Long id) {
+    public ResponseEntity<CertificateRequestDTO> deleteRequest(@PathVariable("id") Long id) {
         try {
             service.delete(id);
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<CertificateRequest>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<CertificateRequestDTO>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(path="/active", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Collection<CertificateRequestDTO>> getAllActiveRequests() {
+        Collection<CertificateRequest> requests = service.getAllActiveRequests();
+        Collection<CertificateRequestDTO> requestDTOS = requests.stream()
+                .map(CertificateRequestMapper::toDto)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(requestDTOS, HttpStatus.OK);
     }
 
 }

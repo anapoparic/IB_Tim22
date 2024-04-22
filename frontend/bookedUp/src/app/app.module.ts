@@ -12,11 +12,13 @@ import { ReservationModule } from './reservation/reservation.module';
 import { AccommodationModule } from './accommodation/accommodation.module';
 import { ReviewModule } from './review/review.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { CreateRequestComponent } from './certification/create-request/create-request.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
+    CreateRequestComponent,
   ],
   imports: [
     BrowserModule,

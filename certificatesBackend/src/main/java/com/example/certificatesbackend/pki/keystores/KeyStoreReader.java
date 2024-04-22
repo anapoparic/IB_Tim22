@@ -13,6 +13,8 @@ import java.security.*;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class KeyStoreReader {
@@ -136,4 +138,39 @@ public class KeyStoreReader {
         }
         return null;
     }
+
+    public Certificate[] getCertificateChain(String keystorePath, String keystorePass, String issuerAlias) throws CertificateException, IOException, NoSuchAlgorithmException {
+        try {
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(keystorePath));
+            keyStore.load(in, keystorePass.toCharArray());
+
+            if (keyStore.isKeyEntry(issuerAlias)) {
+                return keyStore.getCertificateChain(issuerAlias);
+            }
+        } catch (KeyStoreException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public Issuer getIssuer(String keyStoreFile, String alias, char[] password, char[] keyPass) {
+        try {
+
+            BufferedInputStream in = new BufferedInputStream(new FileInputStream(keyStoreFile));
+
+            keyStore.load(in, password);
+
+            Certificate cert = keyStore.getCertificate(alias);
+
+            PrivateKey privKey = (PrivateKey) keyStore.getKey(alias, keyPass);
+
+            X500Name issuerName = new JcaX509CertificateHolder((X509Certificate) cert).getSubject();
+
+            return new Issuer(privKey, issuerName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

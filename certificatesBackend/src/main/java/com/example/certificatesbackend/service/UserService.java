@@ -35,12 +35,6 @@ public class UserService implements ServiceInterface<User> {
         System.out.println(user.getAddress().getId());
         return repository.save(user);
     }
-
-    @Override
-    public User save(User user) {
-        return repository.save(user);
-    }
-
     @Override
     public void delete(Long id) {
         repository.deleteById(id);

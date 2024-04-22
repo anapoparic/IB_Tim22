@@ -67,6 +67,11 @@
            <div class="nav-text">Analytics</div>
         </div>
 
+        <div class="nav-box" (click)="navigateTo('/certifications')">
+            <img class="nav-icon" alt="" src="../../../assets/public/certificate.png" />
+            <div class="nav-text">Certifications</div>
+         </div>
+
         <div class="nav-box" id="signOut" *ngIf="role != null" (click)="logOut()">
            <img class="nav-icon" alt="" src="../../../assets/public/logout-1.svg" />
            <div class="nav-text">Sign out</div>

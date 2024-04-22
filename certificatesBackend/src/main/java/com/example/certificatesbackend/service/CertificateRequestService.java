@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class CertificateRequestService implements ServiceInterface<CertificateRequest> {
@@ -30,6 +31,7 @@ public class CertificateRequestService implements ServiceInterface<CertificateRe
         if (entity.getId() != null){
             throw new Exception("Id must be null when persisting a new entity.");
         }
+        entity.setActive(true);
         return repository.save(entity);
     }
 
@@ -39,5 +41,14 @@ public class CertificateRequestService implements ServiceInterface<CertificateRe
                 .orElseThrow(() -> new Exception("Certification request with given id doesn't exist"));
         req.setActive(false);
         repository.save(req);
+    }
+
+    public boolean existsActiveRequestByEmail(String email) {
+        return repository.findByEmailAndActive(email, true).isPresent();
+    }
+
+
+    public List<CertificateRequest> getAllActiveRequests() {
+        return repository.findByActive(true);
     }
 }

@@ -1,1 +1,40 @@
-<app-admin-nav-bar></app-admin-nav-bar>
+<header>
+    <div class="header-container">
+       <img class="logo" alt="" src="../../../assets/public/logoSecurity.png" routerLink="/certificates" style="cursor: pointer;"/>
+    
+       <div class="home-nav">
+       </div>
+ 
+       <div class="right-icons">
+          <div class="notification-icon"></div>
+          <img
+             class="icon"
+             alt=""
+             src="../../../../assets/public/listoutline-1.svg"
+             id="profile-picture-admin"
+             (click)="onProfilePictureClick()"
+          />
+       </div>
+    </div>
+ 
+     <div id="adminDropdownContainer" class="popup-overlay" *ngIf="isPopupVisible" (click)="onPopupClick($event)">
+       <div class="admin-dropdown">
+         <div class="nav-box" (click)="navigateTo('/requests')">
+            <img class="nav-icon" alt="" src="../../../assets/public/certificate (5).png" />
+            <div class="nav-text">Requests</div>
+         </div>
+ 
+         <div class="nav-box" (click)="navigateTo('/certificates')">
+            <img class="nav-icon" alt="" src="../../../assets/public/certificate (4).png" />
+            <div class="nav-text">Certificates</div>
+         </div>
+ 
+         <div class="nav-box" *ngIf="role != null" (click)="logOut()">
+            <img class="nav-icon" alt="" src="../../../assets/public/logout-1.svg" />
+            <div class="nav-text">Sign out</div>
+         </div>
+      </div>
+ 
+     </div>
+   </header>
+ 

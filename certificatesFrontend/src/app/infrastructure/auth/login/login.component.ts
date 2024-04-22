@@ -5,6 +5,8 @@ import {Login} from "../model/login";
 import {AuthResponse} from "../model/auth-response";
 import {Router} from "@angular/router";
 import Swal from 'sweetalert2';
+import { Role } from 'src/app/user/model/role.enum';
+import { UserService } from 'src/app/user/user.service';
 
 
 @Component({
@@ -16,7 +18,8 @@ export class LoginComponent {
   isPasswordVisible: boolean = false;
 
   constructor(private authService: AuthService,
-              private router: Router) {
+              private router: Router, 
+            private userService: UserService) {
   }
 
   loginForm = new FormGroup({
@@ -52,9 +55,20 @@ export class LoginComponent {
 
     this.authService.login(login).subscribe({
       next: (response: AuthResponse) => {
+        
         localStorage.setItem('user', response.token);
-        this.authService.setUser()
-        this.router.navigate(['/index'])
+        this.authService.setUser();
+
+        if(this.authService.getRole() == "ROLE_SUPER_ADMIN"){
+          this.router.navigate(['/requests'])
+        }else{
+          this.authService.logout();
+          Swal.fire({
+            icon: 'error',
+            title: 'Incorrect Login',
+            text: 'Incorrect login credentials. Please try again.',
+          });
+        }
       },
       error: (error) => {
         Swal.fire({

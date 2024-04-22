@@ -15,24 +15,30 @@ public class CertificateRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String commonName;
 
     @Column(nullable = false)
-    private String givenName;
+    private String firstName;
 
     @Column(nullable = false)
-    private String surname;
+    private String lastName;
 
     @Column(nullable = false)
     private String organization;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
+    private String unit;
+
+    @Column(nullable = false)
+    private String country;
+
+    @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false) //moguce da treba biti unique
     private String uid;
 
     @Column(nullable = false)

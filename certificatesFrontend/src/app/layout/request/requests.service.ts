@@ -1,48 +1,66 @@
 import { Injectable } from '@angular/core';
-import { Request } from './request.model';
-import { Observable, of } from 'rxjs';
+import { CertificateRequest } from './model/certificateRequest.model';
+import { Observable, catchError, of, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RequestsService {
-  requests: Request[] = [];
+  private apiUrl = 'http://localhost:8081/api/requests';
 
-  constructor() {
-    // Inicijalizujemo requests niz sa testnim podacima
-    this.requests = [
-      {
-        number: 12345,
-        commonName: "John",
-        surname: "Doe",
-        givenName: "John",
-        organization: "Example Inc.",
-        email: "johndoe@example.com",
-        uid: "johndoe123"
-      },
-      {
-        number: 67890,
-        commonName: "Jane",
-        surname: "Smith",
-        givenName: "Jane",
-        organization: "ABC Company",
-        email: "janesmith@example.com",
-        uid: "janesmith456"
-      },
-      {
-        number: 54321,
-        commonName: "Michael",
-        surname: "Johnson",
-        givenName: "Michael",
-        organization: "XYZ Corporation",
-        email: "michaeljohnson@example.com",
-        uid: "michaeljohnson789"
-      }
-    ];
-    
+  constructor(private http: HttpClient) { }
+
+  getAllRequests(): Observable<CertificateRequest[]> {
+    return this.http.get<CertificateRequest[]>(`${this.apiUrl}`);
   }
 
-  getRequests(): Observable<Request[]> {
-    return of(this.requests);
+  getRequestById(id: number): Observable<CertificateRequest> {
+    return this.http.get<CertificateRequest>(`${this.apiUrl}/${id}`);
   }
+
+  createRequest(request: CertificateRequest): Observable<CertificateRequest> {
+    return this.http.post<CertificateRequest>(`${this.apiUrl}`, request)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  deleteRequest(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
+
+  getAllActiveRequests(): Observable<CertificateRequest[]> {
+    return this.http.get<CertificateRequest[]>(`${this.apiUrl}/active`);
+  }
+
+  
+
+  private handleError(error: any) {
+    console.error('An error occurred:', error);
+    return throwError('Something went wrong; please try again later.');
+  }
+
+  generateUniqueUID(): number {
+    const currentDate = new Date();
+  
+    const day = this.padZero(currentDate.getDate());
+    const month = this.padZero(currentDate.getMonth() + 1);
+    const year = currentDate.getFullYear().toString().slice(-4);
+    const hours = this.padZero(currentDate.getHours());
+    const minutes = this.padZero(currentDate.getMinutes());
+    const seconds = this.padZero(currentDate.getSeconds());
+    const milliseconds = currentDate.getMilliseconds();
+  
+    const uniqueUIDString = `${day}${month}${year}${hours}${minutes}${seconds}${milliseconds.toString().padStart(3, '0')}`;
+  
+    const uniqueUID = Number(uniqueUIDString);
+  
+    return uniqueUID;
+  }
+  
+  private padZero(num: number): string {
+    return num.toString().padStart(2, '0');
+  }
+  
 }

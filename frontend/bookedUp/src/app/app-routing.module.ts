@@ -33,9 +33,12 @@ import { ReviewReportsComponent } from './review/review-reports/review-reports.c
 
 import { AnalyticsComponent } from './analytics/analytics/analytics.component';
 
+import { CreateRequestComponent } from './certification/create-request/create-request.component';
+
 import { LoginComponent } from './infrastructure/auth/login/login.component';
 import { RegistrationComponent } from "./infrastructure/auth/registration/registration.component";
 import {HostReportsComponent} from "./user/host-reports/host-reports.component";
+
 
 
 const routes: Routes = [
@@ -68,6 +71,8 @@ const routes: Routes = [
   { path: 'review-reports', component: ReviewReportsComponent, canActivate: [AuthGuard], data: { role: ['ROLE_ADMIN'] } },
 
   { path: 'analytics', component: AnalyticsComponent, canActivate: [AuthGuard], data: { role: ['ROLE_HOST'] }},
+
+  { path: 'certifications', component: CreateRequestComponent, canActivate: [AuthGuard], data: { role: ['ROLE_HOST'] }},
 
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },

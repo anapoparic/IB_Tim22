@@ -1,50 +1,90 @@
 import { Injectable } from '@angular/core';
-import { Certificate } from './certificate.model';
-import { Observable, of } from 'rxjs';
+import { Certificate } from './model/certificate.model';
+import { Observable, catchError, of, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CertificateRequest } from '../request/model/certificateRequest.model';
+import { ReasonForRevoke } from './model/enum/reasonForRevoke.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CertificatesService {
-  certificates: Certificate[] = [];
+  private apiUrlCer = 'http://localhost:8081/api/certificates';
+  
+  constructor(private http: HttpClient) { }
 
-  constructor() {
-    this.certificates = [
-      {
-        number: 1,
-        commonName: "John Doe",
-        validFrom: new Date("2024-04-01"),
-        validUntil: new Date("2025-04-01"),
-        alias: "JD123",
-        issuerAlias: "AdminCA",
-        template: "User Certificate",
-        revoked: false
-    },
-    {
-        number: 2,
-        commonName: "Jane Smith",
-        validFrom: new Date("2024-03-15"),
-        validUntil: new Date("2025-03-15"),
-        alias: "JS456",
-        issuerAlias: "AdminCA",
-        template: "User Certificate",
-        revoked: false
-    },
-    {
-        number: 3,
-        commonName: "Acme Corp Web Server",
-        validFrom: new Date("2024-02-20"),
-        validUntil: new Date("2025-02-20"),
-        alias: "acme-server",
-        issuerAlias: "WebServerCA",
-        template: "Server Certificate",
-        revoked: false
-    }
-    ];
-    
+  getAllCertificates(): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(this.apiUrlCer);
   }
 
-  getCertifications(): Observable<Certificate[]> {
-    return of(this.certificates);
+  getCertificateById(id: number): Observable<Certificate> {
+    return this.http.get<Certificate>(`${this.apiUrlCer}/${id}`);
   }
+
+  getCertificatesFromKeyStore(): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(`${this.apiUrlCer}/keyStore`);
+  }
+
+  getAllRootCertificates(): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(`${this.apiUrlCer}/root`);
+  }
+
+  getAllDescendantsOfRoot(id: number): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(`${this.apiUrlCer}/descendants/${id}`);
+  }
+
+  getPathToRoot(id: number): Observable<Certificate[]> {
+    return this.http.get<Certificate[]>(`${this.apiUrlCer}/pathToRoot/${id}`);
+  }
+
+  createCertificate(requestDTO: CertificateRequest, alias: string, issuerAlias: string, template: string): Observable<Certificate> {
+    return this.http.post<Certificate>(this.apiUrlCer, requestDTO, {
+      params: {
+        alias: alias,
+        issuerAlias: issuerAlias,
+        template: template
+      }
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  createRootCertificate(requestDTO: Certificate, uid: string): Observable<Certificate> {
+    return this.http.post<Certificate>(`${this.apiUrlCer}/generateRoot`, requestDTO, {
+      params: {
+        uid: uid
+      }
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }  
+
+  getAliasByCommonName(commonName: string):  Observable<Certificate> {
+    return this.http.get<Certificate>(`${this.apiUrlCer}/aliasByCommonName/${commonName}`);
+  }
+
+  revokeCertificate(id: number, reason: string): Observable<string> {
+    const url = `${this.apiUrlCer}/revoke/${id}/${reason}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.put<string>(url, null, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteCertificate(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrlCer}/${id}`);
+  }
+
+  private handleError(error: any) {
+    console.error('An error occurred:', error);
+    return throwError('Something went wrong; please try again later.');
+  }
+
+  generateAlias(prefix: string): string {
+    const uniqueNumber = Date.now().toString();
+    const alias = prefix + uniqueNumber;
+    return alias;
+  }
+  
 }

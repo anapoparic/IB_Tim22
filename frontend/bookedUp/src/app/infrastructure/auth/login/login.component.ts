@@ -6,6 +6,7 @@ import {AuthResponse} from "../model/auth-response";
 import {Router} from "@angular/router";
 import Swal from 'sweetalert2';
 import { WebSocketService } from 'src/app/shared/notifications/service/web-socket.service';
+import { Role } from 'src/app/user/model/role.enum';
 
 
 @Component({
@@ -54,9 +55,20 @@ export class LoginComponent {
 
     this.authService.login(login).subscribe({
       next: (response: AuthResponse) => {
+        
         localStorage.setItem('user', response.token);
-        this.authService.setUser()
-        this.router.navigate(['/'])
+        this.authService.setUser();
+
+        if(this.authService.getRole() != "ROLE_SUPER_ADMIN"){
+          this.router.navigate(['/'])
+        }else{
+          this.authService.logout();
+          Swal.fire({
+            icon: 'error',
+            title: 'Incorrect Login',
+            text: 'Incorrect login credentials. Please try again.',
+          });
+        }
       },
       error: (error) => {
         Swal.fire({
