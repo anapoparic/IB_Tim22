@@ -1,0 +1,81 @@
+<html>
+<body>
+    <div class="amenities-admin">
+
+        <div class="amenities-admin-child"></div>
+        <app-nav-bar></app-nav-bar>
+
+        <div id="sort-bar" class="sort-bar">
+            <div class="all-accommodations" [ngClass]="{ 'clicked': selectedClass === 'all-accommodations' }" (click)="changeStyle('all-accommodations')">
+              All Accommodations
+            </div>
+            <div class="new-accommodations" [ngClass]="{ 'clicked': selectedClass === 'new-accommodations' }" (click)="changeStyle('new-accommodations')">
+              New Accommodations
+            </div>
+            <div class="changed-accommodations" [ngClass]="{ 'clicked': selectedClass === 'changed-accommodations' }" (click)="changeStyle('changed-accommodations')">
+              Changed Accommodations
+            </div>
+        </div>
+
+        <div class="main-content" id="main-content">
+          <b class="no-text" *ngIf="(accommodations | async)?.length == 0">NO RESULTS</b>
+          <div *ngFor="let accommodation of accommodations | async" class="acc-frame" [class.created-status]="accommodation.status === 'CREATED'"
+               [class.changed-status]="accommodation.status === 'CHANGED'">
+              <img
+                class="accommodation-image"
+                alt=""
+                [src]="getPhotoUrl(accommodation?.id)"
+              />
+
+              <div class="left-data">
+                <div class="top-data-box">
+                  <b class="title">{{ accommodation.name }}</b>
+
+                  <div class="reviews-frame">
+                    <div class="stars-container">
+
+                        <span *ngIf="accommodation && accommodation.averageRating"> <span class="star" *ngFor="let star of generateStars(roundHalf(accommodation.averageRating))">
+                        {{ star }}
+                      </span></span>
+
+                    </div>
+                      <div class="reviews-average" *ngIf="accommodation">{{ roundHalf(accommodation.averageRating ? accommodation.averageRating : 0) }}</div>
+                  </div>
+
+                  <div class="location-frame">
+                    <img class="location-icon" alt="" src="../../assets/public/location-1.svg" />
+                    <div class="location-text">{{ accommodation.address.streetAndNumber }}, {{accommodation.address.city}} {{accommodation.address.postalCode}}, {{ accommodation.address.city }}</div>
+                  </div>
+
+                  <b class="status-text" [class.created-status-text]="accommodation.status === 'CREATED'"
+                     [class.changed-status-text]="accommodation.status === 'CHANGED'">{{ accommodation.status }}</b>
+                </div>
+
+                <div class="bottom-data-box">
+                    <div class="includes-taxes">Includes taxes and fees</div>
+                    <b class="per-night" *ngIf="accommodation.priceType=='PER_GUEST'">{{ accommodation.price }}$/{{priceTypeGuest}}</b>
+                    <b class="per-night" *ngIf="accommodation.priceType=='PER_NIGHT'">{{ accommodation.price }}$/{{priceTypeNight}}</b>
+
+                </div>
+              </div>
+
+              <div class="right-buttons">
+                  <div class="accept-button" id="accept-button" (click)="approveAccommodation(accommodation?.id ?? 0)">
+                  <b class="button-text">Accept</b>
+                </div>
+                <div class="reject-button" id="reject-button" (click)="rejectAccommodation(accommodation?.id ?? 0)">
+                  <b class="button-text">Reject</b>
+                </div>
+                <div class="view-details-button" id="view-details-button" routerLink="/accommodation-details/{{accommodation.id}}">
+                  <b class="button-text">View Details</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+      <app-shorter-footer></app-shorter-footer>
+
+    </div>
+  </body>
+</html>

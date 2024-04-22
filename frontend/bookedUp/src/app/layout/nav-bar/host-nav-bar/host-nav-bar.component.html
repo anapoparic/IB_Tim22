@@ -1,0 +1,86 @@
+<header>
+   <div class="header-container">
+      <img  id="logo" class="logo" alt="" src="../../../assets/public/cream-black-minimalist-illustrated-luxury-real-estate-circle-logo-7-3@2x.png" routerLink="/" style="cursor: pointer;"/>
+
+      <div class="home-nav">
+      </div>
+
+      <div class="right-icons">
+         <img
+         *ngIf="!hasWebSocketNotification"
+         class="notification-icon"
+         alt=""
+         src="../../../../assets/public/bell.png"
+         id="notification-icon"
+         (click)="onNotificationIconClick()"
+         style="height: 20%;"
+         />
+         <img
+         *ngIf="hasWebSocketNotification"
+         class="notification-icon"
+         alt=""
+         src="../../../../assets/public/notification-11.svg"
+
+         (click)="onNotificationIconClick()"
+         />
+
+         <img
+            class="icon"
+            alt=""
+            [src]="displayedImageUrl"
+            id="profile-picture-host"
+            (click)="onProfilePictureClick()"
+         />
+      </div>
+   </div>
+
+   <div id="hostDropdownContainer" class="popup-overlay" *ngIf="isPopupVisible" (click)="onPopupClick($event)">
+      <div class="admin-dropdown">
+        <div class="nav-box" (click)="navigateTo('/manage-profile')">
+           <img class="nav-icon" alt="" src="../../../assets/public/usersquare-2.svg" />
+           <div class="nav-text">Manage account</div>
+        </div>
+
+        <div class="nav-box" (click)="navigateTo('/my-accommodations')">
+           <img class="nav-icon" alt="" src="../../../assets/public/frame.svg" />
+           <div class="nav-text">My accommodations</div>
+        </div>
+
+          <div class="nav-box" id="reservationsNavItem" (click)="navigateTo('/reservation-requests')">
+              <img class="nav-icon" alt="" src="../../../assets/public/hotel-2.svg" />
+              <div class="nav-text">Reservations</div>
+          </div>
+
+
+        <div class="nav-box" (click)="navigateTo('/block-users')">
+            <img class="nav-icon" alt="" src="../../../assets/public/frame1.svg" />
+            <div class="nav-text">Users</div>
+         </div>
+
+        <div class="nav-box" (click)="navigateTo('/host-reviews')">
+           <img class="nav-icon" alt="" src="../../../assets/public/frame2.svg" />
+           <div class="nav-text">Comments</div>
+        </div>
+
+        <div class="nav-box" (click)="navigateTo('/analytics')">
+           <img class="nav-icon" alt="" src="../../../assets/public/reportsolid24-1-1@2x.png" />
+           <div class="nav-text">Analytics</div>
+        </div>
+
+        <div class="nav-box" (click)="navigateTo('/certifications')">
+            <img class="nav-icon" alt="" src="../../../assets/public/certificate.png" />
+            <div class="nav-text">Certifications</div>
+         </div>
+
+        <div class="nav-box" id="signOut" *ngIf="role != null" (click)="logOut()">
+           <img class="nav-icon" alt="" src="../../../assets/public/logout-1.svg" />
+           <div class="nav-text">Sign out</div>
+        </div>
+     </div>
+   </div>
+
+   <div class="popup-overlay" *ngIf="isNotificationVisible" (click)="onNotificationPopupClick($event)">
+      <app-notifications class="notification-dropdown"></app-notifications>
+   </div>
+
+</header>

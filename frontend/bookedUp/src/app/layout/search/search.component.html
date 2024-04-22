@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div class="search-unlogged">
+
+      <div class="search-unlogged-child"></div>
+      <div class="search-unlogged-item"></div>
+
+      <app-nav-bar></app-nav-bar>
+
+      <div id="filters">
+        <div id="main-search-box">
+          <div class="search-unlogged-child30"></div>
+          <div class="location-1-parent1" >
+            <img class="location-1-icon16" alt="" src="../../assets/public/location-12.svg" />
+            <input [(ngModel)]="location" id="locationTxt" type="text" class="melbourne3" placeholder={{location}}/>
+          </div>
+
+          <div class="calendar-1-parent7" >
+            <img class="location-1-icon16" alt="" src="../../assets/public/calendar-1.svg" />
+            <input  [(ngModel)]="fromDate" placeholder={{fromDate}} [min]="minFromDate" class="feb-3-20229" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="fromDate" />
+          </div>
+
+          <div class="calendar-2-parent7" >
+            <img class="location-1-icon16" alt="" src="../../assets/public/calendar-2.svg" />
+            <input [(ngModel)]="outDate" placeholder={{outDate}} [min]="minFromDate"  class="feb-7-20229" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" id="toDate" />
+          </div>
+
+          <div class="user-square-1-parent7">
+          <img class="location-1-icon16" alt="" src="../../assets/public/usersquare-11.svg" />
+          <input [(ngModel)]="guests" id="guestNumberTxt" type="number" class="adult-1-room14" placeholder={{guests}} pattern="\d*" />
+          </div>
+        </div>
+
+          <div id="property-search-box">
+            <div class="search-unlogged-child10"></div>
+              <b class="search-by-property3" >Search by property name</b>
+            <div class="search-1-parent1">
+              <img class="location-1-icon16" alt="" src="../../assets/public/search-1.svg" />
+              <input type="text" class="melbourne3" placeholder="eg. Beach westpalm" [(ngModel)]="name" (ngModelChange)="onNameChange($event)"/>
+            </div>
+          </div>
+
+          <!-- <div class="filter-by3">Filter by</div> -->
+          <div class="filter-by3">
+            <b class="filter">  Filter by</b>
+            <b class="no-filter">
+              <input type="checkbox" id="NofilterCheckbox" [(ngModel)]="nofilterChecked" (change)="checkboxChanged($event, 'NofilterCheckBox')" >
+              <label >Refresh</label>
+            </b>
+          </div>
+
+
+          <div id="budget-filters">
+            <div class="search-unlogged-child9"></div>
+            <div class="your-budget-per-night-wrapper1">
+              <b class="your-budget-per3">Budget Filters</b>
+            </div>
+
+            <div class="div246">$ 100 - $ 500</div>
+            <div class="keep-me-signed-in-parent-19" >
+              <input type="radio" [disabled]="customBudget > 0" id="100-500" class="keep-me-signed-checkbox" name="budget" (change)="checkboxChanged($event, '100-500')"/>
+              <div class="group-child117"></div>
+            </div>
+
+            <div class="div249">$ 500 - $ 1000</div>
+            <div class="keep-me-signed-in-parent-21">
+              <input type="radio" [disabled]="customBudget > 0" id="500-1000" class="keep-me-signed-checkbox" name="budget" (change)="checkboxChanged($event, '500-1000')"/>
+              <div class="group-child117"></div>
+            </div>
+
+            <div class="div252">$ 1000 - $ 1500</div>
+            <div class="keep-me-signed-in-parent-23">
+              <input type="radio" [disabled]="customBudget > 0" id="1000-1500" class="keep-me-signed-checkbox" name="budget" (change)="checkboxChanged($event, '1000-1500')"/>
+              <div class="group-child117"></div>
+            </div>
+
+            <div class="div255">$ 1,500 - $ 2,000</div>
+            <div class="keep-me-signed-in-parent-25">
+              <input type="radio" [disabled]="customBudget > 0" id="1500-2000" class="keep-me-signed-checkbox" name="budget" (change)="checkboxChanged($event, '1500-2000')"/>
+              <div class="group-child117"></div>
+            </div>
+
+            <div class="and-more3">$ 2,000 and more</div>
+            <div class="keep-me-signed-in-parent-27">
+              <input type="radio" [disabled]="customBudget > 0" id="2000" class="keep-me-signed-checkbox" name="budget" (change)="checkboxChanged($event, '2000')"/>
+              <div class="group-child117"></div>
+            </div>
+
+            <div class="budget-slider">
+              <label for="budget">Custom:</label>
+              <input type="range" id="budget" [(ngModel)]="customBudget" (input)="updateBudget()" [disabled]="budgetSliderDisabled" min="0" max="5000" step="5"/>
+              <span>{{ customBudget }}</span>
+            </div>
+
+
+          </div>
+
+          <div id="popular-filters">
+            <div class="popular-filters-wrapper1">
+              <b class="your-budget-per3">Popular Filters</b>
+            </div>
+
+            <div class="free-cancellation3">Free Wi-fi</div>
+            <div class="keep-me-signed-in-parent-20">
+              <input type="checkbox" id="FREE_WIFI" name="amenities" class="keep-me-signed-checkbox"  (change)="checkboxChanged($event, 'FREE_WIFI')"/>
+              <div class="group-child117"></div>
+            </div>
+
+            <div class="spa3">Non smoking rooms</div>
+            <div class="keep-me-signed-in-parent-22">
+              <input type="checkbox" id="NON_SMOKING_ROOMS" name="amenities" class="keep-me-signed-checkbox"   (change)="checkboxChanged($event, 'NON_SMOKING_ROOMS')"/>
+              <div class="group-child117"></div>
+            </div>
+
+            <div class="beach-front3">Parking</div>
+            <div class="keep-me-signed-in-parent-24">
+              <input type="checkbox" id="PARKING"  name="amenities" class="keep-me-signed-checkbox" (change)="checkboxChanged($event, 'PARKING')"/>
+              <div class="group-child117"></div>
+            </div>
+
+            <div class="book-without-credit3">Swimming pool</div>
+            <div class="keep-me-signed-in-parent-28">
+              <input type="checkbox" id="SWIMMING_POOL" name="amenities" class="keep-me-signed-checkbox"  (change)="checkboxChanged($event, 'SWIMMING_POOL')"/>
+              <div class="group-child117"></div>
+            </div>
+
+
+            <div class="hot-tub-jacuzzi3">Restaurant</div>
+            <div class="keep-me-signed-in-parent-26">
+              <input type="checkbox" id="RESTAURANT" name="amenities" class="keep-me-signed-checkbox" (change)="checkboxChanged($event, 'RESTAURANT')"/>
+              <div class="group-child117"></div>
+            </div>
+
+            <div class="no-prepayment3">Fitness centre</div>
+            <div class="keep-me-signed-in-parent-29">
+              <input type="checkbox" id="FITNESS_CENTRE"name="amenities"  class="keep-me-signed-checkbox" (change)="checkboxChanged($event, 'FITNESS_CENTRE')"/>
+              <div class="group-child117"></div>
+            </div>
+          </div>
+
+      </div>
+
+      <div class="search-wrapper4" (click)="onSearchClick()">
+        <b class="register1">Search</b>
+      </div>
+
+      <div id="apartment-type-filter" class="frame-parent45">
+        <div class="all" [ngClass]="{ 'clicked': selectedType === 'all' }" (click)="changeStyle('all')">
+          <div class="register1">All</div>
+        </div>
+        <div class="HOTEL" [ngClass]="{ 'clicked': selectedType === 'HOTEL' }" (click)="changeStyle('HOTEL')">
+          <div class="register1">Hotels</div>
+        </div>
+        <div class="HOSTEL" [ngClass]="{ 'clicked': selectedType === 'HOSTEL' }" (click)="changeStyle('HOSTEL')">
+          <div class="register1">Hostels</div>
+        </div>
+        <div class="APARTMENT" [ngClass]="{ 'clicked': selectedType === 'APARTMENT' }" (click)="changeStyle('APARTMENT')">
+          <div class="register1">Apartments</div>
+        </div>
+        <div class="RESORT" [ngClass]="{ 'clicked': selectedType === 'RESORT' }" (click)="changeStyle('RESORT')">
+          <div class="register1">Resorts</div>
+        </div>
+        <div class="VILLA" [ngClass]="{ 'clicked': selectedType === 'VILLA' }" (click)="changeStyle('VILLA')">
+          <div class="register1">Villas</div>
+        </div>
+      </div>
+
+
+
+      <div class="melbourne-17583" >{{ location }}: {{ searchResults.length }} search results found</div>
+
+
+      <div id="frames-apartments">
+        <ng-container *ngIf="searchResults && searchResults.length > 0; else noResults">
+          <div *ngFor="let result of searchResults" class="search-unlogged-child1">
+            <div id="picture-apartments">
+              <img
+                class="search-unlogged-child11"
+                alt=""
+                [src]="getPhotoUrl(result?.id)"
+                id="rectangleImage"
+              />
+            </div>
+
+            <div id="list-apartments">
+              <div class="lakeside-motel-warefront30">{{ result.name }}</div>
+              <div class="parent28" *ngIf="result.totalPrice !== 0">
+                <b class="b81">Total price:</b>
+              </div>
+
+              <div class="parent28" *ngIf="result.totalPrice !== 0">
+                <b class="b82">{{ result.totalPrice }}$</b>
+              </div>
+
+              <div class="parent28">
+                <b class="b83">{{ result.price }}$</b>
+                <b class="b84" *ngIf="result.priceType=='PER_GUEST'">/{{priceTypeGuest}}</b>
+                <b class="b84" *ngIf="result.priceType=='PER_NIGHT'">/{{priceTypeNight}}</b>
+              </div>
+
+              <div class="includes-taxes-and33">{{result.type}}</div>
+
+              <div class="room-2-days27" *ngIf="result.totalPrice !== 0">1 room {{ calculateDayDifference() }} days</div>
+              <div class="group-child108">
+                <div class="stars-container" *ngIf="result">
+                    <span class="star" *ngFor="let star of generateStars(roundHalf(result?.averageRating ?? 0))">
+                      {{ star }}
+                    </span>
+
+                </div>
+              </div>
+               <div class="reviews55" *ngIf="result">{{ roundHalf(result.averageRating ? result.averageRating  : 0) }}</div>
+<!--              <div class="reviews55">{{ result?.averageRating !== undefined ? result.averageRating: 0.0 }}</div>-->
+              <div class="see-availability-wrapper26" id="frameContainer19">
+                <b class="register1" (click)="navigateToAccommodationDetails(result?.id ?? 0, result?.totalPrice ?? 0)">See availability</b>
+              </div>
+
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-template #noResults>
+          <p>No results found.</p>
+        </ng-template>
+      </div>
+
+      <div id="footer">
+        <div class="search-unlogged-inner"></div>
+        <div class="copyright-1-parent28">
+          <img class="copyright-1-icon30" alt="" src="../../assets/public/copyright-1.svg" />
+          <div class="bookedup-202331">BookedUp 2023 | Team 19 FTN</div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>

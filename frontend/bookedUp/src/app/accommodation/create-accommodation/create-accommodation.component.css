@@ -1,0 +1,254 @@
+.acc-details {
+  position: relative;
+  background-color: var(--color-whitesmoke-100);
+  min-height: 100vh;
+  width: 100%;
+  height: auto;
+  text-align: left;
+  font-size: var(--font-size-2xs);
+  color: var(--gray-2);
+  font-family: var(--font-sansation); 
+  display: flex;
+  flex-direction: column;
+}
+.images-container{
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(180deg, rgba(244, 244, 244, 0), #fff);
+  border-radius: 5px;
+  width: 100%;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.image-box{
+  width: 60%;
+  min-height: 60%;
+  max-height: 60%;
+  transition: transform 0.5s ease;
+  justify-content: center;
+  align-items: center;
+}
+.image-box div {
+  flex: 0 0 100%;
+  display: none;
+}
+.image-box div.active {
+  display: block;
+}
+.room-image {
+  border-radius: var(--br-8xs);
+  display: block;
+  margin-top: 5%;
+  margin-left: 10%;
+  min-height: 350px;
+  min-width: 80%;
+  max-width: 80%;
+  max-height: 350px;
+  &:hover {
+    box-shadow: 0 10px 50px -10px rgba(0,0,0,0.25);
+  }
+}
+.active {
+  display: block;
+}
+.more-images{
+  width: 20%;
+  margin-right: 10%;
+  position: relative;
+  height: 80%;
+}
+.more{
+  border-radius: var(--br-8xs);
+  max-height: 48%;
+  display: block;
+}
+.main-data-box{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  font-size: var(--font-size-base);
+  color: var(--gray-1);
+  margin-bottom: 5%;
+  margin-top: 5%;
+}
+.right-container{
+  position: relative;
+  width: 80%;
+}
+.left-container{
+  position: relative;
+  width: 20%;
+  display: flex !important;
+  flex-direction: column;
+  margin-right: 10%;
+  align-items: center;
+}
+.inputs-data{
+  display: block;
+  width: 75%;
+  margin-left: 10%;
+  height: auto;
+  border-radius: var(--br-7xs);
+  background-color: var(--color-white);
+}
+.inputs-box{
+  padding-top: 5%;
+  padding-bottom: 5%;
+  padding-left: 5%;
+  padding-right: 5%;
+  width: 80%;
+}
+.title-text{
+  font-size:var(--font-size-xl);
+}
+.normal-text{
+  font-size:var(--font-size-mini);
+  word-wrap: break-word;
+  line-height: 1.3;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+.line{
+  margin-bottom: 10px;
+  width: 100%;
+  height: 1px;
+}
+.in-line-box{
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+}
+.icon{
+  width: 20px;
+  height: 20px;
+  margin-right: 1%;
+}
+.button-container{
+  border-radius: var(--br-7xs);
+  background-color: var(--blue-1);
+  width: 100%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  padding: var(--padding-3xs) var(--padding-lg);
+  box-sizing: border-box;
+  cursor: pointer;
+  border: none;
+  font-size: var(--font-size-mini);
+  font-family: var(--font-sansation);
+  color: var(--color-white);
+}
+
+.toggle {
+  --width: 80px;
+  --height: calc(var(--width) / 3);
+
+  position: relative;
+  display: inline-block;
+  width: var(--width);
+  height: var(--height);
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  border-radius: var(--height);
+  cursor: pointer;
+}
+
+.toggle input {
+  display: none;
+}
+
+.toggle .slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--height);
+  background-color: #ccc;
+  transition: all 0.4s ease-in-out;
+}
+
+.toggle .slider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: calc(var(--height));
+  height: calc(var(--height));
+  border-radius: calc(var(--height) / 2);
+  background-color: #fff;
+  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
+  transition: all 0.4s ease-in-out;
+}
+
+.toggle input:checked+.slider {
+  background-color: var( --color-seagreen-100);
+}
+
+.toggle input:checked+.slider::before {
+  transform: translateX(calc(var(--width) - var(--height)));
+}
+
+.toggle .labels {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 12px;
+  font-family: sans-serif;
+  transition: all 0.4s ease-in-out;
+}
+
+.toggle .labels::after {
+  content: attr(data-off);
+  position: absolute;
+  right: 5px;
+  color: #4d4d4d;
+  opacity: 1;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s ease-in-out;
+}
+
+.toggle .labels::before {
+  content: attr(data-on);
+  position: absolute;
+  left: 5px;
+  color: #ffffff;
+  opacity: 0;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.4);
+  transition: all 0.4s ease-in-out;
+}
+
+.toggle input:checked~.labels::after {
+  opacity: 0;
+}
+
+.toggle input:checked~.labels::before {
+  opacity: 1;
+}
+.input-wrapper {
+  display: inline-block;
+}
+
+input {
+  border: none;
+  outline: none;
+  background: none;
+  width: 100%;
+  font-family: var(--font-adamina);
+  font-size: var(--font-size-mini);
+}
+.custom-input {
+  width: 100%;
+  font-family: var(--font-adamina);
+  font-size: var(--font-size-mini);
+  border: 1px solid var(--gray-2);  /* Set border properties */
+  border-radius: 4px;  /* Add border-radius for rounded corners if desired */
+  padding: 8px;  /* Adjust padding as needed */
+  box-sizing: border-box;  /* Ensure padding is included in the total width/height */
+}

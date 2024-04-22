@@ -1,0 +1,6 @@
+<!-- image-frame.component.html -->
+<div #imageFrame (click)="openFileExplorer()" class="image-frame">
+    <img alt="" src="../../assets/public/rectangle-281@2x.png" class="selected-image">
+    <input type="file" #fileInput (change)="displayImage($event)" accept="image/*" style="display: none;">
+</div>
+  

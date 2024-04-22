@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c896eaa9-9756-439d-bd74-946bedb8cd30" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/controller/CertificateController.java" beforeDir="false" afterPath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/controller/CertificateController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/domain/Accommodation.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/dto/CertificateRequestDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/dto/CertificateRequestDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/pki/certificates/CertificateGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/pki/certificates/CertificateGenerator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/pki/keystores/KeyStoreReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/pki/keystores/KeyStoreReader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/service/CertificateService.java" beforeDir="false" afterPath="$PROJECT_DIR$/certificatesBackend/src/main/java/com/example/certificatesbackend/service/CertificateService.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2fJSWr8MYfynZJXi0p0LVF8iX29" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "generate-certificate",
+    "last_opened_file_path": "C:/Users/Korisnik/Desktop/IB/IB_Tim22/certificatesBackend",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c896eaa9-9756-439d-bd74-946bedb8cd30" name="Changes" comment="" />
+      <created>1713517721355</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1713517721355</updated>
+      <workItem from="1713517722406" duration="92000" />
+      <workItem from="1713602760900" duration="32000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

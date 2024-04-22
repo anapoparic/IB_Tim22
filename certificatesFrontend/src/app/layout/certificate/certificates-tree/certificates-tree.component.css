@@ -1,0 +1,46 @@
+.x-icon {
+    width: 2% !important;
+    height:auto !important;
+    cursor: pointer;
+    margin-left: 90%;
+    margin-top: 4%;
+    margin-bottom: 2%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: right;
+  }
+.title-dialog{
+    margin: 0;
+    letter-spacing: 0.01em;
+    color: var(--color-gray-300);
+    font-size: var(--font-size-xl);
+    align-items: center;
+    flex-wrap: wrap;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.indent {
+  margin-right: 5px; 
+  color: #888;
+}
+.location-text {
+  font-size: var(--font-size-sm);
+}
+.reviews-average,
+.location-text {
+  margin-left: 2px;
+}
+.frame{
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 2%;
+}
+.normal-text {
+  color: var(--gray-1);
+}

@@ -1,0 +1,55 @@
+<html>
+<body>
+    <div class="amenities-admin">
+
+        <div class="amenities-admin-child"></div>
+        <app-nav-bar></app-nav-bar>
+
+        <div id="sort-bar" class="sort-bar">
+            <div class="all-accommodations">
+              Your Guests
+            </div>
+        </div>
+
+        <div class="main-content" id="main-content">
+          <b class="no-text" *ngIf="(guests | async)?.length == 0">NO RESULTS</b>
+          <div *ngFor="let user of guests | async" class="acc-frame" [class.created-status]="user">
+              <img
+                class="accommodation-image"
+                alt=""
+                [src]="getPhotoUrl(user?.id)"
+              />
+
+              <div class="left-data">
+                  <b class="title">{{ user.firstName }} {{ user.lastName}}</b>
+
+                  <div class="location-frame">
+                    <img class="location-icon" alt="" src="../../assets/public/homeregular24-1@2x.png" />
+                    <div class="location-text">{{ user.address?.streetAndNumber }}, {{user.address?.city}} {{user.address?.postalCode}}, {{ user.address?.city }}</div>
+                  </div>
+
+                  <div class="location-frame">
+                    <img class="location-icon" alt="" src="../../assets/public/envelopesolid24-1@2x.png" />
+                    <div class="location-text">{{ user.email }}</div>
+                  </div>
+
+                  <div class="location-frame">
+                    <img class="location-icon" alt="" src="../../assets/public/mobileregular24-11@2x.png" />
+                    <div class="location-text">{{ user.phone }}</div>
+                  </div>
+              </div>
+
+              <div class="right-buttons">
+                <div class="reject-button" id="reject-button" (click)="reportUser(user?.id ?? 0)">
+                    <b class="button-text">Report User</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+      <app-shorter-footer></app-shorter-footer>
+
+    </div>
+  </body>
+</html>

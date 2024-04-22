@@ -1,0 +1,8 @@
+.main-canvas{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    margin-left: 20%;
+    width: 60%;
+    height: 100%;
+}

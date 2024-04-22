@@ -1,0 +1,79 @@
+<html>
+<body>
+    <div class="amenities-admin">
+
+        <div class="amenities-admin-child"></div>
+        <app-nav-bar></app-nav-bar>
+
+        <div id="sort-bar" class="sort-bar">
+            <div class="all-accommodations" [ngClass]="{ 'clicked': selectedClass === 'all-accommodations' }" (click)="changeStyle('all-accommodations')">
+              All Users
+            </div>
+            <div class="new-accommodations" [ngClass]="{ 'clicked': selectedClass === 'new-accommodations' }" (click)="changeStyle('new-accommodations')">
+              Blocked Users
+            </div>
+            <div class="changed-accommodations" [ngClass]="{ 'clicked': selectedClass === 'changed-accommodations' }" (click)="changeStyle('changed-accommodations')">
+              Reported Users
+            </div>
+        </div>
+
+        <div class="main-content" id="main-content">
+          <b class="no-text" *ngIf="(users | async)?.length == 0">NO RESULTS</b>
+          <div *ngFor="let user of users | async" class="acc-frame" [class.created-status]="user">
+               <!-- [class.changed-status]="user === 'CHANGED'" -->
+              <img
+                class="accommodation-image"
+                alt=""
+                [src]="getPhotoUrl(user?.id)"
+              />
+
+              <div class="left-data">
+                  <b class="title">{{ user.firstName }} {{ user.lastName}}</b>
+
+                  <div class="location-frame">
+                    <img class="location-icon" alt="" src="../../assets/public/homeregular24-1@2x.png" />
+                    <div class="location-text">{{ user.address?.streetAndNumber }}, {{user.address?.city}} {{user.address?.postalCode}}, {{ user.address?.city }}</div>
+                  </div>
+
+                  <div class="location-frame">
+                    <img class="location-icon" alt="" src="../../assets/public/envelopesolid24-1@2x.png" />
+                    <div class="location-text">{{ user.email }}</div>
+                  </div>
+
+                  <div class="location-frame">
+                    <img class="location-icon" alt="" src="../../assets/public/mobileregular24-11@2x.png" />
+                    <div class="location-text">{{ user.phone }}</div>
+                  </div>
+
+
+
+                  <!-- <b class="status-text" [class.created-status-text]="accommodation.status === 'CREATED'"
+                     [class.changed-status-text]="accommodation.status === 'CHANGED'">{{ accommodation.status }}</b> -->
+
+              </div>
+
+              <div class="right-buttons">
+                <div class="accept-button" id="accept-button"  *ngIf="user.blocked==false">
+                    <b class="button-text">Active</b>
+                </div>
+<!--                <div class="accept-button" id="accept-button" (click)="approveAccommodation(accommodation?.id ?? 0)">-->
+<!--                  <b class="button-text">Active</b>-->
+<!--                </div>-->
+                <div class="reject-button" id="reject-button" (click)="showBlockedReasons(user?.id ?? 0)" *ngIf="user.blocked==true">
+                  <b class="button-text">Blocked</b>
+                </div>
+                  <div class="view-details-button" id="view-details-button" (click)="showReportReasons(user?.id ?? 0)" *ngIf="user.blocked === false && filter === 'changed'">
+                      <b class="button-text">Reported</b>
+                  </div>
+
+
+              </div>
+            </div>
+          </div>
+
+
+      <app-shorter-footer></app-shorter-footer>
+
+    </div>
+  </body>
+</html>

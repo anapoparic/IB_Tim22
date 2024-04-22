@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div class="sign-in5">
+
+    <div id="logo-left">
+        <img
+                class="logo-with-slogan-214"
+                alt=""
+                src="../../assets/public/logo-with-slogan-4@2x.png"
+        />
+    </div>
+
+    <div id="title-login" >
+        <div class="sign-in6">Sign in</div>
+    </div>
+
+    <div id="inputs-login" [formGroup]="loginForm">
+        <b class="email-address19" >Email address </b>
+        <div class="email-address20">
+            <input
+                    id="emailInput"
+                    type="email"
+                    class="email-address21"
+                    placeholder="Enter email address..."
+                    formControlName="username"
+                    required
+            />
+        </div>
+
+
+        <b class="password6" >Password </b>
+        <div class="password7">
+            <input
+                    id="passwordInput"
+                    type="{{ isPasswordVisible ? 'text' : 'password' }}"
+                    class="enter-password4"
+                    placeholder="Enter password..."
+                    formControlName="password"
+
+                    required
+            />
+            <img
+                    class="eye-1-icon4"
+                    alt="Toggle Password Visibility"
+                    src="../../assets/public/eye-1.svg"
+                    (click)="togglePasswordVisibility()"
+            />
+        </div>
+    </div>
+
+    <div id="check-box">
+        <div class="keep-me-signed-in-parent">
+            <input type="checkbox" id="keepMeSignedIn" class="keep-me-signed-checkbox" />
+            <label for="keepMeSignedIn" class="keep-me-signed">Keep me signed in</label>
+            <div class="group-child117"></div>
+        </div>
+
+        <b class="forgot-password1" id="forgotPasswordText" routerLink="/forgot-password">Forgot password?</b>
+    </div>
+
+    <div id="login-button">
+        <div class="continue-with-email-frame" id="continueEmail"  (click)="login()">
+            <b class="continue-with-email2">Continue with email</b>
+        </div>
+    </div>
+
+    <div id="register-button" >
+        <div class="dont-have-an-container" id="dontHaveAn">
+            <span>Don’t have an account? </span>
+            <span class="register5" routerLink="/register">Register</span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

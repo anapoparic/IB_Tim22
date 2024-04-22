@@ -1,0 +1,15 @@
+<ng-container *ngIf="role == null">
+    <app-unlogged-nav-bar></app-unlogged-nav-bar>
+</ng-container>
+
+<ng-container *ngIf="role == 'ROLE_ADMIN'">
+    <app-admin-nav-bar></app-admin-nav-bar>
+</ng-container>
+
+<ng-container *ngIf="role == 'ROLE_HOST'">
+    <app-host-nav-bar></app-host-nav-bar>
+</ng-container>
+
+<ng-container *ngIf="role == 'ROLE_GUEST'">
+    <app-guest-nav-bar></app-guest-nav-bar>
+</ng-container>

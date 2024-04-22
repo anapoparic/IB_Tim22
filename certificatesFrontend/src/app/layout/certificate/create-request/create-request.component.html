@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    <img class="x-icon" alt="" src="../../../assets/public/out.png" (click)="closeDialog()" style="cursor: pointer;"/>
+    <div class="register-guest">
+        <div class="data-container">
+            <p mat-dialog-title class="title-text">Add new certificate</p>
+
+            <div id="inputs-login" [formGroup]="certificationForm!" class="form-container"  mat-dialog-content>
+                <b class="normal-text">Common Name</b>
+                <div class="input-frame" style="margin-bottom: 0%;">
+                    <input id="commonNameInput" type="text" class="input-field" placeholder="Enter common name..." formControlName="commonName" required/>
+                </div>
+
+                <b class="normal-text">Organization</b>
+                <div class="input-frame">
+                    <input id="organizationInput" type="text" class="input-field" placeholder="Enter organization..." formControlName="organization" required/>
+                </div>
+
+                <b class="normal-text">Unit</b>
+                <div class="input-frame">
+                    <input id="unitInput" type="text" class="input-field" placeholder="Enter unit..." formControlName="unit" required/>
+                </div> 
+                
+                <b class="normal-text">Email</b>
+                <div class="input-frame">
+                    <input id="emailInput" type="email" class="input-field" placeholder="Enter email address..." formControlName="email" required/>
+                </div> 
+            
+                <div class="in-line-box">
+                    <div class="column-box">  
+                        <b class="normal-text-names">Issuer Alias</b>
+                        <div class="input-frame">
+                            <input id="uidInput" type="text" class="input-field" placeholder="Enter issuer alias..." formControlName="issuerAlias" required/>
+                        </div> 
+                        
+                    </div>
+                    <div class="column-box">
+                        <b class="normal-text">Country</b>
+                        <div class="input-frame-names">
+                            <input id="countryInput" type="text" class="input-field" placeholder="Enter country..." formControlName="country" required/>
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="in-line-box">
+                    <div class="column-box">
+                        <b class="normal-text">First Name</b>
+                        <div class="input-frame-names">
+                            <input id="firstNameInput" type="text" class="input-field" placeholder="Enter first name..." formControlName="firstName" required/>
+                        </div>
+                    </div>
+
+                    <div class="column-box">        
+                        <b class="normal-text">Last Name</b>
+                        <div class="input-frame-names">
+                            <input id="lastNameInput" type="text" class="input-field" placeholder="Enter last name..." formControlName="lastName" required/>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <b class="normal-text">UID</b>
+                <div class="input-frame">
+                    <input id="uidInput" type="text" class="input-field" placeholder="Enter UID..." formControlName="uid" required/>
+                </div>     
+
+                <b class="normal-text">Alias</b>
+                <div class="input-frame">
+                    <input id="countryInput" type="text" class="input-field" placeholder="Enter alias..." formControlName="alias" required/>
+                </div>
+
+                <b class="normal-text">Template</b>
+                <div class="input-frame-toggle">
+                    <label class="toggle">
+                        <input type="checkbox" (click)="toggleRole()">
+                        <span class="slider"></span>
+                        <span class="labels" data-on="EE" data-off="INT"></span>
+                    </label>
+                </div>
+
+                <div *ngIf="extensionVisible">
+                    <b class="normal-text" style="justify-content: center; display: flex; margin-top: 5%;">Extensions</b><br/>
+                    <b class="normal-text">Basic Constraints:</b>
+                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span>CA: true</div>
+                    <b class="normal-text">Extended Key Usage:</b>
+                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span>Any Extended Key Usage </div>
+                    <b class="normal-text">Subject Key Identifier:</b><br/>
+                    <b class="normal-text">Authority Key Identifier </b>
+                </div>
+                
+
+                <div *ngIf="!extensionVisible">
+                    <b class="normal-text" style="justify-content: center; display: flex; margin-top: 5%;">Extensions: KU, SKI, BC, AKI, SAN</b><br/>
+                    <b class="normal-text">KU (Key Usage)</b>
+                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span> Key Usage: Specify the intended purposes of<br/> the public key.</div>
+                    <b class="normal-text">SKI (Subject Key Identifier)</b>
+                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span> Key Usage: Identify the subject's public key.</div>
+                    <b class="normal-text">BC (Basic Constraints)</b>
+                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span> Key Usage: Specify whether the certificate is a<br/>  CA certificate or a end-entity certificate.</div>
+                    <b class="normal-text">AKI (Authority Key Identifier)</b>
+                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span> Key Usage: Identify the public key corresponding<br/> to the private key used to sign the certificate.</div>
+                    <b class="normal-text">SAN (Subject Alternative Name)</b>
+                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span> Key Usage: Specify additional subject identities <br/>that can be associated with the certificate, such as <br/>email addresses, IP addresses, or DNS names.</div>
+                </div>                
+            </div>
+            
+
+            <div class="button-container" (click)="sendRequest()">
+                <b>Send request</b>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

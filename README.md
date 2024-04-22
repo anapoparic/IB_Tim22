@@ -1,1 +1,10 @@
-# IB_Tim22
+# Project Overview
+This project involves developing a secure certificate issuance system for the Booking application and a corresponding PKI service. <br>
+The Booking application will allow users to request certificates for specific purposes. <br>
+The PKI service will centrally manage certificate issuance, including self-signed and intermediate certificates, while enforcing security best practices. <br>
+The goal is to enable secure communication within the Booking application using HTTPS.
+
+# Team 22 / Members
+SV 42/2021 Dusica Trbovic <br>
+SV 74/2021 Ana Poparic <br>
+SV 78/2021 Vesna Vasic <br>
