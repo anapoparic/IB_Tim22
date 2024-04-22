@@ -5,6 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CertificateRequest } from '../model/certificateRequest.model';
 import { RequestsService } from '../requests.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AcceptRequestComponent } from '../accept-request/accept-request.component';
 
 @Component({
   selector: 'app-requests',
@@ -16,7 +18,7 @@ export class RequestsComponent implements OnInit {
   requests: Observable<CertificateRequest[]> = new Observable<[]>;
 
 
-  constructor(private router: Router, private route: ActivatedRoute, private requestService: RequestsService) {
+  constructor(private router: Router, private route: ActivatedRoute, private requestService: RequestsService , private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -44,42 +46,10 @@ export class RequestsComponent implements OnInit {
       });
     }
 
-    Swal.fire({
-      title: 'Accept Certificate Request',
-      html: this.generateFormHtml(templateOptions),
-      showCancelButton: true,
-      confirmButtonText: 'Accept',
-      cancelButtonText: 'Cancel',
-      preConfirm: () => {
-        return this.getFormData();
-      }
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.handleAcceptance(id);
-      }
+    const dialogRef = this.dialog.open(AcceptRequestComponent, {
+      width: 'auto',
+      data: this.requestService.getRequestById(id)
     });
-  }
-
-
-
-  generateFormHtml(templateOptions: { value: string, label: string }[]): string {
-    return `
-    <label for="template">Select Template:</label>
-    <select id="template" class="swal2-select">
-      ${templateOptions.map(option => `<option value="${option.value}">${option.label}</option>`).join('')}
-    </select>
-    <br>
-    <label for="issuer">Select Issuer:</label>
-    <select id="issuer" class="swal2-select">
-      <option value="CA1">CA1</option>
-      <option value="CA2">CA2</option>
-    </select>
-    <br>
-    <input type="text" id="alias" class="swal2-input" placeholder="Alias">
-    <br>
-    <button id="seeExtensionsBtn" class="swal2-confirm swal2-styled" style="display: none;">See Extensions</button>
-    <div id="extensions" style="display: none;"></div>
-  `;
   }
 
   showExtensions(template: Template, extensionsDiv: HTMLElement): void {
@@ -125,25 +95,6 @@ export class RequestsComponent implements OnInit {
     </table>
   `;
   }
-
-  getFormData(): { template: Template, issuer: string, alias: string } {
-    const template = (document.getElementById('template') as HTMLSelectElement).value as Template;
-    const issuer = (document.getElementById('issuer') as HTMLSelectElement).value;
-    const alias = (document.getElementById('alias') as HTMLInputElement).value;
-    return { template, issuer, alias };
-  }
-
-  handleAcceptance(id: number): void {
-    // Obrada prihvatanja zahteva
-    // this.requestService.acceptRequest(id, template, issuer, alias).subscribe(...);
-    Swal.fire({
-      icon: 'success',
-      title: 'Certificate Request Accepted',
-      text: `Certificate request with ID ${id} has been successfully accepted.`,
-    });
-    this.requests = this.requestService.getAllActiveRequests();
-  }
-
 
   rejectRequest(id: number) {
     this.requestService.deleteRequest(id).subscribe({

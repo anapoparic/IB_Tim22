@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CreateRequestComponent } from './certificate/create-request/create-request.component';
 import { CertificatesTreeComponent } from './certificate/certificates-tree/certificates-tree.component';
 import { CreateRootComponent } from './certificate/create-root/create-root.component';
+import { AcceptRequestComponent } from './request/accept-request/accept-request.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { CreateRootComponent } from './certificate/create-root/create-root.compo
     RequestsComponent,
     CertificatesTreeComponent,
     CreateRootComponent,
+    AcceptRequestComponent,
   ],
   exports: [
     NavBarComponent,
