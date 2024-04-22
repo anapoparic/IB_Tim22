@@ -86,8 +86,13 @@ export class CertificatesComponent implements OnInit {
               Swal.fire('Certificate Revoked!', `Certificate with ID ${id} has been successfully revoked.`, 'success');
             },
             (error) => {
-              Swal.fire('Error!', `Certificate with ID ${id} cannot be revoked.`, 'error');
+              if (error.statusText === 'OK') {
+                Swal.fire('Certificate Revoked!', `Certificate with ID ${id} has been successfully revoked.`, 'success');
+              } else {
+                Swal.fire('Error!', `Certificate with ID ${id} cannot be revoked.`, 'error');
+              }
             }
+            
           );
         } else {
           Swal.fire('Error!', 'Invalid reason selected.', 'error');
@@ -147,6 +152,49 @@ export class CertificatesComponent implements OnInit {
   openDescendantsOfRoot(certificateId: number): void {
     this.selectedClass = "tree";
     this.certifications = this.certificationService.getAllDescendantsOfRoot(certificateId);
+  }
+
+  delete(id: number): void {
+    // Prvo dobijamo podatke o sertifikatu sa datim ID-om
+    this.certificationService.getCertificateById(id).subscribe(
+      (certificate) => {
+        // Kreiramo poruku za SweetAlert
+        const message = `Are you sure you want to delete the certificate with ID: ${id} and reason for revocation: ${certificate.reason}?`;
+
+        // Prikazujemo SweetAlert sa porukom i opcijama
+        Swal.fire({
+          title: 'Delete Certificate',
+          text: message,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes, delete',
+          cancelButtonText: 'Cancel'
+        }).then((result) => {
+          // Proveravamo korisničku akciju
+          if (result.isConfirmed) {
+            // Ako je korisnik potvrdio, pozivamo funkciju za brisanje sertifikata
+            this.certificationService.deleteCertificate(id).subscribe(
+              () => {
+                Swal.fire('Success', 'The certificate has been successfully deleted.', 'success');
+                this.certifications = this.certificationService.getAllCertificates();
+              },
+              (error) => {
+                Swal.fire('Error', 'An error occurred while deleting the certificate.', 'error');
+                console.error('Error deleting certificate:', error);
+              }
+            );
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            // Ako je korisnik odustao, ne radimo ništa
+            Swal.fire('Cancelled', 'Deleting certificate has been cancelled.', 'info');
+          }
+        });
+      },
+      (error) => {
+        // Ako sertifikat nije pronađen, prikazujemo odgovarajuću poruku
+        console.error('Error getting certificate:', error);
+        Swal.fire('Error', 'Certificate not found.', 'error');
+      }
+    );
   }
 
 }

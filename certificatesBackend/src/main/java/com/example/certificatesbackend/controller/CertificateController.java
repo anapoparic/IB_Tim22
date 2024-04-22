@@ -116,7 +116,20 @@ public class CertificateController {
         return new ResponseEntity<Certificate>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping(value = "/revoke/{id}/{reason}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PutMapping(value = "/revoke/{id}/{reason}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<String> revokeCertificate(@PathVariable Integer id, @PathVariable String reason) {
+//        try {
+//            service.revokeCertificate(id, ReasonForRevoke.valueOf(reason));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//
+//        return new ResponseEntity<>("OK", HttpStatus.OK);
+//    }
+
+    @CrossOrigin(origins = "https://localhost:4201")
+    @RequestMapping(value = "/revoke/{id}/{reason}", method = RequestMethod.PUT)
     public ResponseEntity<String> revokeCertificate(@PathVariable Integer id, @PathVariable String reason) {
         try {
             service.revokeCertificate(id, ReasonForRevoke.valueOf(reason));
@@ -125,9 +138,8 @@ public class CertificateController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>("OK", HttpStatus.OK);
+        return new ResponseEntity<>( HttpStatus.OK);
     }
-
     @GetMapping(value = "/root", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CertificateDTO>> getAllRootCertificates() {
         Collection<Certificate> certificates = service.getAllRoot();

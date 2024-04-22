@@ -88,7 +88,7 @@ export class AcceptRequestComponent implements OnInit{
     const certificate: Certificate = {
       alias: this.acceptForm?.controls['alias'].value || '',
       issuerAlias: this.acceptForm?.controls['issuer_alias'].value || '',
-      isRevoked: false,
+      revoked: false,
       template: Template.END_ENTITY,
       commonName: this.request?.commonName || '',
       organization: this.request?.organization || '',

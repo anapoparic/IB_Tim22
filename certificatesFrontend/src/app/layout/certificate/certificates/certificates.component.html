@@ -16,7 +16,7 @@
 
         <div class="main-content" id="main-content">
           <b class="no-text" *ngIf="(certifications | async)?.length == 0">NO RESULTS</b>
-          <div *ngFor="let certificate of certifications | async" class="request-frame">
+          <div  *ngFor="let certificate of certifications | async" class="request-frame">
               <img
               class="icon-image"
               alt=""
@@ -43,11 +43,14 @@
               </div>
 
               <div class="right-buttons">
-                <div class="accept-button" id="accept-button" *ngIf="certificate.template !== Template.END_ENTITY" (click)="signCertificate(certificate.alias)">
+                <div  class="accept-button" id="accept-button" *ngIf="certificate.template !== Template.END_ENTITY && !certificate?.revoked" (click)="signCertificate(certificate.alias)">
                   <b class="button-text">Add Certificate</b>
                 </div>
-                <div class="reject-button" id="reject-button" (click)="revoke(certificate?.id ?? 0)" *ngIf="certificate.isRevoked !== true">
+                <div *ngIf="!certificate?.revoked" class="reject-button" id="revoke-button" (click)="revoke(certificate?.id ?? 0)">
                   <b class="button-text">Revoke</b>
+                </div>
+                <div *ngIf="certificate?.revoked" class="reject-button" id="delete-button" (click)="delete(certificate?.id ?? 0)">
+                  <b class="button-text">Delete</b>
                 </div>
                 <div class="view-details-button" id="view-details-button" (click)="openDetails(certificate?.id ?? 0)">
                     <b class="button-text">View Path</b>

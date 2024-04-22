@@ -62,11 +62,11 @@ public class CertificateService  {
 
 
     public Collection<Certificate> getAll() {
-        return repository.findAll();
+        return repository.findByActive(true);
     }
 
     public Collection<Certificate> getAllRoot() {
-        return repository.findAllByTemplate(Template.ROOT);
+        return repository.findAllByTemplateAndActive(Template.ROOT, true);
     }
 
     public Collection<Certificate> findAllChildren(Integer rootId) {
@@ -87,12 +87,14 @@ public class CertificateService  {
         Collection<Certificate> directChildren = repository.findAllByIssuerAlias(parent.getAlias());
 
         for (Certificate child : directChildren) {
-            children.add(child);
-            if(!child.getIssuerAlias().equals(child.getAlias())){ // if certificate sign itself
-                // Add the child certificate to the collection of children
+            if (child.isActive()) {
+                children.add(child);
+                if (!child.getIssuerAlias().equals(child.getAlias())) { // if certificate sign itself
+                    // Add the child certificate to the collection of children
 
-                // Recursively find all children of the current child
-                findAllChildrenRecursive(child, children);
+                    // Recursively find all children of the current child
+                    findAllChildrenRecursive(child, children);
+                }
             }
         }
     }

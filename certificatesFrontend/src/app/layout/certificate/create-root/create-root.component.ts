@@ -79,7 +79,7 @@ export class CreateRootComponent implements OnInit{
         validTo: undefined,
         alias: this.certificationRootForm?.controls['alias'].value || '',
         issuerAlias: this.certificationRootForm?.controls['issuer_alias'].value || '',
-        isRevoked: false,
+        revoked: false,
         reason: undefined,
         template: Template.ROOT,
         commonName: this.certificationRootForm?.controls['commonName'].value || '',
