@@ -12,20 +12,47 @@ import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cert.jcajce.JcaX509v3CertificateBuilder;
+import org.bouncycastle.crypto.digests.SHA1Digest;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.ContentSigner;
+import org.bouncycastle.operator.DigestCalculator;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
+import org.bouncycastle.x509.extension.SubjectKeyIdentifierStructure;
 import org.springframework.expression.common.TemplateAwareExpressionParser;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.math.BigInteger;
-import java.security.KeyPair;
-import java.security.Security;
+import java.security.*;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPublicKeySpec;
 import java.util.Date;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.security.PublicKey;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
+import java.util.Base64;
+
+import org.bouncycastle.asn1.ASN1Encodable;
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.x509.Extension;
+import org.bouncycastle.asn1.x509.SubjectKeyIdentifier;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.DigestCalculator;
+import org.bouncycastle.operator.DigestCalculatorProvider;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaDigestCalculatorProviderBuilder;
+import org.bouncycastle.x509.extension.SubjectKeyIdentifierStructure;
 
 import static com.example.certificatesbackend.constants.Constants.KEYSTORE_PASSWORD;
 
@@ -108,27 +135,50 @@ public class CertificateGenerator {
                     subject.getPublicKey());
 
             if (template == Template.ROOT) {
-                certGen.addExtension(X509Extension.keyUsage, true, new KeyUsage(KeyUsage.keyCertSign | KeyUsage.cRLSign));
-                certGen.addExtension(X509Extension.basicConstraints, true, new BasicConstraints(true));
-                certGen.addExtension(X509Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));
-//                certGen.addExtension(X509Extension.authorityKeyIdentifier, false, new AuthorityKeyIdentifier(issuer..getPublic()));  //ciji key treba da bude
-                certGen.addExtension(X509Extension.certificatePolicies, false, new CertificatePolicies(new PolicyInformation(new ASN1ObjectIdentifier("1.3.6.1.4.1.99999.1"), new DERSequence())));
-                certGen.addExtension(X509Extension.extendedKeyUsage, false, new ExtendedKeyUsage(KeyPurposeId.anyExtendedKeyUsage));
+                // ROOT certificate extension handling
+                certGen.addExtension(Extension.basicConstraints, true, new BasicConstraints(0)); // Root sertifikat ima basicConstraints: CA=true, pathLenConstraint=0
+                certGen.addExtension(Extension.keyUsage, true, new KeyUsage(KeyUsage.keyCertSign | KeyUsage.cRLSign)); // Korenski sertifikat može potpisivati druge sertifikate i CRL-ove
+
+                // Extended Key Usage za korenski sertifikat
+                KeyPurposeId[] rootKeyPurposes = { KeyPurposeId.anyExtendedKeyUsage }; // Korenski sertifikat može biti korišćen za bilo koju svrhu
+                certGen.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(rootKeyPurposes));
+                // Define key usage for CA
+                // Subject Key Identifier ekstenzija
+                certGen.addExtension(Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));
+
             } else if (template == Template.INTERMEDIATE) {
-                certGen.addExtension(X509Extension.keyUsage, true, new KeyUsage(KeyUsage.keyCertSign | KeyUsage.cRLSign));
-                certGen.addExtension(X509Extension.basicConstraints, true, new BasicConstraints(true));
-                certGen.addExtension(X509Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));
-//                certGen.addExtension(X509Extension.authorityKeyIdentifier, false, new AuthorityKeyIdentifier());
-                certGen.addExtension(X509Extension.certificatePolicies, false, new CertificatePolicies(new PolicyInformation(new ASN1ObjectIdentifier("1.3.6.1.4.1.99999.2"), new DERSequence())));
-                certGen.addExtension(X509Extension.extendedKeyUsage, false, new ExtendedKeyUsage(KeyPurposeId.anyExtendedKeyUsage));
+                // INTERMEDIATE certificate extension handling
+                certGen.addExtension(Extension.basicConstraints, true, new BasicConstraints(true)); // Posrednički sertifikat ima basicConstraints: CA=true
+
+                // Extended Key Usage za posrednički sertifikat
+                KeyPurposeId[] intermediateKeyPurposes = { KeyPurposeId.anyExtendedKeyUsage }; // Posrednički sertifikat može biti korišćen za bilo koju svrhu
+                certGen.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(intermediateKeyPurposes)); // Define key usage for CA
+
+                certGen.addExtension(Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));
+
+
             } else if (template == Template.END_ENTITY) {
-                certGen.addExtension(X509Extension.keyUsage, true, new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyEncipherment));
-                certGen.addExtension(X509Extension.basicConstraints, true, new BasicConstraints(false));
-                certGen.addExtension(X509Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));
-//                certGen.addExtension(X509Extension.authorityKeyIdentifier, false, new AuthorityKeyIdentifier(keyPair.getPublic()));
-                certGen.addExtension(X509Extension.certificatePolicies, false, new CertificatePolicies(new PolicyInformation(new ASN1ObjectIdentifier("1.3.6.1.4.1.99999.3"), new DERSequence())));
-                certGen.addExtension(X509Extension.extendedKeyUsage, false, new ExtendedKeyUsage(KeyPurposeId.anyExtendedKeyUsage));
+                // END_ENTITY certificate extension handling
+                certGen.addExtension(Extension.basicConstraints, true, new BasicConstraints(false)); // Završni sertifikat nema basicConstraints ekstenziju ili je postavljena na CA=false
+
+                // Extended Key Usage za završni sertifikat
+                KeyPurposeId[] endEntityKeyPurposes = { KeyPurposeId.id_kp_serverAuth, KeyPurposeId.id_kp_clientAuth }; // Završni sertifikat je namenjen za server i klijent autentikaciju
+                certGen.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(endEntityKeyPurposes));
+
+                // Subject Alternative Name za završni sertifikat
+                GeneralName[] endEntityNames = {
+                        new GeneralName(GeneralName.dNSName, "*.localhost"), // Primer Subject Alternative Name za web servere
+                        new GeneralName(GeneralName.rfc822Name, "localhost") // Primer Subject Alternative Name za email servere
+                };
+                DERSequence endEntitySAN = new DERSequence(endEntityNames);
+                certGen.addExtension(Extension.subjectAlternativeName, false, endEntitySAN);
+
+                certGen.addExtension(Extension.subjectKeyIdentifier, false, new SubjectKeyIdentifier(subject.getPublicKey().getEncoded()));
+
+
+
             }
+
 
             //Generise se sertifikat
             X509CertificateHolder certHolder = certGen.build(contentSigner);
@@ -153,7 +203,47 @@ public class CertificateGenerator {
             e.printStackTrace();
         } catch (CertIOException e) {
             throw new RuntimeException(e);
+        } catch (GeneralSecurityException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
+
+    public static Extension createAuthorityKeyIdentifier(PublicKey issuerPublicKey) throws IOException {
+        byte[] authorityKeyIdentifier = calculateAuthorityKeyIdentifier(issuerPublicKey);
+        return new Extension(Extension.authorityKeyIdentifier, false, authorityKeyIdentifier);
+    }
+
+    private static byte[] calculateAuthorityKeyIdentifier(PublicKey issuerPublicKey) {
+        byte[] keyHash = calculateSHA1(issuerPublicKey.getEncoded());
+        return keyHash;
+    }
+
+
+    public static Extension createSubjectKeyIdentifier(SubjectPublicKeyInfo subjectPublicKeyInfo) throws IOException {
+        byte[] subjectKeyIdentifier = calculateSubjectKeyIdentifier(subjectPublicKeyInfo);
+        return new Extension(Extension.subjectKeyIdentifier, false, subjectKeyIdentifier);
+    }
+
+    private static byte[] calculateSubjectKeyIdentifier(SubjectPublicKeyInfo subjectPublicKeyInfo) throws IOException {
+        byte[] keyBytes = subjectPublicKeyInfo.getPublicKeyData().getBytes();
+        byte[] keyHash = calculateSHA1(keyBytes);
+        byte[] ski = new byte[8];
+        System.arraycopy(keyHash, 0, ski, 0, 8);
+        return ski;
+    }
+
+    private static byte[] calculateSHA1(byte[] data) {
+        SHA1Digest sha1 = new SHA1Digest();
+        sha1.update(data, 0, data.length);
+        byte[] hash = new byte[sha1.getDigestSize()];
+        sha1.doFinal(hash, 0);
+        return hash;
+    }
+
+
+
+
 }

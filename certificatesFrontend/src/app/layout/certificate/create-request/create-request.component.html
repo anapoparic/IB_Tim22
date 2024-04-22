@@ -81,16 +81,15 @@
                 </div>
 
                 <div *ngIf="extensionVisible">
-                    <b class="normal-text" style="justify-content: center; display: flex; margin-top: 5%;">Extensions: KU, SKI, BC, AKI</b><br/>
-                    <b class="normal-text">KU (Key Usage)</b>
-                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span> Key Usage: Specify the intended purposes of<br/> the public key.</div>
-                    <b class="normal-text">SKI (Subject Key Identifier)</b>
-                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span> Key Usage: Identify the subject's public key.</div>
-                    <b class="normal-text">BC (Basic Constraints)</b>
-                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span> Key Usage: Specify whether the certificate is a<br/>  CA certificate or a end-entity certificate.</div>
-                    <b class="normal-text">AKI (Authority Key Identifier)</b>
-                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span> Key Usage: Identify the public key corresponding<br/> to the private key used to sign the certificate.</div>
+                    <b class="normal-text" style="justify-content: center; display: flex; margin-top: 5%;">Extensions</b><br/>
+                    <b class="normal-text">Basic Constraints:</b>
+                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span>CA: true</div>
+                    <b class="normal-text">Extended Key Usage:</b>
+                    <div class="normal-text" [style.marginLeft.px]="20"><span>&#8226;</span>Any Extended Key Usage </div>
+                    <b class="normal-text">Subject Key Identifier:</b><br/>
+                    <b class="normal-text">Authority Key Identifier </b>
                 </div>
+                
 
                 <div *ngIf="!extensionVisible">
                     <b class="normal-text" style="justify-content: center; display: flex; margin-top: 5%;">Extensions: KU, SKI, BC, AKI, SAN</b><br/>

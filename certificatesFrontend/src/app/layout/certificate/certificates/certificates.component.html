@@ -43,7 +43,7 @@
               </div>
 
               <div class="right-buttons">
-                <div class="accept-button" id="accept-button" (click)="signCertificate(certificate.alias)">
+                <div class="accept-button" id="accept-button" *ngIf="certificate.template !== Template.END_ENTITY" (click)="signCertificate(certificate.alias)">
                   <b class="button-text">Add Certificate</b>
                 </div>
                 <div class="reject-button" id="reject-button" (click)="revoke(certificate?.id ?? 0)">

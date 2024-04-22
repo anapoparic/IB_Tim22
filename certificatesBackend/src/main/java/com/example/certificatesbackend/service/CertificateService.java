@@ -6,23 +6,28 @@ import com.example.certificatesbackend.domain.enums.Template;
 import com.example.certificatesbackend.pki.certificates.CertificateGenerator;
 import com.example.certificatesbackend.pki.data.Issuer;
 import com.example.certificatesbackend.pki.data.Subject;
-import com.example.certificatesbackend.pki.keystores.KeyStoreManager;
 import com.example.certificatesbackend.pki.keystores.KeyStoreReader;
+import com.example.certificatesbackend.pki.keystores.KeyStoreRepository;
 import com.example.certificatesbackend.pki.keystores.KeyStoreWriter;
 import com.example.certificatesbackend.repository.ICertificateRepository;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.util.io.pem.PemObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.ParseException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static com.example.certificatesbackend.constants.Constants.*;
 import static com.example.certificatesbackend.pki.certificates.CertificateGenerator.generateRootCertificate;
@@ -34,9 +39,6 @@ public class CertificateService  {
     private ICertificateRepository repository;
 
     @Autowired
-    private KeyStoreManager keyStoreManager;
-
-    @Autowired
     public KeyStoreWriter storeWriter;
 
     @Autowired
@@ -46,6 +48,7 @@ public class CertificateService  {
     public CertificateRequestService requestService;
 
     public int keystoreCounter = 0;
+
 
     public Collection<Certificate> getAll() {
         return repository.findAll();
@@ -106,14 +109,15 @@ public class CertificateService  {
     }
 
     public Certificate create(CertificateRequest request, String alias, String issuerAlias, String template) throws Exception {
+        System.out.print(request.getCommonName() + "          " + issuerAlias);
 
         Subject subject = createSubject(request);
         KeyPair keyPair = generateKeyPair();
         assert keyPair != null;
         subject.setPublicKey(keyPair.getPublic());
 
-        //java.security.cert.Certificate[] certificatesChain = storeReader.getCertificateChain(KEYSTORE_PATH, KEYSTORE_PASSWORD, issuerAlias);
-        Issuer issuer = storeReader.getIssuer(KEYSTORE_PATH,issuerAlias, KEYSTORE_PASSWORD.toCharArray(), KEYSTORE_PASSWORD.toCharArray());
+        java.security.cert.Certificate[] certificatesChain = storeReader.getCertificateChain(KEYSTORE_PATH, KEYSTORE_PASSWORD, issuerAlias);
+        Issuer issuer = storeReader.getIssuer(KEYSTORE_PATH, issuerAlias, KEYSTORE_PASSWORD.toCharArray(), KEYSTORE_PASSWORD.toCharArray());
         String serialNumber = String.valueOf(System.currentTimeMillis());
 
         Date validFrom = new Date();
@@ -132,21 +136,68 @@ public class CertificateService  {
             certificate = CertificateGenerator.generateCertificate(subject, issuer, validFrom, validTo, serialNumber, Template.INTERMEDIATE);
         }
 
-//        java.security.cert.Certificate[] newChain = Arrays.copyOf(certificatesChain, certificatesChain.length + 1);
-//        newChain[0] = certificate;
+        java.security.cert.Certificate[] newCertificateChain = ArrayUtils.insert(0, certificatesChain, certificate);
 
         storeWriter.loadKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
-        storeWriter.write(alias, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), certificate);
-        //storeWriter.writeChain(alias, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), newChain);
+//        storeWriter.write(alias, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), certificate);
+        storeWriter.writeChain(alias, keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), newCertificateChain);
         storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
 
         Certificate newCertificate = new Certificate(validFrom, validTo, alias, issuerAlias,
                 false, null, Template.valueOf(template), request.getCommonName(), request.getOrganization(), request.getUnit(), request.getCountry(), request.getEmail(),
                 true);
         repository.save(newCertificate);
-        requestService.delete(request.getId());
+        if (request.getId() != null) {
+            requestService.delete(request.getId());
+        }
+
+
+//        String cert_pem_path = "src/main/resources/pem/certificate.crt";
+//        saveCertToPemFile(certificate, cert_pem_path);
+
+        String pk_pem_path ="src/main/resources/pem/" + alias + "_pk.pem";
+
+        savePrivateKeyToPemFile(keyPair.getPrivate(), pk_pem_path);
+
 
         return newCertificate;
+    }
+
+//    public void saveCertToPemFile(X509Certificate certificate, String pem_path) throws IOException {
+//        FileOutputStream fout = new FileOutputStream(pem_path);
+//        StringWriter writer = new StringWriter();
+//        JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
+//        pemWriter.writeObject(certificate);
+//        pemWriter.flush();
+//        pemWriter.close();
+//        fout.write(writer.toString().getBytes());
+//        fout.close();
+//    }
+
+    public String convertCertToPemString(X509Certificate certificate) {
+        StringWriter writer = new StringWriter();
+        try (JcaPEMWriter pemWriter = new JcaPEMWriter(writer)) {
+            pemWriter.writeObject(certificate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return writer.toString();
+    }
+
+
+    public void savePrivateKeyToPemFile(PrivateKey key, String pem_path) throws IOException {
+        FileOutputStream foutKey = new FileOutputStream(pem_path);
+        StringWriter writer = new StringWriter();
+        JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
+
+        PemObject pemFile = new PemObject("PRIVATE KEY", key.getEncoded());
+
+        pemWriter.writeObject(pemFile);
+        pemWriter.flush();
+        pemWriter.close();
+        foutKey.write(writer.toString().getBytes());
+        foutKey.close();
+
     }
 
     public void delete(Long id) throws Exception {
@@ -199,12 +250,17 @@ public class CertificateService  {
         Date validTo = calendar.getTime();
         String serialNumber = String.valueOf(System.currentTimeMillis());
 
+//        storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
+
+        // Generate the certificate
         X509Certificate createdCertificate = generateRootCertificate(subject, keyPair, validFrom, validTo, serialNumber);
 
 
-        storeWriter.loadKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
+        // Write the certificate to the KeyStore
+        storeWriter.loadKeyStore(null, KEYSTORE_PASSWORD.toCharArray());
         storeWriter.write(certificate.getAlias(), keyPair.getPrivate(), KEYSTORE_PASSWORD.toCharArray(), createdCertificate);
         storeWriter.saveKeyStore(KEYSTORE_PATH, KEYSTORE_PASSWORD.toCharArray());
+
 
         Certificate newCertificate = new Certificate(validFrom, validTo, certificate.getAlias(), certificate.getIssuerAlias(),
                 false, null, Template.ROOT, certificate.getCommonName(), certificate.getOrganization(), certificate.getOrganizationUnit(), certificate.getCountry(), certificate.getOwnerEmail(),
@@ -250,4 +306,6 @@ public class CertificateService  {
         }
         return certificates;
     }
+
+
 }

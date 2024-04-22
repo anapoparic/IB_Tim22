@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { CreateRequestComponent } from '../create-request/create-request.component';
 import { CertificatesTreeComponent } from '../certificates-tree/certificates-tree.component';
 import { CreateRootComponent } from '../create-root/create-root.component';
+import { Template } from '../model/enum/template.enum';
 
 @Component({
   selector: 'app-certificates',
@@ -20,6 +21,7 @@ export class CertificatesComponent implements OnInit {
 
   selectedClass: string = 'root';
   certifications: Observable<Certificate[]> = new Observable<[]>;
+  Template = Template;
 
 
   constructor(private router: Router, private route: ActivatedRoute, private certificationService: CertificatesService, private dialog: MatDialog) {
