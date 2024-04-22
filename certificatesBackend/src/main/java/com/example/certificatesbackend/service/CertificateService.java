@@ -2,6 +2,7 @@ package com.example.certificatesbackend.service;
 
 import com.example.certificatesbackend.domain.Certificate;
 import com.example.certificatesbackend.domain.CertificateRequest;
+import com.example.certificatesbackend.domain.enums.ReasonForRevoke;
 import com.example.certificatesbackend.domain.enums.Template;
 import com.example.certificatesbackend.pki.certificates.CertificateGenerator;
 import com.example.certificatesbackend.pki.data.Issuer;
@@ -10,9 +11,16 @@ import com.example.certificatesbackend.pki.keystores.KeyStoreReader;
 import com.example.certificatesbackend.pki.keystores.KeyStoreRepository;
 import com.example.certificatesbackend.pki.keystores.KeyStoreWriter;
 import com.example.certificatesbackend.repository.ICertificateRepository;
+import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
+import org.bouncycastle.cert.X509CRLHolder;
+import org.bouncycastle.cert.X509v2CRLBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CRLConverter;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.bouncycastle.openssl.jcajce.JcaPEMWriter;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +29,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.*;
+import java.security.cert.CRLException;
 import java.security.cert.CertificateException;
+import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.ParseException;
@@ -163,16 +174,16 @@ public class CertificateService  {
         return newCertificate;
     }
 
-//    public void saveCertToPemFile(X509Certificate certificate, String pem_path) throws IOException {
-//        FileOutputStream fout = new FileOutputStream(pem_path);
-//        StringWriter writer = new StringWriter();
-//        JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
-//        pemWriter.writeObject(certificate);
-//        pemWriter.flush();
-//        pemWriter.close();
-//        fout.write(writer.toString().getBytes());
-//        fout.close();
-//    }
+    public void saveCertToPemFile(X509Certificate certificate, String pem_path) throws IOException {
+        FileOutputStream fout = new FileOutputStream(pem_path);
+        StringWriter writer = new StringWriter();
+        JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
+        pemWriter.writeObject(certificate);
+        pemWriter.flush();
+        pemWriter.close();
+        fout.write(writer.toString().getBytes());
+        fout.close();
+    }
 
     public String convertCertToPemString(X509Certificate certificate) {
         StringWriter writer = new StringWriter();
@@ -199,6 +210,7 @@ public class CertificateService  {
         foutKey.close();
 
     }
+
 
     public void delete(Long id) throws Exception {
         Certificate cer = repository.findById(id)
@@ -237,7 +249,7 @@ public class CertificateService  {
         return subject;
     }
 
-    public X509Certificate createRootCertificate(Certificate certificate, String uid) throws ParseException, IOException {
+    public X509Certificate createRootCertificate(Certificate certificate, String uid) throws ParseException, IOException, OperatorCreationException, CRLException {
         KeyPair keyPair = generateKeyPair();
         Subject subject = createRootSubject(keyPair, certificate.getCommonName(), "Admin", "Adminic", certificate.getOrganization(), certificate.getOrganizationUnit(),
                 certificate.getCountry(), certificate.getOwnerEmail(), uid);
@@ -267,9 +279,38 @@ public class CertificateService  {
                 true);
         repository.save(newCertificate);
 
+        saveCRLFile(keyPair.getPrivate(), subject.getX500Name());
+
+        String root_cert_pem_path = "src/main/resources/pem root/root.crt";
+        saveCertToPemFile(createdCertificate, root_cert_pem_path);
+
+        String root_pk_pem_path = "src/main/resources/pem root/root_pk.pem";
+        savePrivateKeyToPemFile(keyPair.getPrivate(), root_pk_pem_path);
 
         return createdCertificate;
     }
+
+    private void saveCRLFile(PrivateKey pk, X500Name issuerName)
+            throws CRLException, IOException, OperatorCreationException {
+        X509v2CRLBuilder crlBuilder = new X509v2CRLBuilder(issuerName, new Date());
+        crlBuilder.setNextUpdate(new Date(System.currentTimeMillis() + 86400 * 1000));
+
+        JcaContentSignerBuilder contentSignerBuilder = new JcaContentSignerBuilder("SHA256WithRSA");
+        contentSignerBuilder.setProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
+        X509CRLHolder crlHolder = crlBuilder.build(contentSignerBuilder.build(pk));
+        JcaX509CRLConverter converter = new JcaX509CRLConverter();
+        converter.setProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+
+        X509CRL crl = converter.getCRL(crlHolder);
+
+        byte[] bytes = crl.getEncoded();
+
+        OutputStream os = new FileOutputStream(ROOT_CRL_PATH);
+        os.write(bytes);
+        os.close();
+    }
+
 
     private Subject createRootSubject(KeyPair keyPairValues, String commonName, String surname, String givenName, String organization,
                                       String organizationalUnit, String countryOfResidence, String email, String uid) throws java.text.ParseException {
@@ -307,5 +348,57 @@ public class CertificateService  {
         return certificates;
     }
 
+    public void revokeCertificate(Integer id, ReasonForRevoke reason) throws Exception {
 
+        File file = new File(ROOT_CRL_PATH);
+
+        if (!file.exists()) {
+            file.createNewFile();
+            System.out.println("Stvorena nova datoteka: " + file.getAbsolutePath());
+        }
+
+        Certificate certificate = repository.findById(id);
+
+        if (certificate == null) {
+            throw new Exception("Certificate with given id doesn't exist");
+        }
+
+        Issuer issuer = storeReader.readIssuerFromStore(KEYSTORE_PATH, certificate.getIssuerAlias(), KEYSTORE_PASSWORD.toCharArray(),
+                KEYSTORE_PASSWORD.toCharArray());
+
+        byte[] bytes = Files.readAllBytes(file.toPath());
+
+        X509CRLHolder holder = new X509CRLHolder(bytes);
+        X509v2CRLBuilder crlBuilder = new X509v2CRLBuilder(holder);
+
+        java.security.cert.Certificate cer = storeReader.readCertificate(KEYSTORE_PATH, KEYSTORE_PASSWORD, certificate.getAlias());
+
+        JcaX509CertificateHolder certHolder = new JcaX509CertificateHolder((X509Certificate) cer);
+
+        crlBuilder.addCRLEntry(certHolder.getSerialNumber(), new Date(), reason.ordinal());
+        JcaContentSignerBuilder contentSignerBuilder = new JcaContentSignerBuilder("SHA256WithRSA");
+        contentSignerBuilder.setProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        X509CRLHolder crlHolder = crlBuilder.build(contentSignerBuilder.build(issuer.getPrivateKey()));
+        JcaX509CRLConverter converter = new JcaX509CRLConverter();
+        converter.setProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+        X509CRL crl = converter.getCRL(crlHolder);
+
+        bytes = crl.getEncoded();
+
+        OutputStream os = new FileOutputStream(ROOT_CRL_PATH);
+        os.write(bytes);
+        os.close();
+
+        certificate.setRevoked(true);
+        certificate.setReason(reason);
+        repository.save(certificate);
+
+    }
+    public Optional<Certificate> getAliasByCommonName(String commonName){
+        return repository.findByCommonName(commonName);
+    }
+
+    public boolean existsActiveRequestByEmail(String email) {
+        return repository.findByOwnerEmailAndActive(email, true).isPresent();
+    }
 }

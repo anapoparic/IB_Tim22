@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    <img class="x-icon" alt="" src="../../../assets/public/out.png" (click)="closeDialog()" style="cursor: pointer;"/>
+    <div class="register-guest">
+        <div class="data-container">
+            <p mat-dialog-title class="title-text">Accept Certificate Request</p>
+
+            <div id="inputs-login" [formGroup]="acceptForm!" class="form-container"  mat-dialog-content>
+
+                <b class="normal-text">Alias</b>
+                <div class="input-frame">
+                    <input id="aliasInput" type="text" class="input-field" formControlName="alias" required />
+                </div>
+
+                <b class="normal-text">Issuer alias</b>
+                <div class="input-frame">
+                    <input id="issuerAliasInput" type="text" class="input-field" formControlName="issuer_alias" required />
+                </div>
+
+                <b class="normal-text">Template</b>
+                <div class="input-frame">
+                    <input id="templateInput" type="text" class="input-field" formControlName="template" required />
+                </div>             
+            </div>
+            
+
+            <div class="button-container" (click)="acceptRequest()">
+                <b>Accept Request</b>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

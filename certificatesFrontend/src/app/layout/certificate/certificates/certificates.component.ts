@@ -38,17 +38,28 @@ export class CertificatesComponent implements OnInit {
     this.certifications = this.certificationService.getAllRootCertificates();
   }
 
-  revoke(id: number) {
-    const reasons = Object.values(ReasonForRevoke).map(value => ({ value, label: value }));
+  revoke(id: number): void {
+    const reasons = [
+      { label: 'Unspecified reason for revocation', value: ReasonForRevoke.UNSPECIFIED },
+      { label: 'Private key compromise', value: ReasonForRevoke.KEY_COMPROMISE },
+      { label: 'CA compromise', value: ReasonForRevoke.CA_COMPROMISE },
+      { label: 'Change in affiliation', value: ReasonForRevoke.AFFILIATION_CHANGED },
+      { label: 'Superseded certificate', value: ReasonForRevoke.SUPERSEDED },
+      { label: 'Cessation of operation', value: ReasonForRevoke.CESSATION_OF_OPERATION },
+      { label: 'Certificate hold - temporary suspension', value: ReasonForRevoke.CERTIFICATE_HOLD },
+      { label: 'Removal from Certificate Revocation List', value: ReasonForRevoke.REMOVE_FROM_CRL },
+      { label: 'Withdrawal of associated privileges', value: ReasonForRevoke.PRIVILEGE_WITHDRAWN },
+      { label: 'Attribute authority compromise', value: ReasonForRevoke.AACOMPROMISE }
+    ];
 
     const checkboxes = reasons.map(reason => `
-    <div style="text-align: left;">
-      <label class="swal2-checkbox" style="text-align: right;">
-        <input type="radio" name="revokeReason" value="${reason.value}">
-        <span class="swal2-label" style="text-align: right;">${reason.label}</span>
-      </label>
-    </div>
-  `).join('<br>');
+      <div style="text-align: left;">
+        <label class="swal2-checkbox">
+          <input type="radio" name="revokeReason" value="${reason.value}">
+          ${reason.label}
+        </label>
+      </div>
+    `).join('');
 
     Swal.fire({
       title: 'Revoke Certificate',
@@ -57,18 +68,59 @@ export class CertificatesComponent implements OnInit {
       confirmButtonText: 'Revoke',
       cancelButtonText: 'Cancel',
       preConfirm: () => {
-        const selectedReason = (document.querySelector('input[name="revokeReason"]:checked') as HTMLInputElement)?.value;
-        if (!selectedReason) {
+        const selectedReasonValue = (document.querySelector('input[name="revokeReason"]:checked') as HTMLInputElement)?.value;
+        if (!selectedReasonValue) {
           Swal.showValidationMessage('Please select a reason.');
         }
-        return selectedReason;
+        return selectedReasonValue;
       }
     }).then((result) => {
       if (result.isConfirmed) {
-        const reason = result.value;
-        Swal.fire('Certificate Revoked!', `Certificate with ID ${id} has been successfully revoked.`, 'success');
+        const selectedReasonValue = result.value;
+        const selectedReasonEnumValue = this.mapReasonToEnum(selectedReasonValue);
+
+        if (selectedReasonEnumValue) {
+
+          this.certificationService.revokeCertificate(id, selectedReasonEnumValue).subscribe(
+            () => {
+              Swal.fire('Certificate Revoked!', `Certificate with ID ${id} has been successfully revoked.`, 'success');
+            },
+            (error) => {
+              Swal.fire('Error!', `Certificate with ID ${id} cannot be revoked.`, 'error');
+            }
+          );
+        } else {
+          Swal.fire('Error!', 'Invalid reason selected.', 'error');
+        }
       }
     });
+  }
+
+  private mapReasonToEnum(reasonValue: string): string | null {
+    switch (reasonValue) {
+      case ReasonForRevoke.UNSPECIFIED:
+        return "UNSPECIFIED";
+      case ReasonForRevoke.KEY_COMPROMISE:
+        return "KEY_COMPROMISE";
+      case ReasonForRevoke.CA_COMPROMISE:
+        return "CA_COMPROMISE";
+      case ReasonForRevoke.AFFILIATION_CHANGED:
+        return "AFFILIATION_CHANGED";
+      case ReasonForRevoke.SUPERSEDED:
+        return "SUPERSEDED";
+      case ReasonForRevoke.CESSATION_OF_OPERATION:
+        return "CESSATION_OF_OPERATION";
+      case ReasonForRevoke.CERTIFICATE_HOLD:
+        return "CERTIFICATE_HOLD";
+      case ReasonForRevoke.REMOVE_FROM_CRL:
+        return "REMOVE_FROM_CRL";
+      case ReasonForRevoke.PRIVILEGE_WITHDRAWN:
+        return "PRIVILEGE_WITHDRAWN";
+      case ReasonForRevoke.AACOMPROMISE:
+        return "AACOMPROMISE";
+      default:
+        return null;
+    }
   }
 
   openDetails(certificateId: number): void {
