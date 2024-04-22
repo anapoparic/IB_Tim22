@@ -309,4 +309,8 @@ public class CertificateService  {
     public Optional<Certificate> getAliasByCommonName(String commonName){
         return repository.findByCommonName(commonName);
     }
+
+    public boolean existsActiveRequestByEmail(String email) {
+        return repository.findByOwnerEmailAndActive(email, true).isPresent();
+    }
 }

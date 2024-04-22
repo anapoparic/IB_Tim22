@@ -46,6 +46,11 @@ export class AcceptRequestComponent implements OnInit{
     this.certificationService.getAliasByCommonName(commonName).subscribe(
       (certificate: Certificate) => {
         this.alias = certificate.alias;
+      },
+      (error) => {
+        console.error(`Error fetching alias for commonName '${commonName}':`, error);
+        this.closeDialog();
+        Swal.fire('Error', 'There is no certificate available to sign your request.', 'error');
       }
     );
 

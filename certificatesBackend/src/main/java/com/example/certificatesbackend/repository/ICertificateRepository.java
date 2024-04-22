@@ -19,4 +19,5 @@ public interface ICertificateRepository extends JpaRepository<Certificate, Long>
     Optional<Certificate> findByAlias(String issuerAlias);
 
     Optional<Certificate>  findByCommonName(String commonName);
+    Optional<Certificate> findByOwnerEmailAndActive(String email, boolean b);
 }
