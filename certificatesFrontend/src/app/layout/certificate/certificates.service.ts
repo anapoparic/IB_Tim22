@@ -66,5 +66,11 @@ export class CertificatesService {
     console.error('An error occurred:', error);
     return throwError('Something went wrong; please try again later.');
   }
+
+  generateAlias(prefix: string): string {
+    const uniqueNumber = Date.now().toString();
+    const alias = prefix + uniqueNumber;
+    return alias;
+  }
   
 }

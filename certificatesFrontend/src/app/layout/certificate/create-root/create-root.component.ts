@@ -45,10 +45,11 @@ export class CreateRootComponent implements OnInit{
         (user: User) => {
           this.loggedUser = user;
           
+          const generatedAlias = this.certificationService.generateAlias('root');
 
           this.certificationRootForm!.setValue({
-            alias: this.generateRootAlias(),
-            issuer_alias: this.generateRootAlias(),
+            alias: generatedAlias,
+            issuer_alias: generatedAlias,
             template: Template.ROOT,
             commonName: '',
             organization: '',
@@ -100,13 +101,6 @@ export class CreateRootComponent implements OnInit{
       });
     }
   }
-
-  generateRootAlias(): string {
-    const uniqueNumber = Date.now().toString();
-    const prefix = 'root';
-    const alias = prefix + uniqueNumber;
-    return alias;
-}
 
   checkForEmptyValues(formValues: any): boolean {
     return Object.values(formValues).every(value => {
