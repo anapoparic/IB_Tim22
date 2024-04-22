@@ -1,7 +1,7 @@
 package com.example.certificatesbackend.domain.enums;
 
 public enum Template {
-    CA,
+    ROOT,
     INTERMEDIATE,
     END_ENTITY,
 }

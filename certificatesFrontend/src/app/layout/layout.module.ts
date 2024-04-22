@@ -5,14 +5,27 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../infrastructure/material/material.module';
 import { NavBarComponent } from "./nav-bar/nav-bar.component";
 import { ShorterFooterComponent } from './shorter-footer/shorter-footer.component';
-import { IndexComponent } from './index/index.component';
+import { CertificatesComponent } from './certificate/certificates/certificates.component';
+import { RequestsComponent } from './request/requests/requests.component';
+
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { CreateRequestComponent } from './certificate/create-request/create-request.component';
+import { CertificatesTreeComponent } from './certificate/certificates-tree/certificates-tree.component';
+import { CreateRootComponent } from './certificate/create-root/create-root.component';
+import { AcceptRequestComponent } from './request/accept-request/accept-request.component';
 
 
 @NgModule({
   declarations: [
+    CreateRequestComponent,
     NavBarComponent,
     ShorterFooterComponent,
-    IndexComponent,
+    CertificatesComponent,
+    RequestsComponent,
+    CertificatesTreeComponent,
+    CreateRootComponent,
+    AcceptRequestComponent,
   ],
   exports: [
     NavBarComponent,
@@ -23,6 +36,8 @@ import { IndexComponent } from './index/index.component';
     RouterModule,
     MaterialModule,
     ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule    
   ]
 })
 export class LayoutModule { }

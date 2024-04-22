@@ -1,5 +1,5 @@
 export enum Template {
-    CA = 'CA',
+    ROOT = 'ROOT',
     INTERMEDIATE = 'INTERMEDIATE',
     END_ENTITY = 'END_ENTITY'
 }

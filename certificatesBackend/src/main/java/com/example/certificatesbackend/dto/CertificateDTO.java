@@ -28,6 +28,9 @@ public class CertificateDTO {
     private Template template;
     private String commonName;
     private String organization;
+    private String organizationUnit;
+    private String country;
+    private String ownerEmail;
 
 
     public CertificateDTO(Certificate certificate) {

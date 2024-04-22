@@ -60,7 +60,7 @@ export class LoginComponent {
         this.authService.setUser();
 
         if(this.authService.getRole() == "ROLE_SUPER_ADMIN"){
-          this.router.navigate(['/index'])
+          this.router.navigate(['/requests'])
         }else{
           this.authService.logout();
           Swal.fire({
