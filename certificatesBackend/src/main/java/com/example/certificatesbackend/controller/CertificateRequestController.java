@@ -4,6 +4,7 @@ import com.example.certificatesbackend.domain.CertificateRequest;
 import com.example.certificatesbackend.dto.CertificateRequestDTO;
 import com.example.certificatesbackend.mapper.CertificateRequestMapper;
 import com.example.certificatesbackend.service.CertificateRequestService;
+import com.example.certificatesbackend.service.CertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,6 +24,9 @@ public class CertificateRequestController {
 
     @Autowired
     private CertificateRequestService service;
+
+    @Autowired
+    private CertificateService certificateService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<CertificateRequestDTO>> getRequests() {
@@ -48,7 +52,7 @@ public class CertificateRequestController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createRequest(@RequestBody CertificateRequestDTO requestDTO) {
         try {
-            if (service.existsActiveRequestByEmail(requestDTO.getEmail())) {
+            if (service.existsActiveRequestByEmail(requestDTO.getEmail()) || certificateService.existsActiveRequestByEmail(requestDTO.getEmail())) {
                 return ResponseEntity.badRequest().body("You have already sent a request with this email.");
             }
 
