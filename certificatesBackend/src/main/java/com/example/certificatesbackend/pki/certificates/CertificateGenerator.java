@@ -83,8 +83,22 @@ public class CertificateGenerator {
                     subject.getX500Name(),
                     keyPair.getPublic());
 
-            certGen.addExtension(org.bouncycastle.asn1.x509.Extension.basicConstraints, true, new BasicConstraints(true));
-            certGen.addExtension(org.bouncycastle.asn1.x509.Extension.keyUsage, true, new KeyUsage(KeyUsage.keyCertSign | KeyUsage.cRLSign));
+            certGen.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
+
+            certGen.addExtension(Extension.keyUsage, true,
+                    new KeyUsage(KeyUsage.cRLSign | KeyUsage.digitalSignature | KeyUsage.keyCertSign | KeyUsage.keyAgreement
+                            | KeyUsage.dataEncipherment | KeyUsage.decipherOnly | KeyUsage.encipherOnly
+                            | KeyUsage.keyEncipherment | KeyUsage.nonRepudiation));
+
+            KeyPurposeId[] allKeyPurposes = { KeyPurposeId.id_kp_codeSigning, KeyPurposeId.id_kp_clientAuth,
+                    KeyPurposeId.id_kp_timeStamping, KeyPurposeId.id_kp_emailProtection, KeyPurposeId.id_kp_serverAuth,
+                    KeyPurposeId.id_kp_OCSPSigning, KeyPurposeId.id_kp_sbgpCertAAServerAuth };
+
+            certGen.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(allKeyPurposes));
+            DERSequence subjectAlternativeNames = new DERSequence(
+                    new ASN1Encodable[] { new GeneralName(GeneralName.dNSName, "*.localhost"),
+                            new GeneralName(GeneralName.dNSName, "localhost") });
+            certGen.addExtension(X509Extensions.SubjectAlternativeName, false, subjectAlternativeNames);
 
 
             //Generise se sertifikat

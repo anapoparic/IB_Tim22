@@ -163,42 +163,6 @@ public class CertificateService  {
         return newCertificate;
     }
 
-//    public void saveCertToPemFile(X509Certificate certificate, String pem_path) throws IOException {
-//        FileOutputStream fout = new FileOutputStream(pem_path);
-//        StringWriter writer = new StringWriter();
-//        JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
-//        pemWriter.writeObject(certificate);
-//        pemWriter.flush();
-//        pemWriter.close();
-//        fout.write(writer.toString().getBytes());
-//        fout.close();
-//    }
-
-    public String convertCertToPemString(X509Certificate certificate) {
-        StringWriter writer = new StringWriter();
-        try (JcaPEMWriter pemWriter = new JcaPEMWriter(writer)) {
-            pemWriter.writeObject(certificate);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return writer.toString();
-    }
-
-
-    public void savePrivateKeyToPemFile(PrivateKey key, String pem_path) throws IOException {
-        FileOutputStream foutKey = new FileOutputStream(pem_path);
-        StringWriter writer = new StringWriter();
-        JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
-
-        PemObject pemFile = new PemObject("PRIVATE KEY", key.getEncoded());
-
-        pemWriter.writeObject(pemFile);
-        pemWriter.flush();
-        pemWriter.close();
-        foutKey.write(writer.toString().getBytes());
-        foutKey.close();
-
-    }
 
     public void delete(Long id) throws Exception {
         Certificate cer = repository.findById(id)
@@ -267,6 +231,11 @@ public class CertificateService  {
                 true);
         repository.save(newCertificate);
 
+        String root_cert_pem_path = "src/main/resources/pem root/root.crt";
+        saveCertToPemFile(createdCertificate, root_cert_pem_path);
+
+        String root_pk_pem_path = "src/main/resources/pem root/root_pk.pem";
+        savePrivateKeyToPemFile(keyPair.getPrivate(), root_pk_pem_path);
 
         return createdCertificate;
     }
@@ -306,6 +275,44 @@ public class CertificateService  {
         }
         return certificates;
     }
+
+    public void saveCertToPemFile(X509Certificate certificate, String pem_path) throws IOException {
+        FileOutputStream fout = new FileOutputStream(pem_path);
+        StringWriter writer = new StringWriter();
+        JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
+        pemWriter.writeObject(certificate);
+        pemWriter.flush();
+        pemWriter.close();
+        fout.write(writer.toString().getBytes());
+        fout.close();
+    }
+
+    public String convertCertToPemString(X509Certificate certificate) {
+        StringWriter writer = new StringWriter();
+        try (JcaPEMWriter pemWriter = new JcaPEMWriter(writer)) {
+            pemWriter.writeObject(certificate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return writer.toString();
+    }
+
+
+    public void savePrivateKeyToPemFile(PrivateKey key, String pem_path) throws IOException {
+        FileOutputStream foutKey = new FileOutputStream(pem_path);
+        StringWriter writer = new StringWriter();
+        JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
+
+        PemObject pemFile = new PemObject("PRIVATE KEY", key.getEncoded());
+
+        pemWriter.writeObject(pemFile);
+        pemWriter.flush();
+        pemWriter.close();
+        foutKey.write(writer.toString().getBytes());
+        foutKey.close();
+
+    }
+
 
 
 }
