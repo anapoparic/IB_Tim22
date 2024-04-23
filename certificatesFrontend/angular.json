@@ -60,6 +60,7 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          
           "configurations": {
             "production": {
               "browserTarget": "bookedUp:build:production"
@@ -69,6 +70,9 @@
             }
           },
           "options": {
+            "ssl": true,
+            "sslKey": "localhost.key",
+          "sslCert": "localhost.crt",
             "port": 4201
          },
           "defaultConfiguration": "development"

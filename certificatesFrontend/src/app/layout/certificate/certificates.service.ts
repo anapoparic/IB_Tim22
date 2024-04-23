@@ -9,7 +9,7 @@ import { ReasonForRevoke } from './model/enum/reasonForRevoke.enum';
   providedIn: 'root'
 })
 export class CertificatesService {
-  private apiUrlCer = 'http://localhost:8081/api/certificates';
+  private apiUrlCer = 'https://localhost:8081/api/certificates';
   
   constructor(private http: HttpClient) { }
 
