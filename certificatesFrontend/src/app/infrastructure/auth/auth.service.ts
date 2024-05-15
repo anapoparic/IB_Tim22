@@ -10,7 +10,7 @@ import { User } from 'src/app/user/model/user.model';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = environment.apiBackend;
 
 
   private headers = new HttpHeaders({
@@ -71,7 +71,7 @@ export class AuthService {
   setUser(): void {
     this.user$.next(this.getRole());
   }
-  
+
   register(user: User): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/registration`, user, {
       headers: this.headers,

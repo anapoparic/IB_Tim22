@@ -3,13 +3,14 @@ import { Certificate } from './model/certificate.model';
 import { Observable, catchError, of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CertificateRequest } from '../request/model/certificateRequest.model';
+import {environment} from "../../../env/env";
 
 @Injectable({
   providedIn: 'root'
 })
 export class CertificatesService {
-  private apiUrlCer = 'http://localhost:8443/api/certificates';
-  
+  private apiUrlCer = environment.apiCertificateBackend+'/certificates';
+
   constructor(private http: HttpClient) { }
 
   getAllCertificates(): Observable<Certificate[]> {
@@ -56,7 +57,7 @@ export class CertificatesService {
     }).pipe(
       catchError(this.handleError)
     );
-  }  
+  }
 
   deleteCertificate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrlCer}/${id}`);
@@ -66,5 +67,5 @@ export class CertificatesService {
     console.error('An error occurred:', error);
     return throwError('Something went wrong; please try again later.');
   }
-  
+
 }

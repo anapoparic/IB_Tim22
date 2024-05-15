@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { CertificateRequest } from './model/certificateRequest.model';
 import { Observable, catchError, of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import {environment} from "../../../env/env";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RequestsService {
-  private apiUrl = 'http://localhost:8443/api/requests';
+  private apiUrl = environment.apiCertificateBackend+'/requests';
 
   constructor(private http: HttpClient) { }
 
@@ -41,7 +42,7 @@ export class RequestsService {
 
   generateUniqueUID(): number {
     const currentDate = new Date();
-  
+
     const day = this.padZero(currentDate.getDate());
     const month = this.padZero(currentDate.getMonth() + 1);
     const year = currentDate.getFullYear().toString().slice(-4);
@@ -49,16 +50,16 @@ export class RequestsService {
     const minutes = this.padZero(currentDate.getMinutes());
     const seconds = this.padZero(currentDate.getSeconds());
     const milliseconds = currentDate.getMilliseconds();
-  
+
     const uniqueUIDString = `${day}${month}${year}${hours}${minutes}${seconds}${milliseconds.toString().padStart(3, '0')}`;
-  
+
     const uniqueUID = Number(uniqueUIDString);
-  
+
     return uniqueUID;
   }
-  
+
   private padZero(num: number): string {
     return num.toString().padStart(2, '0');
   }
-  
+
 }
