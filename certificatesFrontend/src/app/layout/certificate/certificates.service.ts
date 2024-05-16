@@ -3,14 +3,15 @@ import { Certificate } from './model/certificate.model';
 import { Observable, catchError, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CertificateRequest } from '../request/model/certificateRequest.model';
+import {environment} from "../../../env/env";
 import { ReasonForRevoke } from './model/enum/reasonForRevoke.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CertificatesService {
-  private apiUrlCer = 'http://localhost:8081/api/certificates';
-  
+  private apiUrlCer = environment.apiCertificateBackend+'/certificates';
+
   constructor(private http: HttpClient) { }
 
   getAllCertificates(): Observable<Certificate[]> {
@@ -57,7 +58,7 @@ export class CertificatesService {
     }).pipe(
       catchError(this.handleError)
     );
-  }  
+  }
 
   getAliasByCommonName(commonName: string):  Observable<Certificate> {
     return this.http.get<Certificate>(`${this.apiUrlCer}/aliasByCommonName/${commonName}`);
@@ -81,10 +82,11 @@ export class CertificatesService {
     return throwError('Something went wrong; please try again later.');
   }
 
+
   generateAlias(prefix: string): string {
     const uniqueNumber = Date.now().toString();
     const alias = prefix + uniqueNumber;
     return alias;
   }
-  
+
 }

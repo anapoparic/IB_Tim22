@@ -8,12 +8,13 @@ import { PriceChange } from './model/priceChange.model';
 import { Amenity } from './model/enum/amenity.enum';
 import { AccommodationType } from './model/enum/accommodationType.enum';
 import {Reservation} from "../reservation/model/reservation.model";
+import {environment} from "../../env/env";
 
 @Injectable({
   providedIn: 'root',
 })
 export class AccommodationService {
-  private apiUrl = 'http://localhost:8080/api/accommodations';
+  private apiUrl = environment.apiBackend+'/accommodations';
 
   constructor(private http: HttpClient) {}
 

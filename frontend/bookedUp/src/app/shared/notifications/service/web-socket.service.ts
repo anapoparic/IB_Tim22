@@ -12,12 +12,13 @@ import { GuestService } from 'src/app/user/guest/guest.service';
 import { Guest } from 'src/app/user/model/guest.model';
 import { Host } from 'src/app/user/model/host.model';
 import { Role } from 'src/app/user/model/role.enum';
+import {environment} from "../../../../env/env";
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebSocketService {
-  
+
   private stompClient: Stomp.Client | undefined;
   messages: Number[] = [];
 
@@ -28,7 +29,7 @@ export class WebSocketService {
   }
 
   connectToWebSocket(): void {
-    const socket = new SockJS('http://localhost:8080/socket');
+    const socket = new SockJS(environment.apiBackend+'/socket');
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, (frame) => {
@@ -60,7 +61,7 @@ export class WebSocketService {
   sendMessageUsingSocket(notification: Notification) {
     const socket = new SockJS('http://localhost:8080/socket');
     this.stompClient = Stomp.over(socket);
-  
+
     this.stompClient.connect({}, (frame) => {
       if(notification.toUserDTO.role === Role.Guest){
         if(notification.toUserDTO.id !== undefined){
