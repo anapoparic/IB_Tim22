@@ -13,6 +13,7 @@ export class HostService {
 
   constructor(private http: HttpClient) { }
 
+
   getHosts(): Observable<Host[]> {
     return this.http.get<Host[]>(this.apiUrl);
   }
