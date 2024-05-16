@@ -59,7 +59,7 @@ export class WebSocketService {
   }
 
   sendMessageUsingSocket(notification: Notification) {
-    const socket = new SockJS('http://localhost:8080/socket');
+    const socket = new SockJS(environment.apiBackend+'/socket');
     this.stompClient = Stomp.over(socket);
 
     this.stompClient.connect({}, (frame) => {

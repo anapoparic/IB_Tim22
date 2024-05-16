@@ -2,13 +2,14 @@ import {Host, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {Guest} from "../model/guest.model";
+import {environment} from "../../../env/env";
  // Zamijenite sa stvarnom putanjom ka modelu
 
 @Injectable({
   providedIn: 'root'
 })
 export class HostService {
-  private apiUrl = 'http://localhost:8080/api/hosts'; // Prilagodite URL-u vašem backend API-u
+  private apiUrl = environment.apiBackend+'/hosts'; // Prilagodite URL-u vašem backend API-u
 
   constructor(private http: HttpClient) { }
 

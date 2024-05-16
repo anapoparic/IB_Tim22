@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {ReviewReport} from "../model/review-report.model";
 import {Review} from "../model/review.model";
+import {environment} from "../../../env/env";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewReportService {
-  private apiUrl = 'http://localhost:8080/api/review-reports';  // Prilagodite URL-u prema vašem API-ju
+  private apiUrl = environment.apiBackend+'/review-reports';  // Prilagodite URL-u prema vašem API-ju
 
   constructor(private http: HttpClient) { }
 

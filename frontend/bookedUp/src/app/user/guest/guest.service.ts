@@ -2,12 +2,13 @@ import {Host, Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {Guest} from "../model/guest.model";
+import {environment} from "../../../env/env";
 
 @Injectable({
   providedIn: 'root',
 })
 export class GuestService {
-  private apiUrl = 'http://localhost:8080/api/guests';
+  private apiUrl = environment.apiBackend+'/guests';
 
   constructor(private http: HttpClient) {}
 

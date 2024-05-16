@@ -23,4 +23,6 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
                 .enableSimpleBroker("/topic");
         // app/topic
     }
+
+
 }
