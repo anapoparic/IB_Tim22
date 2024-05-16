@@ -7,7 +7,7 @@ export interface Certificate {
     validTo?: Date;
     alias: string;
     issuerAlias: string;
-    isRevoked?: boolean;
+    revoked?: boolean;
     reason?: ReasonForRevoke;
     template: Template;
     commonName: string;

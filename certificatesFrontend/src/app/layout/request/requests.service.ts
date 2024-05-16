@@ -35,6 +35,8 @@ export class RequestsService {
     return this.http.get<CertificateRequest[]>(`${this.apiUrl}/active`);
   }
 
+  
+
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError('Something went wrong; please try again later.');

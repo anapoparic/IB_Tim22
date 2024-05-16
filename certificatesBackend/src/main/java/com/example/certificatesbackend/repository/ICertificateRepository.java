@@ -10,11 +10,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ICertificateRepository extends JpaRepository<Certificate, Long> {
-    List<Certificate> findAllByTemplate(Template template);
+    List<Certificate> findAllByTemplateAndActive(Template template, boolean b);
+
+    List<Certificate> findByActive(boolean b);
 
     List<Certificate> findAllByIssuerAlias(String issuerAlias);
 
     Certificate findById(Integer rootId);
 
     Optional<Certificate> findByAlias(String issuerAlias);
+
+    Optional<Certificate>  findByCommonName(String commonName);
+    Optional<Certificate> findByOwnerEmailAndActive(String email, boolean b);
 }

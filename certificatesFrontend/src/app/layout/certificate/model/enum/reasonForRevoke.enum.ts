@@ -9,5 +9,4 @@ export enum ReasonForRevoke {
   REMOVE_FROM_CRL = 'Removal from Certificate Revocation List',
   PRIVILEGE_WITHDRAWN = 'Withdrawal of associated privileges',
   AACOMPROMISE = 'Attribute authority compromise'
-
 }
