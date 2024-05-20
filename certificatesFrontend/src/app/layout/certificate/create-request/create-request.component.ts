@@ -34,7 +34,7 @@ export class CreateRequestComponent implements OnInit{
       lastName:  ['', Validators.required],
       country:  ['', Validators.required],
       email:  ['', Validators.required],
-      alias:  ['', Validators.required],
+      alias:  [{value: '', disabled: true}],
       issuerAlias:  [{value: '', disabled: true}],
       template:  [Template.INTERMEDIATE],
     });
@@ -56,7 +56,7 @@ export class CreateRequestComponent implements OnInit{
             lastName: '',
             country: '',
             email: '',
-            alias:  '',
+            alias:  this.certificationService.generateAlias('certificate'),
             issuerAlias:  this.data,
             template:  Template.INTERMEDIATE,
           });
@@ -86,7 +86,7 @@ export class CreateRequestComponent implements OnInit{
         uid: this.certificationForm?.controls['uid'].value || ''
       };
       
-      this.certificationService.createCertificate(request, formValues.alias, this.certificationForm?.controls['issuerAlias'].value, formValues.template.toString()).subscribe({
+      this.certificationService.createCertificate(request,  this.certificationForm?.controls['alias'].value, this.certificationForm?.controls['issuerAlias'].value, formValues.template.toString()).subscribe({
         next: () => {
           Swal.fire('Success', 'Successfully created!', 'success');
           this.router.navigate(['/certifications']);

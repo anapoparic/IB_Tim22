@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Certificate } from './model/certificate.model';
 import { Observable, catchError, of, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CertificateRequest } from '../request/model/certificateRequest.model';
 import {environment} from "../../../env/env";
+import { ReasonForRevoke } from './model/enum/reasonForRevoke.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +60,19 @@ export class CertificatesService {
     );
   }
 
+  getAliasByCommonName(commonName: string):  Observable<Certificate> {
+    return this.http.get<Certificate>(`${this.apiUrlCer}/aliasByCommonName/${commonName}`);
+  }
+
+  revokeCertificate(id: number, reason: string): Observable<string> {
+    const url = `${this.apiUrlCer}/revoke/${id}/${reason}`;
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.put<string>(url, null, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   deleteCertificate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrlCer}/${id}`);
   }
@@ -66,6 +80,13 @@ export class CertificatesService {
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError('Something went wrong; please try again later.');
+  }
+
+
+  generateAlias(prefix: string): string {
+    const uniqueNumber = Date.now().toString();
+    const alias = prefix + uniqueNumber;
+    return alias;
   }
 
 }
