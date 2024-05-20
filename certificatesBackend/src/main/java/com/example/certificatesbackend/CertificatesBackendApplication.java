@@ -17,6 +17,8 @@ public class CertificatesBackendApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(CertificatesBackendApplication.class, args);
+
+
 	}
 
 }

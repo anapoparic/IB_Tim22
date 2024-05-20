@@ -10,7 +10,7 @@ import {User} from "../../user/model/user.model";
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8080/api';
+  private apiUrl = environment.apiBackend;
 
 
   private headers = new HttpHeaders({

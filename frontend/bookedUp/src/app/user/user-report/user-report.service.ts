@@ -3,12 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {UserReport} from "../model/user-report";
 import {User} from "../model/user.model";
+import {environment} from "../../../env/env";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserReportService {
-  private apiUrl = 'http://localhost:8080/api/user-reports';
+  private apiUrl = environment.apiBackend+'/user-reports';
 
   constructor(private http: HttpClient) { }
 
