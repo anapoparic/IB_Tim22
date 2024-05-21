@@ -1,13 +1,14 @@
 .register-guest {
     position: relative;
-    height: 100vh;
+    font-family: var(--font-sansation); 
+    min-height: 100vh;
     width: 100%;
+    height: auto;
+    text-align: left;
     font-size: var(--font-size-2xs);
     color: var(--gray-2);
-    font-family: var(--font-sansation); 
-    display: flex;
     flex-direction: column;
-    align-items: center;
+    display: flex;
 }
 .image-container{
     overflow: hidden;
@@ -49,7 +50,8 @@
 }
 .input-frame,
 .input-frame-names,
-.input-frame-address {
+.input-frame-address,
+.input-frame-password {
     height: 37px;
     margin-bottom: 1%;
     margin-top: 1.5%;
@@ -62,14 +64,17 @@
     box-sizing: border-box;
     color: var(--gray-6);
 }
+.input-frame{
+    margin-top: 0.5%;
+}
 .input-frame-names{
     width: 80%;
 }
 .input-frame-address{
-    width: 22%;
-    margin-right: 3%;
+    width: 45%;
     align-items: center;
 }
+
 input {
     border: none;
     outline: none;
@@ -78,10 +83,17 @@ input {
     font-family: var(--font-adamina);
     font-size: var(--font-size-mini);
 }
+.img{
+    width: 4%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
 .normal-text{
     color: var(--color-gray-400);
     font-size: var(--font-size-sm);
-    margin-top: 1%;
+    margin-top: 0;
 }
 .in-line-box{
     position: relative;
@@ -89,7 +101,7 @@ input {
     margin-left: 10%;
     margin-right: 10%;
     align-items: center;
-    width: 80%;
+    width: 30%;
 }
 .column-box{
     position: relative;
