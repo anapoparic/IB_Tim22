@@ -5,6 +5,7 @@ import com.example.certificatesbackend.domain.CertificateRequest;
 import com.example.certificatesbackend.domain.enums.ReasonForRevoke;
 import com.example.certificatesbackend.dto.CertificateDTO;
 import com.example.certificatesbackend.dto.CertificateRequestDTO;
+import com.example.certificatesbackend.dto.SignedCertificateDTO;
 import com.example.certificatesbackend.mapper.CertificateMapper;
 import com.example.certificatesbackend.mapper.CertificateRequestMapper;
 import com.example.certificatesbackend.service.CertificateService;
@@ -51,6 +52,18 @@ public class CertificateController {
 
         return new ResponseEntity<CertificateDTO>(CertificateMapper.toDto(certificate), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/aliasByOwnerEmail/{owner_email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getAliasByOwnerEmail(@PathVariable("owner_email") String ownerEmail) {
+        String alias = service.getAliasByOwnerEmail(ownerEmail);
+
+        if (alias.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(alias);
+    }
+
 
     @GetMapping(value = "/aliasByCommonName/{commonName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CertificateDTO> getAliasByCommonName(@PathVariable("commonName") String commonName) {
@@ -171,4 +184,11 @@ public class CertificateController {
 
         return new ResponseEntity<>(pathDTOS, HttpStatus.OK);
     }
+
+    @GetMapping("/download/{alias}")
+    public ResponseEntity<SignedCertificateDTO> downloadCertificate(@PathVariable String alias) throws Exception {
+        return ResponseEntity.ok(this.service.getCertificatePem(alias));
+    }
+
+
 }

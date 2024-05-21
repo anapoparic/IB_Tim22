@@ -4,6 +4,7 @@ import com.example.certificatesbackend.domain.Certificate;
 import com.example.certificatesbackend.domain.CertificateRequest;
 import com.example.certificatesbackend.domain.enums.ReasonForRevoke;
 import com.example.certificatesbackend.domain.enums.Template;
+import com.example.certificatesbackend.dto.SignedCertificateDTO;
 import com.example.certificatesbackend.pki.certificates.CertificateGenerator;
 import com.example.certificatesbackend.pki.data.Issuer;
 import com.example.certificatesbackend.pki.data.Subject;
@@ -11,6 +12,7 @@ import com.example.certificatesbackend.pki.keystores.KeyStoreReader;
 import com.example.certificatesbackend.pki.keystores.KeyStoreRepository;
 import com.example.certificatesbackend.pki.keystores.KeyStoreWriter;
 import com.example.certificatesbackend.repository.ICertificateRepository;
+import com.example.certificatesbackend.repository.ICertificateRequestRepository;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.BCStyle;
@@ -26,15 +28,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.security.*;
-import java.security.cert.CRLException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509CRL;
-import java.security.cert.X509Certificate;
+import java.security.cert.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.ParseException;
 import java.util.*;
@@ -58,7 +61,8 @@ public class CertificateService  {
     @Autowired
     public CertificateRequestService requestService;
 
-    public int keystoreCounter = 0;
+    @Autowired
+    public ICertificateRequestRepository requestRepository;
 
 
     public Collection<Certificate> getAll() {
@@ -159,7 +163,9 @@ public class CertificateService  {
         Certificate newCertificate = new Certificate(validFrom, validTo, alias, issuerAlias,
                 false, null, Template.valueOf(template), request.getCommonName(), request.getOrganization(), request.getUnit(), request.getCountry(), request.getEmail(),
                 true);
+
         repository.save(newCertificate);
+
         if (request.getId() != null) {
             requestService.delete(request.getId());
         }
@@ -168,9 +174,9 @@ public class CertificateService  {
 //        String cert_pem_path = "src/main/resources/pem/certificate.crt";
 //        saveCertToPemFile(certificate, cert_pem_path);
 
-        String pk_pem_path ="src/main/resources/pem/" + alias + "_pk.pem";
-
-        savePrivateKeyToPemFile(keyPair.getPrivate(), pk_pem_path);
+//        String pk_pem_path ="src/main/resources/pem/" + alias + "_pk.pem";
+//
+//        savePrivateKeyToPemFile(keyPair.getPrivate(), pk_pem_path);
 
 
         return newCertificate;
@@ -187,30 +193,70 @@ public class CertificateService  {
         fout.close();
     }
 
-    public String convertCertToPemString(X509Certificate certificate) {
-        StringWriter writer = new StringWriter();
-        try (JcaPEMWriter pemWriter = new JcaPEMWriter(writer)) {
-            pemWriter.writeObject(certificate);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public SignedCertificateDTO getCertificatePem(String alias) throws Exception {
+        if(repository.findCertificateByAlias(alias)==null){
+            if (requestRepository.findRequestByAlias(alias)!=null)
+                throw new Exception("Your certificate is not approved yet");
+            else {
+                throw new Exception("There is no request with your alias");
+            }
         }
-        return writer.toString();
+        System.out.println("ALIASssssss " + alias);
+        java.security.cert.Certificate certificate = storeReader.readCertificate(KEYSTORE_PATH, KEYSTORE_PASSWORD,
+                alias);
+
+        String pemCertificate;
+        try {
+            ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+            outStream.write("-----BEGIN CERTIFICATE-----\n".getBytes());
+            outStream.write(Base64.getEncoder().encode(certificate.getEncoded()));
+            outStream.write("\n-----END CERTIFICATE-----\n".getBytes());
+            pemCertificate = outStream.toString();
+            PrivateKey key = storeReader.readPrivateKey(KEYSTORE_PATH, KEYSTORE_PASSWORD, alias, KEYSTORE_PASSWORD);
+            Cipher cipher = Cipher.getInstance("RSA/ECB/NOPADDING");
+            cipher.init(Cipher.ENCRYPT_MODE,key );
+
+            SignedCertificateDTO signedCertificateDto = new SignedCertificateDTO();
+            signedCertificateDto.setCertificatePem(pemCertificate);
+            signedCertificateDto.setDigitalSignature(cipher.doFinal(this.hashSHA256(pemCertificate).getBytes(StandardCharsets.UTF_8)));
+
+            return signedCertificateDto;
+
+
+
+        } catch (CertificateEncodingException | IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidKeyException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalBlockSizeException e) {
+            throw new RuntimeException(e);
+        } catch (BadPaddingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
     }
 
+    private String hashSHA256(String input){
 
-    public void savePrivateKeyToPemFile(PrivateKey key, String pem_path) throws IOException {
-        FileOutputStream foutKey = new FileOutputStream(pem_path);
-        StringWriter writer = new StringWriter();
-        JcaPEMWriter pemWriter = new JcaPEMWriter(writer);
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
 
-        PemObject pemFile = new PemObject("PRIVATE KEY", key.getEncoded());
+        byte[] hash = md.digest(input.getBytes());
 
-        pemWriter.writeObject(pemFile);
-        pemWriter.flush();
-        pemWriter.close();
-        foutKey.write(writer.toString().getBytes());
-        foutKey.close();
-
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : hash) {
+            hexString.append(String.format("%02x", b));
+        }
+        return hexString.toString();
     }
 
 
@@ -283,11 +329,11 @@ public class CertificateService  {
 
         saveCRLFile(keyPair.getPrivate(), subject.getX500Name());
 
-        String root_cert_pem_path = "src/main/resources/pem root/root.crt";
-        saveCertToPemFile(createdCertificate, root_cert_pem_path);
-
-        String root_pk_pem_path = "src/main/resources/pem root/root_pk.pem";
-        savePrivateKeyToPemFile(keyPair.getPrivate(), root_pk_pem_path);
+//        String root_cert_pem_path = "src/main/resources/pem root/root.crt";
+//        saveCertToPemFile(createdCertificate, root_cert_pem_path);
+//
+//        String root_pk_pem_path = "src/main/resources/pem root/root_pk.pem";
+//        savePrivateKeyToPemFile(keyPair.getPrivate(), root_pk_pem_path);
 
         return createdCertificate;
     }
@@ -400,7 +446,15 @@ public class CertificateService  {
         return repository.findByCommonName(commonName);
     }
 
+    public String getAliasByOwnerEmail(String ownerEmail){
+        Certificate certificate = repository.findByOwnerEmail(ownerEmail).orElse(null);
+        assert certificate != null;
+        return certificate.getAlias();
+    }
+
     public boolean existsActiveRequestByEmail(String email) {
         return repository.findByOwnerEmailAndActive(email, true).isPresent();
     }
+
+
 }

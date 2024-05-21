@@ -21,4 +21,5 @@ public class CertificateRequestDTO {
     private String country;
     private String uid;
     private String email;
+    private String alias;
 }

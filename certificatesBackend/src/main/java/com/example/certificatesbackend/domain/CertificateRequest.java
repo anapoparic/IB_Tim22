@@ -43,4 +43,8 @@ public class CertificateRequest {
 
     @Column(nullable = false)
     private boolean active;
+
+    @Column(nullable = false)
+    private String alias;
+
 }
