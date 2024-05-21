@@ -10,6 +10,7 @@ import { UserService } from 'src/app/user/user.service';
 import Swal from 'sweetalert2';
 import { CertificateRequest } from '../model/certificateRequest.model';
 import { CertificationService } from '../certification.service';
+import { Certificate } from '../model/certificate.model';
 
 @Component({
   selector: 'app-create-request',
@@ -20,6 +21,8 @@ export class CreateRequestComponent implements OnInit{
 
 
   certificationForm: FormGroup | undefined;
+  request? : CertificateRequest;
+  alias :string | undefined;
 
   constructor(private authService: AuthService, private router: Router, private userService: UserService,private formBuilder: FormBuilder, private  certificationService: CertificationService) {
     this.certificationForm =  this.formBuilder.group({
@@ -70,20 +73,29 @@ export class CreateRequestComponent implements OnInit{
         unit: formValues.unit || '',
         country: this.certificationForm?.controls['country'].value || '',
         email: this.certificationForm?.controls['email'].value || '',
-        uid: this.certificationForm?.controls['uid'].value || ''
+        uid: this.certificationForm?.controls['uid'].value || '',
+        alias :  this.certificationService.generateAlias('endEntity')
       };
 
       this.certificationService.createRequest(request).subscribe({
-        next: (createdRequest: CertificateRequest) => {
+        next: (createdRequest:CertificateRequest) => {
+          this.request = createdRequest;
           Swal.fire('Success', 'Successfully created!', 'success');
           this.router.navigate(['/']);
         },
         error: (error) => {
+          console.error('Error creating request:', error);
+          let errorMessage = 'An unexpected error occurred.';
+  
           if (error.status === 400 && error.error === 'You have already sent a request with this email.') {
-            Swal.fire('Error', 'You have already sent a request with this email.', 'error');
-          } else {
-            Swal.fire('Error', 'You have already sent a request with this email.', 'error');
+            errorMessage = 'You have already sent a request with this email.';
+          } else if (error.error && typeof error.error === 'string') {
+            errorMessage = error.error;
+          } else if (error.message) {
+            errorMessage = error.message;
           }
+  
+          Swal.fire('Error', errorMessage, 'error');
         }
       });
     } else {
@@ -106,7 +118,28 @@ export class CreateRequestComponent implements OnInit{
   }
 
   downloadCertificate() {
-    throw new Error('Method not implemented.');
+    this.certificationService.getAliasByOwnerEmail(this.loggedUser.email).subscribe(
+      (alias: string) => {
+        this.alias = alias;
+        console.log("ALIASSSS " + this.alias)
+        if (this.alias) {
+          this.certificationService.downloadCertificate(this.alias).subscribe(
+            (certificate: Certificate) => {
+              Swal.fire('Success', 'Successfully downloaded certificate!', 'success');
+              // Handle the certificate data (e.g., save as file, display, etc.)
+            },
+            error => {
+              Swal.fire('Error', 'Error downloading certificate!', 'error');
+            }
+          );
+        } else {
+          Swal.fire('Error', 'Alias is undefined, cannot download certificate.', 'error');
+        }
+      }
+    );
+
+    
   }
+
 
 }

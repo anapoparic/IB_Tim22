@@ -8,4 +8,5 @@ export interface CertificateRequest {
     country: string;
     uid: string;
     email: string;
+    alias?: string;
 }

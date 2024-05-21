@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { CertificateRequest } from './model/certificateRequest.model';
 import { Observable, catchError, throwError } from 'rxjs';
@@ -12,6 +12,8 @@ export class CertificationService {
   private apiUrl = environment.apiCertificateBackend+'/requests'; // Prilagodite URL prema portu 8081 i putanji na serveru
 
   constructor(private http: HttpClient) { }
+
+
 
   getAllRequests(): Observable<CertificateRequest[]> {
     return this.http.get<CertificateRequest[]>(`${this.apiUrl}`);
@@ -33,6 +35,7 @@ export class CertificationService {
   }
 
   private apiUrlCer = environment.apiCertificateBackend+'/certificates';
+  private apiUrlBackend = environment.apiBackend+'/certificates';
 
   getAllCertificates(): Observable<Certificate[]> {
     return this.http.get<Certificate[]>(this.apiUrlCer);
@@ -57,6 +60,30 @@ export class CertificationService {
   deleteCertificate(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrlCer}/${id}`);
   }
+
+  downloadCertificate(alias?: string): Observable<Certificate> {
+    return this.http.get<Certificate>(`${this.apiUrlBackend}/download/${alias}`)
+      .pipe(
+        catchError(this.handleError)
+      );
+  }
+
+  // private handleError(error: HttpErrorResponse) {
+  //   let errorMessage = 'An unknown error occurred!';
+    
+  //   if (error.error instanceof ErrorEvent) {
+  //     // A client-side or network error occurred.
+  //     errorMessage = `A client-side error occurred: ${error.error.message}`;
+  //   } else {
+  //     // The backend returned an unsuccessful response code.
+  //     errorMessage = `Backend returned code ${error.status}, body was: ${error.error}`;
+  //   }
+
+  //   // Optionally log to the console for debugging
+  //   console.error(errorMessage);
+    
+  //   return throwError(() => new Error(errorMessage));
+  // }
 
   private handleError(error: any) {
     console.error('An error occurred:', error);
@@ -84,4 +111,15 @@ export class CertificationService {
   private padZero(num: number): string {
     return num.toString().padStart(2, '0');
   }
+
+  generateAlias(prefix: string): string {
+    const uniqueNumber = Date.now().toString();
+    const alias = prefix + uniqueNumber;
+    return alias;
+  }
+
+  getAliasByOwnerEmail(ownerEmail?: string):  Observable<string> {
+    return this.http.get(`${this.apiUrlCer}/aliasByOwnerEmail/${ownerEmail}`, { responseType: 'text' });
+  }
+  
 }
