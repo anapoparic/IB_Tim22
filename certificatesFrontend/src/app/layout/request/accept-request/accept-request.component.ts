@@ -64,7 +64,8 @@ export class AcceptRequestComponent implements OnInit{
         (user: User) => {
           this.loggedUser = user;
           
-          const generatedAlias = this.certificationService.generateAlias('endEntity');
+          // const generatedAlias = this.certificationService.generateAlias('endEntity');
+          const generatedAlias = this.request?.alias;
 
           this.acceptForm!.setValue({
             alias: generatedAlias,

@@ -83,7 +83,8 @@ export class CreateRequestComponent implements OnInit{
         unit: formValues.unit || '',
         country: formValues.country || '',
         email: formValues.email || '',
-        uid: this.certificationForm?.controls['uid'].value || ''
+        uid: this.certificationForm?.controls['uid'].value || '',
+        alias: this.certificationService.generateAlias('certificate')
       };
       
       this.certificationService.createCertificate(request,  this.certificationForm?.controls['alias'].value, this.certificationForm?.controls['issuerAlias'].value, formValues.template.toString()).subscribe({
