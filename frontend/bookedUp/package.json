@@ -28,6 +28,7 @@
     "html2canvas": "^1.4.1",
     "install": "^0.13.0",
     "jspdf": "^2.5.1",
+    "keycloak-js": "^24.0.2",
     "leaflet": "^1.9.4",
     "net": "^1.0.2",
     "ng2-charts": "^5.0.4",

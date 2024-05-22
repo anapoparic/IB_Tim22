@@ -7,7 +7,7 @@ import {
   Router,
 } from '@angular/router';
 import { Observable } from 'rxjs';
-import {AuthService} from "../auth.service";
+import { KeycloakService } from 'src/app/keycloak/keycloak.service';
 
 
 @Injectable({
@@ -16,7 +16,7 @@ import {AuthService} from "../auth.service";
 export class AuthGuard implements CanActivate {
   constructor(
       private router: Router,
-      private authService: AuthService
+      private keycloakService: KeycloakService
   ) {}
 
   canActivate(
@@ -27,16 +27,29 @@ export class AuthGuard implements CanActivate {
       | Promise<boolean | UrlTree>
       | boolean
       | UrlTree {
-    const userRole :string = this.authService.user$.getValue();
-
-    if (userRole == null) {
+    if (this.keycloakService.keycloak.isTokenExpired()) {
       this.router.navigate(['login']);
       return false;
     }
-    if (!route.data['role'].includes(userRole)) {
+
+    const tokenParsed = this.keycloakService.keycloak.tokenParsed;
+    console.log('Parsed Token:', tokenParsed); // Log the parsed token to inspect it
+    const userRoles: string[] = tokenParsed?.realm_access?.roles || [];
+    console.log('User Roles:', userRoles); // Log the roles to inspect them
+
+    if (!userRoles || userRoles.length === 0) {
+      this.router.navigate(['login']);
+      return false;
+    }
+
+    const requiredRoles = route.data['role'] as string[];
+    const hasRequiredRole = userRoles.some(role => requiredRoles.includes(role));
+
+    if (!hasRequiredRole) {
       this.router.navigate(['home']);
       return false;
     }
+
     return true;
   }
 }

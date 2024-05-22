@@ -7,6 +7,7 @@ import {PhotoService} from "../../../shared/photo/photo.service";
 import { WebSocketService } from 'src/app/shared/notifications/service/web-socket.service';
 import { Subscription } from 'rxjs';
 import { NotificationsService } from 'src/app/shared/notifications/service/notifications.service';
+import { KeycloakService } from 'src/app/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-host-nav-bar',
@@ -30,7 +31,8 @@ export class HostNavBarComponent implements OnInit{
     private userService: UserService, 
     private photoService:PhotoService,
     private  webSocketService: WebSocketService, 
-    private notificationService: NotificationsService
+    private notificationService: NotificationsService,
+    private keycloakService: KeycloakService
     ) {}
 
   ngOnInit(): void {
@@ -83,15 +85,16 @@ export class HostNavBarComponent implements OnInit{
     this.router.navigate([route]);
   }
 
-  logOut(): void {
+  async logOut(): Promise<void> {
+    this.keycloakService.logout();
     //this.webSocketService.disconnectFromWebSocket();
-    this.authService.logout().subscribe({
-      next: (_) => {
-        localStorage.removeItem('user');
-        this.authService.setUser();
-        this.router.navigate(['/']);
-      }
-    })
+    // this.authService.logout().subscribe({
+    //   next: (_) => {
+    //     localStorage.removeItem('user');
+    //     this.authService.setUser();
+    //     this.router.navigate(['/']);
+    //   }
+    // })
   }
 
   loadPhotos() {

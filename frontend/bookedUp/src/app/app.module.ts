@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
@@ -13,6 +13,11 @@ import { AccommodationModule } from './accommodation/accommodation.module';
 import { ReviewModule } from './review/review.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { CreateRequestComponent } from './certification/create-request/create-request.component';
+import { KeycloakService } from './keycloak/keycloak.service';
+
+export function kcFactory(kcService: KeycloakService) {
+  return () => kcService.init();
+}
 
 
 @NgModule({
@@ -39,6 +44,12 @@ import { CreateRequestComponent } from './certification/create-request/create-re
       useClass: Interceptor,
       multi: true,
     },
+    {
+      provide: APP_INITIALIZER,
+      deps: [KeycloakService],
+      useFactory: kcFactory,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 

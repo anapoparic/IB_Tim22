@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import {User} from "../../../user/model/user.model";
 import {Observable} from "rxjs";
 import {PhotoService} from "../../../shared/photo/photo.service";
+import { KeycloakService } from 'src/app/keycloak/keycloak.service';
 
 @Component({
   selector: 'app-admin-nav-bar',
@@ -19,7 +20,7 @@ export class AdminNavBarComponent implements OnInit{
   loggedUser!: User;
   displayedImageUrl: string | null = null;
 
-  constructor(private router: Router, private photoService:PhotoService, private authService: AuthService, private userService: UserService) {}
+  constructor(private router: Router, private photoService:PhotoService, private authService: AuthService, private userService: UserService, private keycloakService: KeycloakService) {}
 
   ngOnInit(): void {
     this.authService.userState.subscribe((result) => {
@@ -53,14 +54,15 @@ export class AdminNavBarComponent implements OnInit{
     this.router.navigate([route]);
   }
 
-  logOut(): void {
-    this.authService.logout().subscribe({
-      next: (_) => {
-        localStorage.removeItem('user');
-        this.authService.setUser();
-        this.router.navigate(['/']);
-      }
-    })
+  async logOut(): Promise<void> {
+    this.keycloakService.logout();
+    // this.authService.logout().subscribe({
+    //   next: (_) => {
+    //     localStorage.removeItem('user');
+    //     this.authService.setUser();
+    //     this.router.navigate(['/']);
+    //   }
+    // })
   }
 
   loadPhotos() {
