@@ -34,7 +34,9 @@ export class AuthGuard implements CanActivate {
 
     const tokenParsed = this.keycloakService.keycloak.tokenParsed;
     console.log('Parsed Token:', tokenParsed); // Log the parsed token to inspect it
-    const userRoles: string[] = tokenParsed?.realm_access?.roles || [];
+
+    // Pristupamo ulogama korisnika pod "backend" resursom
+    const userRoles: string[] = tokenParsed?.resource_access?.['backend']?.roles || [];
     console.log('User Roles:', userRoles); // Log the roles to inspect them
 
     if (!userRoles || userRoles.length === 0) {
@@ -42,11 +44,13 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    const requiredRoles = route.data['role'] as string[];
-    const hasRequiredRole = userRoles.some(role => requiredRoles.includes(role));
+    // const requiredRoles = route.data['role'] as string[];
+    // console.log("REQUIREDROLEEEEEEEES"  + requiredRoles)
+    // const hasRequiredRole = userRoles.some(role => requiredRoles.includes(role));
+    // console.log("ROLEEEEEEEE"  + hasRequiredRole)
 
-    if (!hasRequiredRole) {
-      this.router.navigate(['home']);
+    if (userRoles[0] != "ADMIN" && userRoles[0] != "GUEST" && userRoles[0] != "HOST") {
+      this.router.navigate(['']);
       return false;
     }
 

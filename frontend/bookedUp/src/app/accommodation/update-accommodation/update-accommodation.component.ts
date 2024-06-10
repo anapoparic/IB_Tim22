@@ -17,6 +17,7 @@ import { Observable, map } from 'rxjs';
 import { Photo } from 'src/app/shared/model/photo.model';
 import {PhotoService} from "../../shared/photo/photo.service";
 import { Address } from 'src/app/shared/model/address.model';
+import { SanitizationService } from 'src/app/dompurify/sanitization.service';
 
 @Component({
   selector: 'app-update-accommodation',
@@ -71,7 +72,7 @@ export class UpdateAccommodationComponent implements OnInit {
 
   updateForm: FormGroup | undefined;
 
-  constructor(private router: Router,  private route: ActivatedRoute,private hostService: HostService, private authService: AuthService, private accommodationService: AccommodationService, private fb: FormBuilder, private photoService:PhotoService) {
+  constructor(private router: Router,  private route: ActivatedRoute,private hostService: HostService, private authService: AuthService, private accommodationService: AccommodationService, private fb: FormBuilder, private photoService:PhotoService, private sanitizationService: SanitizationService) {
     this.updateForm = this.fb.group({
       name: ['', Validators.required],
       streetAndNumber: ['', Validators.required],
@@ -133,15 +134,15 @@ export class UpdateAccommodationComponent implements OnInit {
             });
 
             this.updateForm!.setValue({
-              name: acc.name,
-              streetAndNumber: acc.address.streetAndNumber,
-              city: acc.address.city,
-              postalCode: acc.address.postalCode,
-              country: acc.address.country,
+              name: this.sanitizationService.sanitize(acc.name),
+              streetAndNumber: this.sanitizationService.sanitize(acc.address.streetAndNumber),
+              city: this.sanitizationService.sanitize(acc.address.city),
+              postalCode: this.sanitizationService.sanitize(acc.address.postalCode),
+              country: this.sanitizationService.sanitize(acc.address.country),
               defaultPrice: acc.price,
               perNightChecked: this.perNightChecked,
               perGuestChecked: this.perGuestChecked,
-              description: acc.description,
+              description: this.sanitizationService.sanitize(acc.description),
               minimumGuest: acc.minGuests,
               maximumGuest: acc.maxGuests,
               acceptReservations: acc.automaticReservationAcceptance,
@@ -282,13 +283,13 @@ edit(){
   }
 
   this.editedAcc = {
-    name: this.updateForm?.get(['name'])?.value || '',
-    description: this.updateForm?.get(['description'])?.value || '',
+    name: this.sanitizationService.sanitize(this.updateForm?.get(['name'])?.value) || '',
+    description: this.sanitizationService.sanitize(this.updateForm?.get(['description'])?.value) || '',
     address: {
-      country: this.updateForm?.get(['country'])?.value || '',
-      city: this.updateForm?.get(['city'])?.value|| '',
-      postalCode: this.updateForm?.get(['postalCode'])?.value|| '',
-      streetAndNumber: this.updateForm?.get(['streetAndNumber'])?.value|| '',
+      country: this.sanitizationService.sanitize(this.updateForm?.get(['country'])?.value) || '',
+      city: this.sanitizationService.sanitize(this.updateForm?.get(['city'])?.value) || '',
+      postalCode: this.sanitizationService.sanitize(this.updateForm?.get(['postalCode'])?.value) || '',
+      streetAndNumber: this.sanitizationService.sanitize(this.updateForm?.get(['streetAndNumber'])?.value) || '',
       latitude: this.selectedAccommodation.address.latitude,
       longitude: this.selectedAccommodation.address.longitude
     },

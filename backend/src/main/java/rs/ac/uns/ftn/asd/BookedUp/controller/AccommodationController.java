@@ -2,7 +2,9 @@ package rs.ac.uns.ftn.asd.BookedUp.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.keycloak.AuthorizationContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -28,15 +30,18 @@ public class AccommodationController {
     @Autowired
     private AccommodationService accommodationService;
 
+
     /*url: /api/accommodations GET*/
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAccommodations() {
-        Collection<Accommodation> accommodations = accommodationService.getAll();
-        Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
-                .map(AccommodationMapper::toDto)
-                .collect(Collectors.toList());
 
-        return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+            Collection<Accommodation> accommodations = accommodationService.getAll();
+            Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                    .map(AccommodationMapper::toDto)
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+
     }
 
     @PreAuthorize("hasRole('ROLE_HOST')")
@@ -99,6 +104,8 @@ public class AccommodationController {
     @PreAuthorize("hasAuthority('ROLE_HOST')")
     @RequestMapping(method=RequestMethod.POST)
     public ResponseEntity<AccommodationDTO> createAccommodation(@Valid @RequestBody AccommodationDTO accommodationDTO) throws Exception {
+        System.out.println("USAAAAAAAAAAAAAAO");
+
         Accommodation createdAccommodation = null;
 
         try {
@@ -161,7 +168,6 @@ public class AccommodationController {
             return new ResponseEntity<AccommodationDTO>(HttpStatus.FORBIDDEN);
         }
 
-//        da li dodati proveru za manualnu
 
         accommodationService.approveAccommodation(accommodation);
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodation), HttpStatus.OK);
@@ -179,7 +185,6 @@ public class AccommodationController {
             return new ResponseEntity<AccommodationDTO>(HttpStatus.FORBIDDEN);
         }
 
-//        da li dodati proveru za manualnu
         accommodationService.rejectAccommodation(accommodation);
         return new ResponseEntity<AccommodationDTO>(AccommodationMapper.toDto(accommodation), HttpStatus.OK);
     }
@@ -187,23 +192,27 @@ public class AccommodationController {
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/modified", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllModified() {
-        Collection<Accommodation> accommodations = accommodationService.findAllModified();
-        Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
-                .map(AccommodationMapper::toDto)
-                .collect(Collectors.toList());
 
-        return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+            Collection<Accommodation> accommodations = accommodationService.findAllModified();
+            Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                    .map(AccommodationMapper::toDto)
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+
     }
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping(value = "/created", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<AccommodationDTO>> getAllCreated() {
-        Collection<Accommodation> accommodations = accommodationService.findAllCreated();
-        Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
-                .map(AccommodationMapper::toDto)
-                .collect(Collectors.toList());
 
-        return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
+
+            Collection<Accommodation> accommodations = accommodationService.findAllCreated();
+            Collection<AccommodationDTO> accommodationsDTO = accommodations.stream()
+                    .map(AccommodationMapper::toDto)
+                    .collect(Collectors.toList());
+
+            return new ResponseEntity<>(accommodationsDTO, HttpStatus.OK);
     }
 
 

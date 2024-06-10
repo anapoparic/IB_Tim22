@@ -16,6 +16,7 @@ import {ReviewType} from "../model/enum/reviewType.enum";
 import {GuestService} from "../../user/guest/guest.service";
 import {User} from "../../user/model/user.model";
 import {Guest} from "../../user/model/guest.model";
+import { SanitizationService } from 'src/app/dompurify/sanitization.service';
 
 @Component({
   selector: 'app-add-review',
@@ -40,7 +41,7 @@ export class AddReviewComponent implements OnInit{
 
   loggedUser!: Guest;
 
-  constructor( private router: Router, private route: ActivatedRoute, private reviewService: ReviewService, private photoService:PhotoService, private accommodationService: AccommodationService, private authService: AuthService, private reservationService: ReservationService, private guestService: GuestService) {}
+  constructor( private router: Router, private route: ActivatedRoute, private reviewService: ReviewService, private photoService:PhotoService, private accommodationService: AccommodationService, private authService: AuthService, private reservationService: ReservationService, private guestService: GuestService, private sanitizationService : SanitizationService) {}
 
     ngOnInit(): void {
         this.route.params.subscribe((params) => {
@@ -90,7 +91,7 @@ export class AddReviewComponent implements OnInit{
           const reviewData: Review = {
               accommodation: this.acc,
               type: ReviewType.Accommodation,
-              comment: this.accommodationComment,
+              comment: this.sanitizationService.sanitize(this.accommodationComment),
               review: this.selectedAccommodationStars,
               date: new Date(),
               guest: this.loggedUser,
@@ -125,7 +126,7 @@ export class AddReviewComponent implements OnInit{
           const reviewDataHost: Review = {
               host: this.acc.host,
               type: ReviewType.Host,
-              comment: this.hostComment,
+              comment: this.sanitizationService.sanitize(this.hostComment),
               review: this.selectedHostStars,
               date: new Date(),
               guest: this.loggedUser,

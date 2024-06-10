@@ -25,7 +25,8 @@ VALUES
     ('images/us5.png', 'guest', 500, 500, true),
     ('images/us6.png', 'guest', 220, 230, true),
     ('images/us7.png', 'guest', 524, 476,true),
-    ('images/us7.png', 'guest', 524, 476,true);
+    ('images/us7.png', 'guest', 524, 476,true),
+    ('images/us1705792777204.jpg', 'defaultUser', 524, 476,true);
 
 INSERT INTO users (first_name, last_name, address_id, phone, email, password, is_blocked, verified, photo_id, last_password_reset_date, notification_enable, accommodation_rating_notification_enabled, average_rating, cancellation_notification_enabled, host_rating_notification_enabled, reservation_created_notification_enabled, active, role)
 VALUES

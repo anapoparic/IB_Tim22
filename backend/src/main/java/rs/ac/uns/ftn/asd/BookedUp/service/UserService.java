@@ -40,37 +40,6 @@ public class UserService implements ServiceInterface<User> {
         return repository.save(user);
     }
 
-//    @Override
-//    public User update(User user) throws Exception {
-//        User userToUpdate = repository.findById(user.getId()).orElse(null);
-//        if (userToUpdate == null) {
-//            throw new Exception("Trazeni entitet nije pronadjen.");
-//        }
-//        userToUpdate.setFirstName(user.getFirstName());
-//        userToUpdate.setLastName(user.getLastName());
-//        userToUpdate.setAddress(user.getAddress());
-//        userToUpdate.setEmail(user.getEmail());
-//        userToUpdate.setPassword(user.getPassword());
-//        userToUpdate.setPhone(user.getPhone());
-//        //userToUpdate.setRole(user.getRole());
-//        userToUpdate.setVerified(user.isVerified());
-//        userToUpdate.setProfilePicture(user.getProfilePicture());
-//        userToUpdate.setLastPasswordResetDate(user.getLastPasswordResetDate());
-//        userToUpdate.setBlocked(user.isBlocked());
-//
-//        userToUpdate.setAuthority(user.getAuthority());
-//        userToUpdate.setProfilePicture(user.getProfilePicture());
-//        userToUpdate.setVerified(user.isVerified());
-//        userToUpdate.setLastPasswordResetDate(user.getLastPasswordResetDate());
-//
-//        System.out.println(userToUpdate.getLastPasswordResetDate());
-//        for (Authority authority : userToUpdate.getAuthority()){
-//            System.out.println(authority.getRole());
-//        }
-//
-//        return repository.save(userToUpdate);
-//
-//    }
 
     @Override
     public User save(User user) {

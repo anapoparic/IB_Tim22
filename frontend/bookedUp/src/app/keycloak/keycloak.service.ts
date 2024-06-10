@@ -1,12 +1,15 @@
 import {Injectable} from '@angular/core';
 import Keycloak from 'keycloak-js';
 import {UserProfile} from './user-profile';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class KeycloakService {
   private _keycloak: Keycloak | undefined;
+
+  constructor(private router: Router) {}
 
   get keycloak() {
     if (!this._keycloak) {
@@ -45,5 +48,10 @@ export class KeycloakService {
   logout() {
     this.keycloak.accountManagement();
     return this.keycloak.logout({redirectUri: 'https://localhost:4200'});
+  }
+
+  manageProfile(){
+    this.keycloak.accountManagement();
+    return this.keycloak.loadUserProfile();
   }
 }

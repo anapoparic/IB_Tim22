@@ -16,6 +16,9 @@ import {PriceChange} from "../model/priceChange.model";
 import { Observable } from 'rxjs';
 import {Photo} from "../../shared/model/photo.model";
 import {PhotoService} from "../../shared/photo/photo.service";
+import { SanitizationService } from 'src/app/dompurify/sanitization.service';
+import { KeycloakService } from 'src/app/keycloak/keycloak.service';
+import { Role } from 'src/app/user/model/role.enum';
 
 
 @Component({
@@ -60,12 +63,17 @@ export class CreateAccommodationComponent implements OnInit {
     copyPriceChange: PriceChange[] = [];
 
     loggedUser!: Host;
+    role: string = '';
+    givenName: string = '';
+    familyName: string = '';
+    email: string = '';
+    emailVerified: boolean = false;
 
     addedDates: { start: string, end: string }[] = [];
     availability: DateRange[] = [];
     photos: Photo[] = [];
 
-    constructor(private router: Router, private hostService: HostService, private authService: AuthService, private accommodationService: AccommodationService, private cdr: ChangeDetectorRef, private zone: NgZone, private photoService:PhotoService) {
+    constructor(private router: Router, private hostService: HostService, private authService: AuthService, private accommodationService: AccommodationService, private cdr: ChangeDetectorRef, private zone: NgZone, private photoService:PhotoService, private sanitizationService: SanitizationService, private keycloakService: KeycloakService) {
     }
 
     ngOnInit() {
@@ -78,14 +86,55 @@ export class CreateAccommodationComponent implements OnInit {
             this.accTypeList.push(this.transformEnumToDisplayFormat(type));
         }
 
-        this.hostService.getHost(this.authService.getUserID()).subscribe(
-            (host: Host) => {
-                this.loggedUser = host;
+        const tokenParsed = this.keycloakService.keycloak.tokenParsed;
+        const userRoles: string[] = tokenParsed?.resource_access?.['backend']?.roles || [];
+        this.role = userRoles[-1];
+        
+        this.givenName = tokenParsed?.['given_name'] || '';
+        this.familyName = tokenParsed?.['family_name'] || '';
+        this.email = tokenParsed?.['email'] || '';
+        this.emailVerified = tokenParsed?.['email_verified'] || false;
+        const photo : Photo = {
+            id: 9,
+            url: 'images/us1705792777204.jpg',
+            caption: 'defaultUser',
+            active: true
+          }
+
+          this.loggedUser = {
+            firstName: this.givenName,
+            lastName: this.familyName,
+            address: {
+                street: "Bogdana Suputa",
+                city: "Novi Sad", // Add other address properties as needed
+                postalCode: "11000",
+                country: "Serbia"
             },
-            (error) => {
-                console.error('Error loading user:', error);
-            }
-        );
+            phone: "063324804",
+            email: this.email,
+            password: "#Ana1234",
+            blocked: false,
+            verified: this.emailVerified,
+            active: true,
+            profilePicture: photo,
+            role: this.role as Role,
+            // Add other Host-specific properties if needed
+        } as Host;
+
+
+        
+    
+
+
+
+        // this.hostService.getHost(this.authService.getUserID()).subscribe(
+        //     (host: Host) => {
+        //         this.loggedUser = host;
+        //     },
+        //     (error) => {
+        //         console.error('Error loading user:', error);
+        //     }
+        // );
     }
 
     convertBlobToFile(blobUrl: string): Promise<File> {
@@ -217,13 +266,13 @@ export class CreateAccommodationComponent implements OnInit {
             // this.uploadImagesToResources();
 
             const accommodation: Accommodation = {
-                name: this.name || '',
-                description: this.description || '',
+                name: this.sanitizationService.sanitize(this.name) || '',
+                description: this.sanitizationService.sanitize(this.description) || '',
                 address: {
-                    country: this.country || '',
-                    city: this.city || '',
-                    postalCode: this.postalCode || '',
-                    streetAndNumber: this.addressStreet || '',
+                    country: this.sanitizationService.sanitize(this.country) || '',
+                    city: this.sanitizationService.sanitize(this.city) || '',
+                    postalCode: this.sanitizationService.sanitize(this.postalCode) || '',
+                    streetAndNumber: this.sanitizationService.sanitize(this.addressStreet) || '',
                     latitude: 0, //??
                     longitude: 0 //??
                 },

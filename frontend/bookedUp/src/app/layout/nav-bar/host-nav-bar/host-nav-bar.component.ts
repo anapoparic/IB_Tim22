@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Host, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import { UserService } from 'src/app/user/user.service';
 import { Router } from '@angular/router';
@@ -8,6 +8,8 @@ import { WebSocketService } from 'src/app/shared/notifications/service/web-socke
 import { Subscription } from 'rxjs';
 import { NotificationsService } from 'src/app/shared/notifications/service/notifications.service';
 import { KeycloakService } from 'src/app/keycloak/keycloak.service';
+import { Photo } from 'src/app/shared/model/photo.model';
+import { Role } from 'src/app/user/model/role.enum';
 
 @Component({
   selector: 'app-host-nav-bar',
@@ -23,6 +25,12 @@ export class HostNavBarComponent implements OnInit{
 
   role: string = '';
   loggedUser!: User;
+
+  givenName: string = '';
+  familyName: string = '';
+  email: string = '';
+  emailVerified: boolean = false;
+  
   displayedImageUrl: string | null = null;
 
   constructor(
@@ -36,28 +44,93 @@ export class HostNavBarComponent implements OnInit{
     ) {}
 
   ngOnInit(): void {
-    this.subscription = this.notificationService.notify$.subscribe(() => {
-      this.hasWebSocketNotification = this.webSocketService.hasNotificationOnSocket(this.authService.getUserID());
-      console.log('Nav-bar updated!');
-    });
-    
-    this.hasWebSocketNotification = this.webSocketService.hasNotificationOnSocket(this.authService.getUserID());
+    // if (!this.keycloakService.keycloak.isTokenExpired()){
+    //   this.role = "ROLE_HOST"
+    // }
+    // this.loadDefaultPhoto();
 
-    this.authService.userState.subscribe((result) => {
-      this.role = result;
-      // this.loadPhotos();
+    const tokenParsed = this.keycloakService.keycloak.tokenParsed;
+        const userRoles: string[] = tokenParsed?.resource_access?.['backend']?.roles || [];
+        this.role = userRoles[-1];
+        
+        this.givenName = tokenParsed?.['given_name'] || '';
+        this.familyName = tokenParsed?.['family_name'] || '';
+        this.email = tokenParsed?.['email'] || '';
+        this.emailVerified = tokenParsed?.['email_verified'] || false;
+        const photo : Photo = {
+            id: 9,
+            url: 'images/us1705792777204.jpg',
+            caption: 'defaultUser',
+            active: true
+          }
 
-    })
+          this.loggedUser = {
+            firstName: this.givenName,
+            lastName: this.familyName,
+            address: {
+                street: "Bogdana Suputa",
+                city: "Novi Sad", // Add other address properties as needed
+                postalCode: "11000",
+                country: "Serbia"
+            },
+            phone: "063324804",
+            email: this.email,
+            password: "#Ana1234",
+            blocked: false,
+            verified: this.emailVerified,
+            active: true,
+            profilePicture: photo,
+            role: this.role as Role,
+            // Add other Host-specific properties if needed
+        } as Host;
 
-    this.userService.getUser(this.authService.getUserID()).subscribe(
-      (user: User) => {
-        this.loggedUser = user;
         this.loadPhotos();
+
+
+    // this.subscription = this.notificationService.notify$.subscribe(() => {
+    //   this.hasWebSocketNotification = this.webSocketService.hasNotificationOnSocket(this.authService.getUserID());
+    //   console.log('Nav-bar updated!');
+    // });
+    
+    // this.hasWebSocketNotification = this.webSocketService.hasNotificationOnSocket(this.authService.getUserID());
+
+    // this.authService.userState.subscribe((result) => {
+    //   this.role = result;
+    //   // this.loadPhotos();
+
+    // })
+
+    // this.userService.getUser(this.authService.getUserID()).subscribe(
+    //   (user: User) => {
+    //     this.loggedUser = user;
+    //     this.loadPhotos();
+    //   },
+    //   (error) => {
+    //     console.error('Error loading user:', error);
+    //   }
+    // );
+  }
+
+  loadDefaultPhoto() {
+    const photo : Photo = {
+      id: 9,
+      url: 'images/us1705792777204.jpg',
+      caption: 'defaultUser',
+      active: true
+    }
+    this.photoService.loadPhoto(photo).subscribe(
+      (data) => {
+        this.createImageFromBlob(data).then((url: string) => {
+          this.displayedImageUrl=url;
+        }).catch(error => {
+          console.error("Greška prilikom konverzije slike ${imageName}: ", error);
+        });
       },
       (error) => {
-        console.error('Error loading user:', error);
+        console.log("Doslo je do greske pri ucitavanju slike ${imageName}:" , error);
       }
     );
+    
   }
 
   onNotificationIconClick(): void {
@@ -124,5 +197,9 @@ export class HostNavBarComponent implements OnInit{
       reader.onerror = reject;
       reader.readAsDataURL(imageBlob);
     });
+  }
+
+  manageAccount(){
+    this.keycloakService.keycloak.accountManagement();
   }
 }

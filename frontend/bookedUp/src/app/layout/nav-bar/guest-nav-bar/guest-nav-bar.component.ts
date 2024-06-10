@@ -8,6 +8,7 @@ import { WebSocketService } from 'src/app/shared/notifications/service/web-socke
 import { NotificationsService } from 'src/app/shared/notifications/service/notifications.service';
 import { Subscription } from 'rxjs';
 import { KeycloakService } from 'src/app/keycloak/keycloak.service';
+import { Photo } from 'src/app/shared/model/photo.model';
 @Component({
   selector: 'app-guest-nav-bar',
   templateUrl: './guest-nav-bar.component.html',
@@ -35,29 +36,56 @@ export class GuestNavBarComponent implements OnInit{
     private keycloakService: KeycloakService ) {}
 
   ngOnInit(): void {
-    this.subscription = this.notificationService.notify$.subscribe(() => {
-      this.hasWebSocketNotification = this.webSocketService.hasNotificationOnSocket(this.authService.getUserID());
-      console.log('Nav-bar updated!');
-    });
+    if (!this.keycloakService.keycloak.isTokenExpired()){
+      this.role = "ROLE_GUEST"
+    }
+    this.loadDefaultPhoto();
+    // this.subscription = this.notificationService.notify$.subscribe(() => {
+    //   this.hasWebSocketNotification = this.webSocketService.hasNotificationOnSocket(this.authService.getUserID());
+    //   console.log('Nav-bar updated!');
+    // });
 
-    this.hasWebSocketNotification = this.webSocketService.hasNotificationOnSocket(this.authService.getUserID());
+    // this.hasWebSocketNotification = this.webSocketService.hasNotificationOnSocket(this.authService.getUserID());
 
-    this.authService.userState.subscribe((result) => {
-      this.role = result;
-    })
+    // this.authService.userState.subscribe((result) => {
+    //   this.role = result;
+    // })
 
-    this.userService.getUser(this.authService.getUserID()).subscribe(
-        (user: User) => {
-          this.loggedUser = user;
-          this.loadPhotos();
+    // this.userService.getUser(this.authService.getUserID()).subscribe(
+    //     (user: User) => {
+    //       this.loggedUser = user;
+    //       this.loadPhotos();
 
-        },
-        (error) => {
-          console.error('Error loading user:', error);
-          // Handle error as needed
-        }
+    //     },
+    //     (error) => {
+    //       console.error('Error loading user:', error);
+    //       // Handle error as needed
+    //     }
+    // );
+
+  }
+
+  
+  loadDefaultPhoto() {
+    const photo : Photo = {
+      id: 9,
+      url: 'images/us1705792777204.jpg',
+      caption: 'defaultUser',
+      active: true
+    }
+    this.photoService.loadPhoto(photo).subscribe(
+      (data) => {
+        this.createImageFromBlob(data).then((url: string) => {
+          this.displayedImageUrl=url;
+        }).catch(error => {
+          console.error("Greška prilikom konverzije slike ${imageName}: ", error);
+        });
+      },
+      (error) => {
+        console.log("Doslo je do greske pri ucitavanju slike ${imageName}:" , error);
+      }
     );
-
+    
   }
 
   onNotificationIconClick(): void {
@@ -123,5 +151,9 @@ export class GuestNavBarComponent implements OnInit{
       reader.onerror = reject;
       reader.readAsDataURL(imageBlob);
     });
+  }
+
+  manageAccount(){
+    this.keycloakService.keycloak.accountManagement();
   }
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
 
 @Service
 public class RegistrationService implements IRegistrationService {
-    @Autowired
+//    @Autowired
     private UserService service;
     @Autowired
     private ConfirmationTokenService confirmationTokenService;

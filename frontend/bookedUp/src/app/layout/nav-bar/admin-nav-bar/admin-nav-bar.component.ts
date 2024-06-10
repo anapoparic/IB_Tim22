@@ -7,6 +7,8 @@ import {User} from "../../../user/model/user.model";
 import {Observable} from "rxjs";
 import {PhotoService} from "../../../shared/photo/photo.service";
 import { KeycloakService } from 'src/app/keycloak/keycloak.service';
+import { borderRightStyle } from 'html2canvas/dist/types/css/property-descriptors/border-style';
+import { Photo } from 'src/app/shared/model/photo.model';
 
 @Component({
   selector: 'app-admin-nav-bar',
@@ -23,20 +25,29 @@ export class AdminNavBarComponent implements OnInit{
   constructor(private router: Router, private photoService:PhotoService, private authService: AuthService, private userService: UserService, private keycloakService: KeycloakService) {}
 
   ngOnInit(): void {
-    this.authService.userState.subscribe((result) => {
-      this.role = result;
-    })
+    if (!this.keycloakService.keycloak.isTokenExpired()){
+      this.role = "ROLE_ADMIN"
+    }
+    this.loadDefaultPhoto();
+    
+    // this.authService.userState.subscribe((result) => {
+    //   this.role = result;
+    // })
 
-    this.userService.getUser(this.authService.getUserID()).subscribe(
-        (user: User) => {
-          this.loggedUser = user;
-          this.loadPhotos();
-        },
-        (error) => {
-          console.error('Error loading user:', error);
-          // Handle error as needed
-        }
-    );
+    // this.userService.getUser(this.authService.getUserID()).subscribe(
+    //     (user: User) => {
+    //       this.loggedUser = user;
+    //       if (this.loggedUser){
+    //         this.loadPhotos();
+    //       } 
+          
+    //     },
+    //     (error) => {
+    //       console.error('Error loading user:', error);
+    //       // Handle error as needed
+    //     }
+    // );
+
   }
 
   onProfilePictureClick(): void {
@@ -63,6 +74,28 @@ export class AdminNavBarComponent implements OnInit{
     //     this.router.navigate(['/']);
     //   }
     // })
+  }
+
+  loadDefaultPhoto() {
+    const photo : Photo = {
+      id: 9,
+      url: 'images/us1705792777204.jpg',
+      caption: 'defaultUser',
+      active: true
+    }
+    this.photoService.loadPhoto(photo).subscribe(
+      (data) => {
+        this.createImageFromBlob(data).then((url: string) => {
+          this.displayedImageUrl=url;
+        }).catch(error => {
+          console.error("Greška prilikom konverzije slike ${imageName}: ", error);
+        });
+      },
+      (error) => {
+        console.log("Doslo je do greske pri ucitavanju slike ${imageName}:" , error);
+      }
+    );
+    
   }
 
   loadPhotos() {
@@ -92,5 +125,9 @@ export class AdminNavBarComponent implements OnInit{
       reader.onerror = reject;
       reader.readAsDataURL(imageBlob);
     });
+  }
+
+  manageAccount(){
+    this.keycloakService.keycloak.accountManagement();
   }
 }

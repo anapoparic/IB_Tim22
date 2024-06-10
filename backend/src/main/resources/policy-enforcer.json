@@ -1,0 +1,26 @@
+{
+  "enforcement-mode": "ENFORCING",
+  "paths": [
+    {
+      "path": "/api/accommodations/*",
+      "methods": [
+        {
+          "method": "GET",
+          "scopes": ["urn:app.com:scopes:read"]
+        },
+        {
+          "method": "POST",
+          "scopes": ["urn:app.com:scopes:create"]
+        },
+        {
+          "method": "PUT",
+          "scopes": ["urn:app.com:scopes:update"]
+        },
+        {
+          "method": "DELETE",
+          "scopes": ["urn:app.com:scopes:delete"]
+        }
+      ]
+    }
+  ]
+}

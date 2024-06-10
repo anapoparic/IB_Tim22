@@ -7,6 +7,7 @@ import { Review } from '../model/review.model';
 import { ReviewService } from '../review.service';
 import {AuthService} from "../../infrastructure/auth/auth.service";
 import {ReviewReportService} from "../review-report/review-report.service";
+import { SanitizationService } from 'src/app/dompurify/sanitization.service';
 
 @Component({
   selector: 'app-host-reviews',
@@ -22,7 +23,7 @@ export class HostReviewsComponent implements OnInit {
 
   review: Review[] = [];
 
-  constructor(private reviewService: ReviewService, private router: Router, private route: ActivatedRoute, private photoService: PhotoService, private authService: AuthService, private reviewReportService: ReviewReportService) {
+  constructor(private reviewService: ReviewService, private router: Router, private route: ActivatedRoute, private photoService: PhotoService, private authService: AuthService, private reviewReportService: ReviewReportService, private sanitizationService : SanitizationService) {
   }
 
 
@@ -139,7 +140,7 @@ export class HostReviewsComponent implements OnInit {
 
         // Pozovi funkciju create iz ReviewReportService i prosledi odgovarajuće podatke
         this.reviewReportService.createReviewReport({
-          reason: reportReason,
+          reason: this.sanitizationService.sanitize(reportReason),
           reportedReview: review,
           status: true,  // Postavite status prema vašim zahtevima
         }).subscribe(response => {

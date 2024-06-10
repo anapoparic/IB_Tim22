@@ -19,14 +19,14 @@ import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
 
 import java.util.stream.Collectors;
 
-@RestController
+//@RestController
 @RequestMapping(value = "/api/registration")
 public class RegistrationController {
 
-    @Autowired
+//    @Autowired
     private RegistrationService registrationService;
 
-    @Autowired
+//    @Autowired
     private UserService userService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

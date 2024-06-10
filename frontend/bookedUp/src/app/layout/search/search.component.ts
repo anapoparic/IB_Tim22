@@ -5,6 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { AccommodationType } from 'src/app/accommodation/model/enum/accommodationType.enum';
 import { Amenity } from 'src/app/accommodation/model/enum/amenity.enum';
 import {PhotoService} from "../../shared/photo/photo.service";
+import { SanitizationService } from 'src/app/dompurify/sanitization.service';
 
 @Component({
   selector: 'app-search',
@@ -78,7 +79,7 @@ export class SearchComponent implements OnInit {
   }
 
 
-  constructor(private router: Router, private route: ActivatedRoute, private accommodationService: AccommodationService, private el: ElementRef, private photoService: PhotoService) {
+  constructor(private router: Router, private route: ActivatedRoute, private accommodationService: AccommodationService, private el: ElementRef, private photoService: PhotoService, private sanitizationService: SanitizationService) {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     this.minFromDate = this.formatDate(tomorrow);
@@ -93,7 +94,7 @@ export class SearchComponent implements OnInit {
 
   ngOnInit() {
 
-    this.location = this.route.snapshot.queryParams['location'] || "";
+    this.location = this.sanitizationService.sanitize(this.route.snapshot.queryParams['location']) || "";
     this.fromDate = this.route.snapshot.queryParams['selectedFromDate'] || new Date();
     this.outDate = this.route.snapshot.queryParams['selectedToDate'] || new Date();
     this.guests = this.route.snapshot.queryParams['guestNumber'] || 0;
@@ -136,7 +137,7 @@ export class SearchComponent implements OnInit {
 
 
   onSearchClick(): void {
-    this.location = (document.getElementById("locationTxt") as HTMLInputElement).value || "";
+    this.location = this.sanitizationService.sanitize((document.getElementById("locationTxt") as HTMLInputElement).value) || "";
     this.guests = parseInt((document.getElementById("guestNumberTxt") as HTMLInputElement).value, 10) || 0;
 
     const fromDateInput = (document.getElementById("fromDate") as HTMLInputElement);

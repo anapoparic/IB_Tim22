@@ -7,6 +7,7 @@ import { map } from 'rxjs/operators';
 import { AuthService } from 'src/app/infrastructure/auth/auth.service';
 import {  FormGroup, FormBuilder, FormControl, Validators, NgForm, AbstractControl, ValidationErrors } from '@angular/forms';
 import {PhotoService} from "../../shared/photo/photo.service";
+import { SanitizationService } from 'src/app/dompurify/sanitization.service';
 
 @Component({
   selector: 'app-index',
@@ -25,7 +26,7 @@ export class IndexComponent implements OnInit {
     searchForm!: FormGroup;
     popularAcc: Accommodation[]=[];
 
-  constructor(private router: Router, private photoService:PhotoService,private formBuilder: FormBuilder, private route: ActivatedRoute, private accommodationService: AccommodationService, private authService: AuthService) {
+  constructor(private router: Router, private photoService:PhotoService,private formBuilder: FormBuilder, private route: ActivatedRoute, private accommodationService: AccommodationService, private authService: AuthService, private sanitizationService: SanitizationService) {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
     this.minFromDate = this.formatDate(tomorrow);
@@ -62,7 +63,7 @@ export class IndexComponent implements OnInit {
     })
 
 
-      const location = (document.getElementById("locationTxt") as HTMLInputElement).value || "";
+      const location = this.sanitizationService.sanitize((document.getElementById("locationTxt") as HTMLInputElement).value) || "";
       const guestNumber = parseInt((document.getElementById("guestNumberTxt") as HTMLInputElement).value, 10) || 1;
 
       const fromDateInput = document.getElementById("fromDate") as HTMLInputElement;

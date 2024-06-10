@@ -50,6 +50,9 @@ public class UserController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> getUser(@PathVariable("id") Long id) {
         User user = userService.getById(id);
+        if (user == null){
+
+        }
         UserDTO userDTO = UserMapper.toDto(user);
 
         if (userDTO == null) {

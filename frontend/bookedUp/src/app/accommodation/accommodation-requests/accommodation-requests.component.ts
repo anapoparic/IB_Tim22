@@ -5,6 +5,7 @@ import { Accommodation } from '../model/accommodation.model';
 import { Observable } from 'rxjs';
 import Swal from "sweetalert2";
 import {PhotoService} from "../../shared/photo/photo.service";
+import { SanitizationService } from 'src/app/dompurify/sanitization.service';
 
 @Component({
   selector: 'app-accommodation-requests',
@@ -22,7 +23,7 @@ export class AccommodationRequestsComponent implements OnInit {
   photoDict: { accId: number, url: string }[] = [];
   acc: Accommodation[] = [];
 
-  constructor(private accommodationService: AccommodationService, private router: Router, private route: ActivatedRoute, private photoService: PhotoService) {
+  constructor(private accommodationService: AccommodationService, private router: Router, private route: ActivatedRoute, private photoService: PhotoService, private sanitizationService: SanitizationService) {
   }
 
 
@@ -92,7 +93,7 @@ export class AccommodationRequestsComponent implements OnInit {
               Swal.fire({
                 icon: 'success',
                 title: 'Accommodation Approved!',
-                text: 'The accommodation has been successfully approved.',
+                text: this.sanitizationService.sanitize('The accommodation has been successfully approved.'),
               }).then(() => {
                 this.loadAccommodations();
               });
@@ -115,7 +116,7 @@ export class AccommodationRequestsComponent implements OnInit {
               Swal.fire({
                 icon: 'success',
                 title: 'Accommodation Rejected!',
-                text: 'The accommodation has been successfully rejected.',
+                text: this.sanitizationService.sanitize('The accommodation has been successfully rejected.'),
               }).then(() => {
                 this.loadAccommodations();
               });

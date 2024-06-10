@@ -7,4 +7,6 @@ export interface Host extends User {
   cancellationNotificationEnabled?: boolean;
   hostRatingNotificationEnabled?: boolean;
   accommodationRatingNotificationEnabled?: boolean;
+
+  
 }

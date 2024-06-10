@@ -24,50 +24,50 @@ import rs.ac.uns.ftn.asd.BookedUp.service.UserService;
 
 
 @CrossOrigin
-@RestController
+//@RestController
 @RequestMapping("/api")
 public class LogInController {
     private static final Logger logger = LoggerFactory.getLogger(LogInController.class);
 
-    @Autowired
+//    @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
+//    @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
+//    @Autowired
     private UserService userService;
 
-    @Autowired
+//    @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-    @PostMapping( value ="/login", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<TokenDTO> login(@RequestBody LogInDTO loginDto) {
-
-        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
-                loginDto.getPassword());
-        Authentication auth = authenticationManager.authenticate(authReq);
-
-        SecurityContext sc = SecurityContextHolder.getContext();
-        sc.setAuthentication(auth);
-
-        UserDetails userDetail = userDetailsService.loadUserByUsername(loginDto.getEmail());
-
-        if (!userDetail.isEnabled()) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        User user = userService.getByEmail(loginDto.getEmail());
-        if (user.isBlocked()) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-
-        String token = jwtTokenUtil.generateToken(userDetail);
-        TokenDTO tokenDto = new TokenDTO();
-        tokenDto.setToken(token);
-
-        return new ResponseEntity<>(tokenDto, HttpStatus.OK);
-    }
+//    @PostMapping( value ="/login", consumes = "application/json", produces = "application/json")
+//    public ResponseEntity<TokenDTO> login(@RequestBody LogInDTO loginDto) {
+//
+//        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(loginDto.getEmail(),
+//                loginDto.getPassword());
+//        Authentication auth = authenticationManager.authenticate(authReq);
+//
+//        SecurityContext sc = SecurityContextHolder.getContext();
+//        sc.setAuthentication(auth);
+//
+//        UserDetails userDetail = userDetailsService.loadUserByUsername(loginDto.getEmail());
+//
+//        if (!userDetail.isEnabled()) {
+//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+//        }
+//
+//        User user = userService.getByEmail(loginDto.getEmail());
+//        if (user.isBlocked()) {
+//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//        }
+//
+//        String token = jwtTokenUtil.generateToken(userDetail);
+//        TokenDTO tokenDto = new TokenDTO();
+//        tokenDto.setToken(token);
+//
+//        return new ResponseEntity<>(tokenDto, HttpStatus.OK);
+//    }
 
     @GetMapping(value = "/logout", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity logoutUser() {
