@@ -48,6 +48,7 @@ public class ReservationController {
         return new ResponseEntity<>(reservationsDTO, HttpStatus.OK);
     }
 
+    //RBAC
     @PreAuthorize("hasAuthority('ROLE_GUEST')")
     @GetMapping(value = "/guest/{guestId}/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<ReservationDTO>> getReservationsByStatusAndGuestId(@PathVariable("guestId") Long guestId, @RequestParam(required = true) ReservationStatus reservationStatus) {

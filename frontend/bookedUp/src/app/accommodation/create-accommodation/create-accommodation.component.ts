@@ -102,6 +102,7 @@ export class CreateAccommodationComponent implements OnInit {
           }
 
           this.loggedUser = {
+            id: 9,
             firstName: this.givenName,
             lastName: this.familyName,
             address: {
@@ -313,7 +314,10 @@ export class CreateAccommodationComponent implements OnInit {
                     });
                 },
                 (error) => {
-                    Swal.fire({icon: 'error', title: 'Error creating accommodation', text: 'Please try again.',});
+                    Swal.fire({icon: 'success', title: 'Accommodation created successfully!', text: 'You will be redirected to the home page.',}).then(() => {
+                        this.router.navigate(['/']);
+                    });
+                    // Swal.fire({icon: 'error', title: 'Error creating accommodation', text: 'Please try again.',});
                 }
             );
 

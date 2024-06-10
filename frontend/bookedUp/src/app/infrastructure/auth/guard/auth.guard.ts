@@ -40,7 +40,8 @@ export class AuthGuard implements CanActivate {
     console.log('User Roles:', userRoles); // Log the roles to inspect them
 
     if (!userRoles || userRoles.length === 0) {
-      this.router.navigate(['login']);
+      this.keycloakService.keycloak.login();
+      // this.router.navigate(['login']);
       return false;
     }
 

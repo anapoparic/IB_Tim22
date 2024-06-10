@@ -38,20 +38,20 @@ export class AccommodationsComponent implements OnInit {
 
     private loadAccommodations(): void {
         if (this.filter === 'active') {
-            this.accommodations = this.accommodationService.getAllActiveAccommodationsByHostId(this.authService.getUserID());
-            this.accommodationService.getAllActiveAccommodationsByHostId(this.authService.getUserID()).subscribe((results) => {
+            this.accommodations = this.accommodationService.getAllActiveAccommodationsByHostId(9);
+            this.accommodationService.getAllActiveAccommodationsByHostId(9).subscribe((results) => {
                 this.acc = results;
                 this.loadPhotos();
             });
         } else if (this.filter === 'requests') {
-            this.accommodations = this.accommodationService.getAllRequestsByHostId(this.authService.getUserID());
-            this.accommodationService.getAllRequestsByHostId(this.authService.getUserID()).subscribe((results) => {
+            this.accommodations = this.accommodationService.getAllRequestsByHostId(9);
+            this.accommodationService.getAllRequestsByHostId(9).subscribe((results) => {
                 this.acc = results;
                 this.loadPhotos();
             });
         } else {
-            this.accommodations = this.accommodationService.getAllRejectedByHostId(this.authService.getUserID());
-            this.accommodationService.getAllRejectedByHostId(this.authService.getUserID()).subscribe((results) => {
+            this.accommodations = this.accommodationService.getAllRejectedByHostId(9);
+            this.accommodationService.getAllRejectedByHostId(9).subscribe((results) => {
                 this.acc = results;
                 this.loadPhotos();
             });

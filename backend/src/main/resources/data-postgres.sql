@@ -9,7 +9,8 @@ VALUES
     ('Spain', 'Barcelona', '08007', 'Passeig de Gràcia, 38-40', 41.3925, 2.1657, true),
     ('United Kingdom', 'London', 'W1K 4HR', 'Brook Street, Mayfair', 51.5094, -0.1493, true),
     ('Italy', 'Venice', '30122', 'Riva degli Schiavoni, 4196', 45.4336, 12.3433, true),
-    ('Italy', 'Rome', '00187', 'Via Vittorio Veneto, 125', 41.9064, 12.4881, true);
+    ('Italy', 'Rome', '00187', 'Via Vittorio Veneto, 125', 41.9064, 12.4881, true),
+    ('Serbia', 'Novi Sad', '11000', 'Bogdana Suputa 81', 0.0, 0.0, true);
 
 INSERT INTO public.authority (role) VALUES
                                         ('ADMIN'),
@@ -37,7 +38,8 @@ VALUES
     ('Jovana', 'Jovanović', 5, 0649876543, 'jovana.jovanovic@example.com', 'jovanapass', false, true, 5, '2023-04-01 18:20:00', true, null, null, null, null, null,true, 'GUEST'),
     ('Nenad', 'Nenadić', 6, 0658765432, 'nenad.nenadic@example.com', 'nenadpass', false, true, 6, '2023-05-01 21:10:00', true, null, null, null, null, null,true, 'GUEST'),
     ('Mila', 'Milićević', 7, 0661122334, 'mila.milicevic@example.com', 'milinpass', false, true, 7, '2022-06-01 09:30:00', false, null, null, null, null, null,true, 'GUEST'),
-    ('Admin', 'Adminovic', 9, 77364272, 'admin@example.com', 'adminpass', false, true, 8, '2023-01-01 10:00:00', null, null, null, null, null, null, true, 'SUPER_ADMIN');
+    ('Admin', 'Adminovic', 9, 77364272, 'admin@example.com', 'adminpass', false, true, 8, '2023-01-01 10:00:00', null, null, null, null, null, null, true, 'SUPER_ADMIN'),
+    ('Ana', 'Poparic', 11, '063324804', 'anapoparic28@gmail.com', '#Ana1234', false, true, 9, '2023-01-01 10:00:00', null, true, 5.0, false, true, false, true, 'HOST');
 
 ALTER TABLE accommodation
     ALTER COLUMN description TYPE VARCHAR(1000);
@@ -53,7 +55,8 @@ VALUES
     ('Skyline View Loft', 'Perched atop a skyscraper, this contemporary loft offers unparalleled skyline views. The one-bedroom space features minimalist aesthetics, a fully equipped kitchen, and a spacious living area. Enjoy the luxury of a private balcony overlooking the city lights for a truly cosmopolitan experience.', 7, 450.0, 6, 10, 14, false, 'ACTIVE', 'PER_NIGHT', 'VILLA', 3.0, 2, true),
     ('Tranquil Cottage Retreat', 'Escape to the countryside in this charming cottage surrounded by lush gardens. The two-bedroom retreat features a rustic fireplace, a fully equipped kitchen, and a private patio for enjoying morning coffee or evening stargazing. Immerse yourself in the tranquility of nature while being just a short drive from local vineyards and hiking trails.', 8, 300.0, 2, 4, 7, true, 'ACTIVE', 'PER_NIGHT', 'HOTEL', 3.8, 3, true),
     ('Beachfront Bungalow Paradise', 'Experience paradise at this beachfront bungalow with direct access to the sandy shores. The tropical-themed two-bedroom haven offers a sun-soaked deck, hammocks for lazy afternoons, and stunning sunset views. Embrace the laid-back coastal lifestyle with surf lessons, beach picnics, and seaside relaxation.', 9, 70.0, 1, 3, 3, true, 'ACTIVE', 'PER_NIGHT', 'VILLA', 2.4, 2, true),
-    ('Riverside Retreat Cabin', 'Unplug and unwind in this secluded cabin nestled by a serene river. The one-bedroom hideaway features a woodsy interior, a riverside deck for fishing or lounging, and a cozy fireplace. Disconnect from the hustle and bustle, and reconnect with nature in this peaceful riverside retreat.', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 4.7, 3, true);
+    ('Riverside Retreat Cabin', 'Unplug and unwind in this secluded cabin nestled by a serene river. The one-bedroom hideaway features a woodsy interior, a riverside deck for fishing or lounging, and a cozy fireplace. Disconnect from the hustle and bustle, and reconnect with nature in this peaceful riverside retreat.', 10, 90.0, 2, 4, 5, true, 'ACTIVE', 'PER_NIGHT', 'APARTMENT', 4.7, 3, true),
+    ('Moj novi smestaj', '', 11, 250, 2, 5, 7, false, 'CREATED', 'PER_NIGHT', 'HOTEL', 7.0, 9, true);
 
 INSERT INTO photo (url, caption, width, height, active, accommodation_id)
 VALUES
@@ -86,7 +89,8 @@ VALUES
     ('images/acc27.jpg', 'acc9', 640, 960,true, 9),
     ('images/acc28.jpg', 'acc10', 640, 960, true, 10),
     ('images/acc29.jpg', 'acc10', 640, 960, true, 10),
-    ('images/acc30.jpg', 'acc10', 640, 960, true, 10);
+    ('images/acc30.jpg', 'acc10', 640, 960, true, 10),
+    ('images/acc1705758070950.jpg', 'acc11', 640, 960, true, 10);
 
 INSERT INTO amenities (accommodation_id, amenities)
 VALUES
@@ -109,7 +113,9 @@ VALUES
     (9, 'FITNESS_CENTRE'),
     (10, 'NON_SMOKING_ROOMS'),
     (10, 'PARKING'),
-    (10, 'RESTAURANT');
+    (10, 'RESTAURANT'),
+    (11, 'FREE_WIFI'),
+    (11, 'NON_SMOKING_ROOMS');
 
 INSERT INTO date_range (accommodation_id, start_date, end_date)
 VALUES
@@ -129,7 +135,9 @@ VALUES
     (9, '2024-01-10 13:00:00.000000', '2024-01-17 13:00:00.000000'),
     (9, '2024-01-22 13:00:00.000000', '2024-12-29 13:00:00.000000'),
     (10, '2023-12-05 13:00:00.000000', '2024-01-12 13:00:00.000000'),
-    (10, '2024-01-15 13:00:00.000000', '2024-10-26 13:00:00.000000');
+    (10, '2024-01-15 13:00:00.000000', '2024-10-26 13:00:00.000000'),
+    (11, '2024-07-01 13:00:00.000000', '2024-07-31 13:00:00.000000');
+
 
 INSERT INTO price_change (accommodation_id, change_date, new_price)
 VALUES
